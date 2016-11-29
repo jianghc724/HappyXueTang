@@ -11,19 +11,32 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import json
+import logging
+import urllib.parse
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Configurations load from file
+CONFIGS = json.loads(open(os.path.join(BASE_DIR, 'configs.json')).read())
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^brcf)v0w!ieh+xl(ql6yyoh$jgj&ir-jes$*m9!!@5e4r*dni'
+SECRET_KEY = CONFIGS['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = CONFIGS['DEBUG']
+
+# SECURITY WARNING: don't run with IGNORE_WECHAT_SIGNATURE turned on in production!
+IGNORE_WECHAT_SIGNATURE = CONFIGS['IGNORE_WECHAT_SIGNATURE']
+
+# SECURITY WARNING: keep the WeChat token, appid and secret used in production secret!
+WECHAT_TOKEN = CONFIGS['WECHAT_TOKEN']
+WECHAT_APPID = CONFIGS['WECHAT_APPID']
+WECHAT_SECRET = CONFIGS['WECHAT_SECRET']
 
 ALLOWED_HOSTS = []
 

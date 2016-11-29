@@ -1,3 +1,24 @@
-from django.shortcuts import render
+from django.utils import timezone
 
-# Create your views here.
+from wechat.wrapper import WeChatView, WeChatLib
+from wechat.handlers import *
+from HappyXueTang.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
+
+
+class CustomWeChatView(WeChatView):
+
+    lib = WeChatLib(WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET)
+
+    handlers = [
+
+    ]
+    error_message_handler = ErrorHandler
+    default_handler = DefaultHandler
+
+    event_keys = {
+
+    }
+
+    menu = {
+
+    }
