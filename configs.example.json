@@ -5,6 +5,8 @@
   "WECHAT_TOKEN": "ThisIsAWeChatTokenWhichCanBeARandomString",
   "WECHAT_APPID": "PleaseCopyFromWebsite",
   "WECHAT_SECRET": "PleaseCopyFromWebsite",
+  "API_KEY": "",
+  "API_SECRET": "",
   "DB_NAME": "happy_xuetang",
   "DB_USER": "root",
   "DB_PASS": "",
