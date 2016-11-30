@@ -3,9 +3,13 @@ from django.db import models
 from codex.baseerror import LogicError
 
 
-class Student(models.Model):
+class User(models.Model):
     open_id = models.CharField(max_length=64, unique=True, db_index=True)
-    student_id = models.CharField(max_length=16, unique=True, db_index=True)
+    user_id = models.CharField(max_length=16, unique=True, db_index=True)
+    user_status = models.IntegerField()
+
+    STATUS_STUDENT = 0
+    STATUS_TEACHER = 1
 
     @classmethod
     def get_by_openid(cls, openid):
@@ -28,7 +32,7 @@ class Course(models.Model):
     exam_start_time = models.DateTimeField()
     exam_end_time = models.DateTimeField()
     exam_location = models.CharField(max_length=128)
-    rating = models.FloatField(max_digits=5, demical_places=2)
+    rating = models.FloatField()
 
     COURSE_CANCELLED = -1
     COURSE_AUTUMN_ONLY = 1

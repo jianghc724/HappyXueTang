@@ -12,7 +12,7 @@ from django.template.loader import get_template
 
 from HappyXueTang import settings
 from codex.baseview import BaseView
-from wechat.models import Student
+from wechat.models import User
 
 
 class WeChatHandler(object):
@@ -201,7 +201,7 @@ class WeChatView(BaseView):
         msg = self.parse_msg_xml(ET.fromstring(self.request.body))
         if 'FromUserName' not in msg:
             return self.error_message_handler(self, msg, None).handle()
-        user, created = Student.objects.get_or_create(open_id=msg['FromUserName'])
+        user, created = User.objects.get_or_create(open_id=msg['FromUserName'])
         if created:
             self.logger.info('New user: %s', user.open_id)
         try:
