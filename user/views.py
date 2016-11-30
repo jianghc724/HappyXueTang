@@ -39,3 +39,10 @@ class UserBind(APIView):
         self.check_input('openid', 'student_id', 'password')
         self.validate_user()
 
+
+class UserUnBind(APIView):
+    def get(self):
+        pass
+
+    def post(self):
+        pass
