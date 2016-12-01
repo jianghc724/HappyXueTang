@@ -32,7 +32,7 @@ class BindAccountHandler(WeChatHandler):
         return self.is_text('绑定')
 
     def handle(self):
-        pass
+        self.reply_text(self.get_message('bind_account'))
 
 
 class CourseDetailHandler(WeChatHandler):
