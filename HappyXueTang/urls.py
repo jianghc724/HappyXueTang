@@ -16,6 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 # from django.contrib import admin
 
+from wechat.views import CustomWeChatView
+
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
+    url(r'^wechat/?S', CustomWeChatView.as_view()),
 ]
