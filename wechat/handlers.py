@@ -1,5 +1,5 @@
 from wechat.wrapper import WeChatHandler
-
+from HappyXueTang import settings
 
 class ErrorHandler(WeChatHandler):
 
@@ -28,6 +28,9 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
 
 
 class BindAccountHandler(WeChatHandler):
+    def url_bind(self):
+        return settings.get_url('', {'openid':self.user.open_id})
+
     def check(self):
         return self.is_text('绑定')
 
