@@ -4,7 +4,7 @@ from codex.baseview import APIView
 import requests
 import json
 
-from wechat.models import User
+from wechat.models import User, Course, StudentCourse
 from HappyXueTang.settings import API_KEY, API_SECRET
 
 
@@ -42,7 +42,27 @@ class UserBind(APIView):
 
 class CourseList(APIView):
     def get(self):
-        pass
+        self.check_input('openid')
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        userid = User.get_by_openid(self.input['openid']).user_id
+        addr = 'http://se.zhuangty.com/curriculum/' + userid + '?username=' + userid
+        r = requests.post(addr, data=data, headers=headers)
+        return_json = r.json()
+        if return_json['message'] == 'Success':
+            course_json = return_json['classes']
+            course_id = course_json['coursid']
+            courses = Course.objects.filter(course_id = course_id)
+            if not courses:
+                # create course
+                pass
+            # create student course
+        else:
+            # raise proper error
+            pass
 
 
 class CourseDetail(APIView):
