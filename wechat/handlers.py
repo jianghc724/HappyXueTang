@@ -29,7 +29,7 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
 
 class BindAccountHandler(WeChatHandler):
     def url_bind(self):
-        return settings.get_url('u/bind', {'openid':self.user.open_id})
+        return settings.get_url('u/bind', {'open_id':self.user.open_id})
 
     def check(self):
         return self.is_text('绑定')
