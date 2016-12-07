@@ -33,6 +33,7 @@ class BindAccountHandler(WeChatHandler):
         return settings.get_url('u/bind', {'open_id':self.user.open_id})
 
     def check(self):
+        print("adsf")
         return self.is_text('绑定') or self.is_event_click(self.view.event_keys['account_bind'])
 
     def handle(self):
