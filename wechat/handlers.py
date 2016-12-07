@@ -1,9 +1,9 @@
 from wechat.wrapper import WeChatHandler
-from codex.baseerror import *
 from HappyXueTang import settings
 from wechat.models import User
 from django.http import HttpResponse
 from HappyXueTang.settings import API_KEY, API_SECRET
+from codex.baseerror import *
 import requests
 
 
@@ -52,8 +52,19 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
         user = User.get_by_openid(self.user.open_id)
         user.user_status = -1
         user.save()
-        print(user.user_status)
-        return self.reply_text(self.get_message('unbind_account'))
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        userid = User.get_by_openid(self.input['open_id']).user_id
+        addr = 'http://se.zhuangty.com:8000/curriculum/' + userid + '?username=' + userid
+        r = requests.post(addr, data=data, headers=headers)
+        return_json = r.json()
+        if return_json['message'] == 'Success':
+            return self.reply_text(self.get_message('unbind_account'))
+        else:
+            raise LogicError("UnBind Failure")
 
 
 class BindAccountHandler(WeChatHandler):
@@ -64,19 +75,7 @@ class BindAccountHandler(WeChatHandler):
         return self.is_text('绑定') or self.is_event_click(self.view.event_keys['account_bind'])
 
     def handle(self):
-        data = {
-            "apikey": API_KEY,
-            "apisecret": API_SECRET,
-        }
-        headers = {'content-type': 'application/json'}
-        userid = User.get_by_openid(self.input['open_id']).user_id
-        addr = 'http://se.zhuangty.com:8000/users/' + userid + '/cancel?username=' + userid
-        r = requests.post(addr, data=data, headers=headers)
-        return_json = r.json()
-        if return_json['message'] == 'Success':
-            return self.reply_text(self.get_message('bind_account'))
-        else:
-            raise LogicError("UnBind Failure")
+        return self.reply_text(self.get_message('bind_account'))
 
 
 class CourseDetailHandler(WeChatHandler):
