@@ -1,6 +1,6 @@
 from wechat.wrapper import WeChatHandler
 from HappyXueTang import settings
-
+from wechat.models import User
 class ErrorHandler(WeChatHandler):
 
     def check(self):
@@ -20,12 +20,20 @@ class DefaultHandler(WeChatHandler):
 
 
 class UnbindOrUnsubscribeHandler(WeChatHandler):
+    def url_bind(self):
+        return settings.get_url('u/bind', {'open_id': self.user.open_id})
+    
     def check(self):
         return self.is_text('解绑')
 
     def handle(self):
-        return self.reply_text('对不起，没有找到您需要的信息:(')
-
+        if self.user.user_id == '' or self.user.user_status == -1:
+            return self.reply_text("对不起，您还未绑定账号")
+        user = User.get_by_openid(self.user.open_id)
+        user.user_status = -1
+        user.save()
+        print(user.user_status)
+        return self.reply_text(self.get_message('unbind_account'))
 
 
 class BindAccountHandler(WeChatHandler):

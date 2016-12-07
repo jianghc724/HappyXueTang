@@ -13,26 +13,32 @@ class UserBind(APIView):
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
-            "userid": self.input['user_id'],
+            "username": self.input['user_id'],
             "password": self.input['password']
         }
         headers = {'content-type': 'application/json'}
-        r = requests.post('http://se.zhuangty.com/students/register', data=data, headers=headers)
+        r = requests.post('http://se.zhuangty.com:8000/users/register', data=json.dumps(data), headers=headers)
         return_json = r.json()
         if return_json['message'] == 'Success':
             user = User.get_by_openid(self.input['open_id'])
+            #print(return_json['information']['studentnumber'])
             user.user_id = return_json['information']['studentnumber']
+            #print(return_json['information']['position'])
             if return_json['information']['position'] == 'teacher':
                 user.user_status = User.STATUS_TEACHER
             else:
+                #print(1)
                 user.user_status = User.STATUS_STUDENT
+            #print(return_json['information']['realname'])
             user.name = return_json['information']['realname']
+            #print(2333)
             user.save()
         else:
             raise ValidateError("Password and Student ID is not matched")
 
     def get(self):
         self.check_input('open_id')
+        print(User.get_by_openid(self.input['open_id']).user_status)
         return User.get_by_openid(self.input['open_id']).user_status
 
     def post(self):
