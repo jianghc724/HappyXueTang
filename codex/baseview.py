@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 #
 import json
@@ -7,6 +8,7 @@ from django.http import HttpResponse
 from django.views.generic import View
 
 from codex.baseerror import BaseError, InputError
+from django.views.decorators.csrf import csrf_exempt
 
 
 __author__ = "Epsirom"
@@ -16,6 +18,7 @@ class BaseView(View):
 
     logger = logging.getLogger('View')
 
+    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         self.request = request
         return self.do_dispatch(*args, **kwargs)
@@ -52,6 +55,7 @@ class APIView(BaseView):
         d.update(self.request.FILES)
         return d
 
+    @csrf_exempt
     def api_wrapper(self, func, *args, **kwargs):
         code = 0
         msg = ''
@@ -87,3 +91,4 @@ class APIView(BaseView):
         for k in keys:
             if k not in self.input:
                 raise InputError('Field "%s" required' % (k, ))
+
