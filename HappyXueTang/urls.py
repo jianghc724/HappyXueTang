@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 # from django.contrib import admin
 
 from wechat.views import CustomWeChatView
+from HappyXueTang.views import StaticFileView
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -24,4 +25,5 @@ urlpatterns = [
     url(r'^api/u/', include('user.urls')),
     #url(r'^api/s/', include('student.urls')),
     #url(r'^api/t/', include('teacher.urls')),
+    url(r'^', StaticFileView.as_view()),
 ]
