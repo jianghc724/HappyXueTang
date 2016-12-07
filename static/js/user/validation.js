@@ -157,10 +157,7 @@ function checkIsDigit(groupid, helpid, inputid, hintName) {
 }
 
 function checkUserid() {
-    if (checkNotEmpty('useridGroup', 'helpUserid', 'inputUserid', '')) {
-        return checkIsDigit('useridGroup', 'helpUserid', 'inputUserid', '学堂账号');
-    }
-    return false;
+    return checkNotEmpty('useridGroup', 'helpUserid', 'inputUserid', '');
 }
 
 function checkPassword() {
