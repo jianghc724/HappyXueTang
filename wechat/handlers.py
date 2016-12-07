@@ -69,10 +69,13 @@ class CourseDetailHandler(WeChatHandler):
         pass
 
 class CourseListHandler(WeChatHandler):
+    def url_list(self):
+        return settings.get_url('u/course/list', {'open_id': self.user.open_id})
 
     def check(self):
         return self.is_text('课程表') or self.is_event_click(self.view.event_keys['get_curriculum_schedule'])
 
     def handle(self):
-        #return self.reply_text(self.get_message('bind_account'))
-        pass
+        if self.user.user_id == '' or self.user.user_status == -1:
+            return self.reply_text(self.get_message('bind_account'))
+        return self.reply_text(self.get_message('list'))

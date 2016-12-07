@@ -55,7 +55,7 @@ class CourseList(APIView):
         }
         headers = {'content-type': 'application/json'}
         userid = User.get_by_openid(self.input['open_id']).user_id
-        addr = 'http://se.zhuangty.com/curriculum/' + userid + '?username=' + userid
+        addr = 'http://se.zhuangty.com:8000/curriculum/' + userid + '?username=' + userid
         r = requests.post(addr, data=data, headers=headers)
         return_json = r.json()
         if return_json['message'] == 'Success':
