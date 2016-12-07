@@ -93,3 +93,12 @@ class CourseListHandler(WeChatHandler):
         if self.user.user_id == '' or self.user.user_status == -1:
             return self.reply_text(self.get_message('bind_account'))
         return self.reply_text(self.get_message('list'))
+
+
+class BulletScreenHandler(WeChatHandler):
+
+    def check(self):
+        return self.is_text_command('弹幕')
+
+    def handle(self):
+        pass
