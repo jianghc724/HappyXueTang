@@ -2,6 +2,10 @@ from wechat.wrapper import WeChatHandler
 from HappyXueTang import settings
 from wechat.models import User
 from django.http import HttpResponse
+from HappyXueTang.settings import API_KEY, API_SECRET
+from codex.baseerror import *
+import requests, json
+
 
 class ErrorHandler(WeChatHandler):
 
@@ -20,6 +24,7 @@ class DefaultHandler(WeChatHandler):
     def handle(self):
         return self.reply_text('我爱学习,学习使我快乐~随便看看吧~')
 
+
 class HelpOrSubscribeHandler(WeChatHandler):
 
     def check(self):
@@ -33,6 +38,7 @@ class HelpOrSubscribeHandler(WeChatHandler):
         })'''
         pass
 
+
 class UnbindOrUnsubscribeHandler(WeChatHandler):
     def check(self):
         return self.is_text('解绑')
@@ -43,8 +49,22 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
         user = User.get_by_openid(self.user.open_id)
         user.user_status = -1
         user.save()
-        print(user.user_status)
-        return self.reply_text(self.get_message('unbind_account'))
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        userid = User.get_by_openid(self.user.open_id).user_id
+        addr = 'http://se.zhuangty.com:8000/users/' + userid + '/cancel?username=' + userid
+        print(addr)
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
+        print(r)
+        print(r.json())
+        return_json = r.json()
+        if return_json['message'] == 'Success':
+            return self.reply_text(self.get_message('unbind_account'))
+        else:
+            raise LogicError("UnBind Failure")
 
 
 class BindAccountHandler(WeChatHandler):
@@ -62,6 +82,7 @@ class CourseDetailHandler(WeChatHandler):
 
     def handle(self):
         pass
+
 
 class CourseListHandler(WeChatHandler):
 
