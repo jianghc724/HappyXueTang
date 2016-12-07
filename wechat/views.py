@@ -99,3 +99,7 @@ class CustomWeChatView(WeChatView):
         ]
     }
 
+    @classmethod
+    def update_menu(cls):
+        cls.lib.set_wechat_menu(cls.menu)
+        return 1
