@@ -59,7 +59,9 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
         headers = {'content-type': 'application/json'}
         userid = User.get_by_openid(self.user.open_id).user_id
         addr = 'http://se.zhuangty.com:8000/users/' + userid + '?username=' + userid
+        print(addr)
         r = requests.post(addr, data=data, headers=headers)
+        print(r)
         return_json = r.json()
         if return_json['message'] == 'Success':
             return self.reply_text(self.get_message('unbind_account'))
