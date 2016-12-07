@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="/css/user/bind.css" rel="stylesheet" type="text/css"/>
+    <title>快乐学堂</title>
+</head>
+
+<body>
+    <div id="wrap">
+    <header></header>
+
+    <div class="theme" id="theme"></div>
+
+    <hr/>
+    <div id="mainbody"></div>
+
+    </div>
+
+    <footer id="footer">
+        <hr/>
+        <a href="" target="_blank">快乐学堂</a>
+        &copy; 2016
+    </footer>
+
+    <script type="text/template" id="tpl-header">
+        <img class="header-img" src="/img/xuetang-header.png"/>
+    </script>
+
+    <script type="text/template" id="tpl-theme">绑定账号</script>
+
+    <script type="text/template" id="tpl-mainbody">
+        {% if isLoading %}
+        <div id="successHolder">
+            <img src="/img/loading.gif" />
+            <div>正在加载……</div>
+        </div>
+        {% elif isValidated >= 0 %}
+            <div id="successHolder">
+            <img src="/img/success.png" />
+            {% if isValidated == 0 %}
+                <p>您已成功绑定学生账户!</p>
+            {% else %}
+                <p>您已成功绑定教师账户!</p>
+            {% endif %}
+            </div>
+        {% else %}
+            <div id="validationHolder">
+            <form class="form-horizontal" role="form" method="post" id="validationForm" onsubmit="return false;">
+                <div class="form-group" id="useridGroup">
+                    <label for="inputUserid" class="col-xs-3 control-label">学堂账号</label>
+                    <div class="col-xs-9">
+                    <input type="tel" class="form-control" id="inputUserid" placeholder="请输入学堂账号!" name="user_id" onblur="checkUserid();">
+                    <span class="help-block" id="helpUserid"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="passwordGroup">
+                    <label for="inputPassword" class="col-xs-3 control-label">密码</label>
+                    <div class="col-xs-9">
+                    <input type="password" class="form-control" id="inputPassword" placeholder="请输入密码!" name="password" onblur="checkPassword();">
+                    <span class="help-block" id="helpPassword"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="submitGroup">
+                    <div class="col-xs-offset-3 col-xs-9">
+                    <button onclick="submitBind();" class="btn btn-default" id="submitBtn">绑定</button>
+                    <p class="help-block" id="helpLoading" style="display: none"><img src="/img/loading.gif">正在绑定，请稍候...</p>
+                    <p class="help-block" id="helpSubmit"></p>
+                    </div>
+                </div>
+            </form>
+            </div>
+        {% endif %}
+    </script>
+    <script src="/3rd/jquery.js"></script>
+    <script src="/3rd/swig.js"></script>
+    <script src="/js/weixin_lib.js"></script>
+    <script src="/js/base.js"></script>
+    <script src="/js/user/validation.js"></script>
+    <script>
+    var locals = {
+        isLoading: true,
+        isValidated: -1,
+        isBinding: false
+    };
+    var render = function () {
+        $('header').html(swig.render($('#tpl-header').html(), {locals: locals}));
+        $('#theme').html(swig.render($('#tpl-theme').html(), {locals: locals}));
+        $('#mainbody').html(swig.render($('#tpl-mainbody').html(), {locals: locals}));
+    };
+    $(function () {
+        console.log(locals.isValidated);
+        render();
+        api.get('/api/u/user/bind', {open_id: urlParam.open_id}, function (data) {
+            locals.isLoading = false;
+            locals.isValidated = data;
+            console.log(locals.isValidated);
+            render();
+        }, dftFail);
+    });
+    var submitBind = function () {
+        submitValidation(urlParam.open_id, function (data) {
+            api.get('/api/u/user/bind', {open_id: urlParam.open_id}, function (data) {
+                locals.isBinding = false;
+                locals.isValidated = data;
+                render();
+            }, dftFail);
+        }, function (errno, errmsg) {
+            //locals.isBinding = false;
+            //locals.isValidated = false;
+            //render();
+            if (errno == 3) {
+                showError('useridGroup', 'helpUserid', '');
+                showError('passwordGroup', 'helpPassword', '账号或密码错误！请输入登录info的学号和密码');
+            } else {
+                showError('submitGroup', 'helpSubmit', '出现了奇怪的错误，我们已经记录下来了，请稍后重试。');
+            }
+            disableAll(false);
+            showLoading(false);
+        });
+    };
+    </script>
+</body>
+</html>
