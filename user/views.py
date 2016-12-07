@@ -42,7 +42,7 @@ class UserBind(APIView):
 
 class CourseList(APIView):
     def get(self):
-        self.check_input('openid')
+        self.check_input('openid', 'week')
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
@@ -72,11 +72,11 @@ class CourseList(APIView):
                 if not stucou:
                     stu_cou = StudentCourse.objects.create(student_id=userid, course_key=courseid, course_number=coursenum)
                     stu_cou.save()
-                result.append({
-                    'name':course_json['coursename'],
-                    'week':weeks,
-                    'time':times
-                })
+                if weeks[self.input['week'] - 1] == 1:
+                    result.append({
+                        'name':course_json['coursename'],
+                        'time':times
+                    })
             return result
         else:
             raise GetInfoError('Get Course List Failed')
