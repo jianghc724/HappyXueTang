@@ -13,14 +13,14 @@ class UserBind(APIView):
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
-            "username": self.input['student_id'],
+            "userid": self.input['user_id'],
             "password": self.input['password']
         }
         headers = {'content-type': 'application/json'}
         r = requests.post('http://se.zhuangty.com/students/register', data=data, headers=headers)
         return_json = r.json()
         if return_json['message'] == 'Success':
-            user = User.get_by_openid(self.input['openid'])
+            user = User.get_by_openid(self.input['open_id'])
             user.user_id = return_json['information']['studentnumber']
             if return_json['information']['position'] == 'teacher':
                 user.user_status = User.STATUS_TEACHER
@@ -32,23 +32,23 @@ class UserBind(APIView):
             raise ValidateError("Password and Student ID is not matched")
 
     def get(self):
-        self.check_input('openid')
-        return User.get_by_openid(self.input['openid']).user_status
+        self.check_input('open_id')
+        return User.get_by_openid(self.input['open_id']).user_status
 
     def post(self):
-        self.check_input('openid', 'student_id', 'password')
+        self.check_input('open_id', 'user_id', 'password')
         self.validate_user()
 
 
 class CourseList(APIView):
     def get(self):
-        self.check_input('openid', 'week')
+        self.check_input('open_id', 'week')
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
         }
         headers = {'content-type': 'application/json'}
-        userid = User.get_by_openid(self.input['openid']).user_id
+        userid = User.get_by_openid(self.input['open_id']).user_id
         addr = 'http://se.zhuangty.com/curriculum/' + userid + '?username=' + userid
         r = requests.post(addr, data=data, headers=headers)
         return_json = r.json()

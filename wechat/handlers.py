@@ -30,13 +30,13 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
 
 class BindAccountHandler(WeChatHandler):
     def url_bind(self):
-        return settings.get_url('u/bind', {'openid':self.user.open_id})
+        return settings.get_url('u/bind', {'open_id':self.user.open_id})
 
     def check(self):
         return self.is_text('绑定') or self.is_event_click(self.view.event_keys['account_bind'])
 
     def handle(self):
-        self.reply_text(self.get_message('bind_account'))
+        return self.reply_text(self.get_message('bind_account'))
 
 
 class CourseDetailHandler(WeChatHandler):
