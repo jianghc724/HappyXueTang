@@ -93,4 +93,28 @@ class CourseList(APIView):
 
 class CourseDetail(APIView):
     def get(self):
-        pass
+        self.check_input('open_id', 'course_id')
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        userid = User.get_by_openid(self.input['open_id']).user_id
+        addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
+        return_json = r.json()
+        if return_json['message'] == 'Success':
+            for course_json in return_json['classes']:
+                course_num_list = course_json['courseid'].split('-')
+                courseid = course_num_list[3]
+                if courseid == self.input['course_id']:
+                    result = {
+                        'name':course_json['coursename'],
+                        'notice':course_json['unreadnotice'],
+                        'file':course_json['newfile'],
+                        'homework':course_json['unsubmittedoperations']
+                    }
+                else:
+                    continue
+            raise LogicError('No such course')
+        raise LogicError('Username Invalid')
