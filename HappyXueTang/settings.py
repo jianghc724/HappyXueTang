@@ -137,6 +137,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+SITE_DOMAIN = CONFIGS['SITE_DOMAIN'].rstrip('/')
+
+def get_url(path, params=None):
+    full_path = urllib.parse.urljoin(SITE_DOMAIN, path)
+    if params:
+        return full_path + ('&' if urllib.parse.urlparse(full_path).query else '?') + urllib.parse.urlencode(params)
+    else:
+        return full_path
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
