@@ -33,16 +33,18 @@ class UserBind(APIView):
 
     def get(self):
         self.check_input('openid')
-        return User.get_by_openid(self.input['openid']).student_id
+        return User.get_by_openid(self.input['openid']).user_status
 
     def post(self):
         self.check_input('openid', 'student_id', 'password')
         self.validate_user()
 
 
-class UserUnBind(APIView):
+class CourseList(APIView):
     def get(self):
         pass
 
-    def post(self):
+
+class CourseDetail(APIView):
+    def get(self):
         pass
