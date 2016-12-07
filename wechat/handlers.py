@@ -4,7 +4,7 @@ from wechat.models import User
 from django.http import HttpResponse
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
-import requests
+import requests, json
 
 
 class ErrorHandler(WeChatHandler):
@@ -60,7 +60,8 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
         userid = User.get_by_openid(self.user.open_id).user_id
         addr = 'http://se.zhuangty.com:8000/users/' + userid + '/cancel?username=' + userid
         print(addr)
-        r = requests.post(addr, data=data, headers=headers)
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
+        print(r)
         print(r.json())
         return_json = r.json()
         if return_json['message'] == 'Success':
