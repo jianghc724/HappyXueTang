@@ -56,21 +56,22 @@ class CourseList(APIView):
         headers = {'content-type': 'application/json'}
         userid = User.get_by_openid(self.input['open_id']).user_id
         addr = 'http://se.zhuangty.com:8000/curriculum/' + userid + '?username=' + userid
-        r = requests.post(addr, data=data, headers=headers)
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
         return_json = r.json()
         if return_json['message'] == 'Success':
             result = []
             for course_json in return_json['classes']:
-                courseid = course_json['coursid']
-                coursenum = course_json['coursesequence']
+                course_num_list = course_json['courseid'].split('-')
+                courseid = course_num_list[3]
+                coursenum = int(course_num_list[4])
                 weeks = 0
                 for week in course_json['week']:
-                    weeks = weeks * 2 + week
+                    weeks = weeks * 2 + int(week)
                 times = course_json['time']
                 time = times[0] * 10 + times[1]
-                courses = Course.objects.filter(course_id=courseid).filter(course_number=coursenum).filter(week=weeks).filter(course_time=time)
+                courses = Course.objects.filter(key=courseid).filter(number=coursenum).filter(week=weeks).filter(course_time=time)
                 if not courses:
-                    cou = Course.objects.create(name=course_json['coursename'], key=course_json['coursid'], teacher=course_json['teacher'],
+                    cou = Course.objects.create(name=course_json['coursename'], key=courseid, teacher=course_json['teacher'],
                                                 week=weeks, location=course_json['classroom'], course_time=time, number=coursenum)
                     cou.save()
 
@@ -78,7 +79,9 @@ class CourseList(APIView):
                 if not stucou:
                     stu_cou = StudentCourse.objects.create(student_id=userid, course_key=courseid, course_number=coursenum)
                     stu_cou.save()
-                if weeks[self.input['week'] - 1] == 1:
+                print(23333)
+                print(self.input['week'])
+                if int(course_json['week'][int(self.input['week']) - 1]) == 1:
                     result.append({
                         'name':course_json['coursename'],
                         'time':times

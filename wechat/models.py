@@ -26,14 +26,14 @@ class Course(models.Model):
     key = models.CharField(max_length=16, db_index=True)
     number = models.IntegerField()
     teacher = models.CharField(max_length=32)
-    semester = models.IntegerField()
+    semester = models.IntegerField(default=3)
     week = models.IntegerField()
     location = models.CharField(max_length=128)
     course_time = models.IntegerField()
-    exam_start_time = models.DateTimeField()
-    exam_end_time = models.DateTimeField()
-    exam_location = models.CharField(max_length=128)
-    rating = models.FloatField()
+    exam_start_time = models.DateTimeField(null=True, blank=True)
+    exam_end_time = models.DateTimeField(null=True, blank=True)
+    exam_location = models.CharField(max_length=128,null=True, blank=True)
+    rating = models.FloatField(null=True, blank=True)
 
     COURSE_CANCELLED = -1
     COURSE_AUTUMN_ONLY = 1
@@ -84,9 +84,9 @@ class StudentCourse(models.Model):
     course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
     semester = models.CharField(max_length=8)
-    status = models.IntegerField()
-    grading_policy = models.IntegerField()
-    grade = models.IntegerField()
+    status = models.IntegerField(default=0, null=True, blank=True)
+    grading_policy = models.IntegerField(null=True, blank=True)
+    grade = models.IntegerField(null=True, blank=True)
 
     COURSE_WITHDRAWN = -1
     COURSE_IN_PROGRESS = 0

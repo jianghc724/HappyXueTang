@@ -44,6 +44,7 @@ class WeChatHandler(object):
         )
 
     def reply_text(self, content):
+        print(content)
         return get_template('text.xml').render(self.get_context(
             Content=content
         ))
@@ -80,6 +81,11 @@ class WeChatHandler(object):
     def is_text_command(self, *commands):
         return self.is_msg_type('text') and ((self.input['Content'].split() or [None])[0] in commands)
 
+    def url_bind(self):
+        return settings.get_url('u/bind', {'open_id': self.user.open_id})
+
+    def url_list(self):
+        return settings.get_url('student/course_list', {'open_id': self.user.open_id})
 
 class WeChatEmptyHandler(WeChatHandler):
 

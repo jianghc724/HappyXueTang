@@ -34,9 +34,6 @@ class HelpOrSubscribeHandler(WeChatHandler):
         pass
 
 class UnbindOrUnsubscribeHandler(WeChatHandler):
-    def url_bind(self):
-        return settings.get_url('u/bind', {'open_id': self.user.open_id})
-
     def check(self):
         return self.is_text('解绑')
 
@@ -51,8 +48,6 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
 
 
 class BindAccountHandler(WeChatHandler):
-    def url_bind(self):
-        return settings.get_url('u/bind', {'open_id':self.user.open_id})
 
     def check(self):
         return self.is_text('绑定') or self.is_event_click(self.view.event_keys['account_bind'])
@@ -69,8 +64,6 @@ class CourseDetailHandler(WeChatHandler):
         pass
 
 class CourseListHandler(WeChatHandler):
-    def url_list(self):
-        return settings.get_url('u/course/list', {'open_id': self.user.open_id})
 
     def check(self):
         return self.is_text('课程表') or self.is_event_click(self.view.event_keys['get_curriculum_schedule'])

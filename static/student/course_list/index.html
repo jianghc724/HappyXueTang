@@ -4,17 +4,13 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="/css/base.css" rel="stylesheet" type="text/css" />
-    <link href="/css/user/bind.css" rel="stylesheet" type="text/css"/>
+    <link href="/3rd/st/container.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/3rd/st/grid.min.css" rel="stylesheet" type="text/css"/>
     <title>快乐学堂</title>
 </head>
 
 <body>
     <div id="wrap">
-    <header></header>
-
-    <div class="theme" id="theme"></div>
-
-    <hr/>
     <div id="mainbody"></div>
 
     </div>
@@ -31,15 +27,27 @@
             <img src="/img/loading.gif" />
             <div>正在加载……</div>
         </div>
-        {% elif courses.length > 0 %}
-            <div> 哈哈哈</div>
+        {% else %}
+            <div id="curriculumn" class="ui grid">
+                <div id="week-banner" class="three column row">
+                </div>
+                <div id="week-day" class="seven column row">
+                </div>
+                <div id="course-content" class="two column">
+                    <div id="courses" class="six row column">
+                        jkasljdfklas
+                    </div>
+                    <div id="courses" class="six row column">
+                        halsflksajl
+                    </div>
+                </div>
+            </div>
         {% endif %}
     </script>
     <script src="/3rd/jquery.js"></script>
     <script src="/3rd/swig.js"></script>
     <script src="/js/weixin_lib.js"></script>
     <script src="/js/base.js"></script>
-    <script src="/js/student/validation.js"></script>
     <script>
     var locals = {
         isLoading: true,
