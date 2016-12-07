@@ -57,7 +57,7 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
             "apisecret": API_SECRET,
         }
         headers = {'content-type': 'application/json'}
-        userid = User.get_by_openid(self.input['open_id']).user_id
+        userid = User.get_by_openid(self.user.open_id).user_id
         addr = 'http://se.zhuangty.com:8000/curriculum/' + userid + '?username=' + userid
         r = requests.post(addr, data=data, headers=headers)
         return_json = r.json()
