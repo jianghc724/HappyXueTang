@@ -13,30 +13,29 @@
     {% elif isValidated %}
     <div id="successHolder">
         <img src="/img/success.png" />
-        <p>认证成功！</p>
-        <p>您已经可以使用“紫荆之声”的全部功能了！</p>
+        <p>绑定成功！</p>
     </div>
     {% else %}
     <div id="validationHolder">
         <form class="form-horizontal" role="form" method="post" id="validationForm" onsubmit="return false;">
           <div class="form-group" id="usernameGroup">
-            <label for="inputUsername" class="col-xs-3 control-label">学号</label>
+            <label for="inputUsername" class="col-xs-3 control-label">学堂账号</label>
             <div class="col-xs-9">
-              <input type="tel" class="form-control" id="inputUsername" placeholder="请输入您的学号" name="student_id" onblur="checkUsername();">
+              <input type="tel" class="form-control" id="inputUsername" placeholder="请输入您的学堂账号" name="student_id" onblur="checkUsername();">
               <span class="help-block" id="helpUsername"></span>
             </div>
           </div>
           <div class="form-group" id="passwordGroup">
             <label for="inputPassword" class="col-xs-3 control-label">密码</label>
             <div class="col-xs-9">
-              <input type="password" class="form-control" id="inputPassword" placeholder="使用info密码进行登录" name="password" onblur="checkPassword();">
+              <input type="password" class="form-control" id="inputPassword" placeholder="使用学堂密码进行登录" name="password" onblur="checkPassword();">
               <span class="help-block" id="helpPassword"></span>
             </div>
           </div>
           <div class="form-group" id="submitGroup">
             <div class="col-xs-offset-3 col-xs-9">
-              <button onclick="submitBind();" class="btn btn-default" id="submitBtn">认证</button>
-              <p class="help-block" id="helpLoading" style="display: none"><img src="/img/loading.gif">正在认证，请稍候...</p>
+              <button onclick="submitBind();" class="btn btn-default" id="submitBtn">绑定</button>
+              <p class="help-block" id="helpLoading" style="display: none"><img src="/img/loading.gif">正在绑定，请稍候...</p>
               <p class="help-block" id="helpSubmit"></p>
             </div>
           </div>
@@ -44,18 +43,7 @@
     </div>
     {% endif %}
 {% endblock %}
-{% block script %}
-{% endblock %}
-
-
-
-<script src="/3rd/jquery.js"></script>
-<script src="/3rd/swig.js"></script>
-<script src="/js/weixin_lib.js"></script>
-<script src="/js/base.js"></script>
-<script src="/js/validation.js"></script>
-
-<script>
+    <script>
     var locals = {
         isLoading: true,
         isValidated: false,
@@ -95,6 +83,12 @@
             showLoading(false);
         });
     };
-</script>
+    </script>
+{% block script %}
+{% endblock %}
+
+<script src="/js/base.js"></script>
+<script src="/js/validation.js"></script>
+
 </body>
 </html>

@@ -21,4 +21,7 @@ from wechat.views import CustomWeChatView
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
     url(r'^wechat/?$', CustomWeChatView.as_view()),
+    url(r'^api/u/', include('user.urls')),
+    #url(r'^api/s/', include('student.urls')),
+    #url(r'^api/t/', include('teacher.urls')),
 ]
