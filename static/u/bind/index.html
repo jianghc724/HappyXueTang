@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{% block title %}快乐学堂{% endblock %}</title>
+    <title>快乐学堂</title>
 </head>
 
 <body>
@@ -79,6 +79,8 @@
         api.get('/api/u/user/bind', {open_id: urlParam.open_id}, function (data) {
             locals.isLoading = false;
             locals.isValidated = data;
+            console.log(data);
+            console.log(isValidated);
             render();
         }, dftFail);
     });

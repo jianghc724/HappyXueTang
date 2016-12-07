@@ -5,7 +5,7 @@ from codex.baseerror import LogicError
 
 class User(models.Model):
     open_id = models.CharField(max_length=64, unique=True, db_index=True)
-    user_id = models.CharField(max_length=16, unique=True, db_index=True)
+    user_id = models.CharField(max_length=16, db_index=True)
     user_status = models.IntegerField(default=-1)
     name = models.CharField(max_length=32)
 
