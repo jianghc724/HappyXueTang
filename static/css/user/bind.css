@@ -1,7 +1,17 @@
-body{
-    height:100%;
+.header-img {
+    width:100%;
+    position:relative;
+    left:0;
+}
+#successHolder {
     width:100%;
 }
-.header-img{
-    height:10%;
+
+#successHolder img {
+    width:60%;
+    position:relative;
+}
+#successHolder, div {
+    text-align:center;
+    font-size:12px;
 }

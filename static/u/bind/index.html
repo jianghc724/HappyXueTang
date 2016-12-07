@@ -29,14 +29,13 @@
         <img class="header-img" src="/img/xuetang-header.png"/>
     </script>
 
-    <script type="text/template" id="tpl-theme">
-        绑定网络学堂账号
-    </script>
+    <script type="text/template" id="tpl-theme">绑定账号</script>
 
     <script type="text/template" id="tpl-mainbody">
         {% if isLoading %}
         <div id="successHolder">
             <img src="/img/loading.gif" />
+            <div>正在加载……</div>
         </div>
         {% elif isValidated >= 0 %}
             <div id="successHolder">
@@ -101,9 +100,11 @@
     });
     var submitBind = function () {
         submitValidation(urlParam.open_id, function (data) {
-            locals.isBinding = false;
-            locals.isValidated = (data >= 0);
-            render();
+            api.get('/api/u/user/bind', {open_id: urlParam.open_id}, function (data) {
+                locals.isBinding = false;
+                locals.isValidated = data;
+                render();
+            }, dftFail);
         }, function (errno, errmsg) {
             //locals.isBinding = false;
             //locals.isValidated = false;
