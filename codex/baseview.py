@@ -7,23 +7,22 @@ from django.http import HttpResponse
 from django.views.generic import View
 
 from codex.baseerror import BaseError, InputError
-from django.views.decorators.csrf import csrf_exempt
+
+
+__author__ = "Epsirom"
 
 
 class BaseView(View):
 
     logger = logging.getLogger('View')
 
-    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         self.request = request
         return self.do_dispatch(*args, **kwargs)
 
-    @csrf_exempt
     def do_dispatch(self, *args, **kwargs):
         raise NotImplementedError('You should implement do_dispatch() in sub-class of BaseView')
 
-    @csrf_exempt
     def http_method_not_allowed(self, *args, **kwargs):
         return super(BaseView, self).http_method_not_allowed(self.request, *args, **kwargs)
 
@@ -32,7 +31,6 @@ class APIView(BaseView):
 
     logger = logging.getLogger('API')
 
-    @csrf_exempt
     def do_dispatch(self, *args, **kwargs):
         self.input = self.query or self.body
         handler = getattr(self, self.request.method.lower(), None)
@@ -40,12 +38,10 @@ class APIView(BaseView):
             return self.http_method_not_allowed()
         return self.api_wrapper(handler, *args, **kwargs)
 
-    @csrf_exempt
     @property
     def body(self):
         return json.loads(self.request.body.decode() or '{}')
 
-    @csrf_exempt
     @property
     def query(self):
         d = getattr(self.request, self.request.method, None)
@@ -56,7 +52,6 @@ class APIView(BaseView):
         d.update(self.request.FILES)
         return d
 
-    @csrf_exempt
     def api_wrapper(self, func, *args, **kwargs):
         code = 0
         msg = ''
@@ -88,7 +83,6 @@ class APIView(BaseView):
             })
         return HttpResponse(response, content_type='application/json')
 
-    @csrf_exempt
     def check_input(self, *keys):
         for k in keys:
             if k not in self.input:
