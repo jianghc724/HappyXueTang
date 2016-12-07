@@ -29,7 +29,7 @@ class Course(models.Model):
     semester = models.IntegerField()
     week = models.IntegerField()
     location = models.CharField(max_length=128)
-    course_time = models.CharField(max_length=128)
+    course_time = models.IntegerField()
     exam_start_time = models.DateTimeField()
     exam_end_time = models.DateTimeField()
     exam_location = models.CharField(max_length=128)
