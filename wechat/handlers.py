@@ -24,7 +24,8 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
         return self.is_text('解绑')
 
     def handle(self):
-        pass
+        return self.reply_text('对不起，没有找到您需要的信息:(')
+
 
 
 class BindAccountHandler(WeChatHandler):
@@ -32,7 +33,7 @@ class BindAccountHandler(WeChatHandler):
         return settings.get_url('u/bind', {'openid':self.user.open_id})
 
     def check(self):
-        return self.is_text('绑定')
+        return self.is_text('绑定') or self.is_event_click(self.view.event_keys['account_bind'])
 
     def handle(self):
         self.reply_text(self.get_message('bind_account'))
