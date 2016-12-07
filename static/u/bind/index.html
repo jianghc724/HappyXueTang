@@ -82,7 +82,7 @@
     <script>
     var locals = {
         isLoading: true,
-        isValidated: false,
+        isValidated: -1,
         isBinding: false
     };
     var render = function () {
@@ -91,10 +91,12 @@
         $('#mainbody').html(swig.render($('#tpl-mainbody').html(), {locals: locals}));
     };
     $(function () {
+        console.log(locals.isValidated);
         render();
         api.get('/api/u/user/bind', {open_id: urlParam.open_id}, function (data) {
             locals.isLoading = false;
             locals.isValidated = data;
+            console.log(locals.isValidated);
             render();
         }, dftFail);
     });

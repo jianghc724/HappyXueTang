@@ -38,6 +38,7 @@ class UserBind(APIView):
 
     def get(self):
         self.check_input('open_id')
+        print(User.get_by_openid(self.input['open_id']).user_status)
         return User.get_by_openid(self.input['open_id']).user_status
 
     def post(self):
