@@ -4,8 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="/css/base.css" rel="stylesheet" type="text/css" />
-    <link href="/3rd/st/container.min.css" rel="stylesheet" type="text/css"/>
-    <link href="/3rd/st/grid.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <title>快乐学堂</title>
 </head>
 
@@ -30,17 +29,112 @@
         {% else %}
             <div id="curriculumn" class="ui grid">
                 <div id="week-banner" class="three column row">
-                </div>
-                <div id="week-day" class="seven column row">
-                </div>
-                <div id="course-content" class="two column">
-                    <div id="courses" class="six row column">
-                        jkasljdfklas
+                    <div class = "column"></div>
+                    <div id="show-week" class = "column">
+                        <div id="week" class ="ui inline dropdown">
+                            <div class="text">第十三周</div>
+                            <i class="dropdwon icon"></i>
+                            <div class="menu">
+                                <div class="item">第一周</div>
+                                <div class="item">第二周</div>
+                                <div class="item">第三周</div>
+                                <div class="item">第四周</div>
+                                <div class="item">第五周</div>
+                                <div class="item">第六周</div>
+                                <div class="item">第七周</div>
+                                <div class="item">第八周</div>
+                                <div class="item">第九周</div>
+                                <div class="item">第十周</div>
+                                <div class="item">第十一周</div>
+                                <div class="item">第十二周</div>
+                                <div class="item">第十三周</div>
+                                <div class="item">第十四周</div>
+                                <div class="item">第十五周</div>
+                                <div class="item">第十六周</div>
+
+                            </div>
+                        </div>
                     </div>
-                    <div id="courses" class="six row column">
-                        halsflksajl
-                    </div>
+                    <div class = "column"></div>
                 </div>
+                <hr>
+                <div id="week-day" class="eight column row">
+                    <div id="week-day-0" class = "column"></div>
+                    <div id="week-day-1" class = "column"></div>
+                    <div id="week-day-2" class = "column"></div>
+                    <div id="week-day-3" class = "column"></div>
+                    <div id="week-day-4" class = "column"></div>
+                    <div id="week-day-5" class = "column"></div>
+                    <div id="week-day-6" class = "column"></div>
+                    <div id="week-day-7" class = "column"></div>
+                </div>
+                <hr>
+                <div id="course-1" class="eight column row">
+                    <div id="01" class = "column"></div>
+                    <div id="11" class = "column"></div>
+                    <div id="21" class = "column"></div>
+                    <div id="31" class = "column"></div>
+                    <div id="41" class = "column"></div>
+                    <div id="51" class = "column"></div>
+                    <div id="61" class = "column"></div>
+                    <div id="71" class = "column"></div>
+                </div>
+                <hr>
+                <div id="course-2" class="eight column row">
+                    <div id="02" class = "column"></div>
+                    <div id="12" class = "column"></div>
+                    <div id="22" class = "column"></div>
+                    <div id="32" class = "column"></div>
+                    <div id="42" class = "column"></div>
+                    <div id="52" class = "column"></div>
+                    <div id="62" class = "column"></div>
+                    <div id="72" class = "column"></div>
+                </div>
+                <hr>
+                <div id="course-3" class="eight column row">
+                    <div id="03" class = "column"></div>
+                    <div id="13" class = "column"></div>
+                    <div id="23" class = "column"></div>
+                    <div id="33" class = "column"></div>
+                    <div id="43" class = "column"></div>
+                    <div id="53" class = "column"></div>
+                    <div id="63" class = "column"></div>
+                    <div id="73" class = "column"></div>
+                </div>
+                <hr>
+                <div id="course-4" class="eight column row">
+                    <div id="04" class = "column"></div>
+                    <div id="14" class = "column"></div>
+                    <div id="24" class = "column"></div>
+                    <div id="34" class = "column"></div>
+                    <div id="44" class = "column"></div>
+                    <div id="54" class = "column"></div>
+                    <div id="64" class = "column"></div>
+                    <div id="74" class = "column"></div>
+                </div>
+                <hr>
+                <div id="course-5" class="eight column row">
+                    <div id="05" class = "column"></div>
+                    <div id="15" class = "column"></div>
+                    <div id="25" class = "column"></div>
+                    <div id="35" class = "column"></div>
+                    <div id="45" class = "column"></div>
+                    <div id="55" class = "column"></div>
+                    <div id="65" class = "column"></div>
+                    <div id="75" class = "column"></div>
+                </div>
+                <hr>
+                <div id="course-6" class="eight column row">
+                    <div id="06" class = "column"></div>
+                    <div id="16" class = "column"></div>
+                    <div id="26" class = "column"></div>
+                    <div id="36" class = "column"></div>
+                    <div id="46" class = "column"></div>
+                    <div id="56" class = "column"></div>
+                    <div id="66" class = "column"></div>
+                    <div id="76" class = "column"></div>
+                </div>
+                <hr>
             </div>
         {% endif %}
     </script>
@@ -48,6 +142,7 @@
     <script src="/3rd/swig.js"></script>
     <script src="/js/weixin_lib.js"></script>
     <script src="/js/base.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
     <script>
     var locals = {
         isLoading: true,

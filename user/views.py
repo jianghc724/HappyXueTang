@@ -38,7 +38,7 @@ class UserBind(APIView):
 
     def get(self):
         self.check_input('open_id')
-        print(User.get_by_openid(self.input['open_id']).user_status)
+        #print(User.get_by_openid(self.input['open_id']).user_status)
         return User.get_by_openid(self.input['open_id']).user_status
 
     def post(self):
@@ -79,8 +79,7 @@ class CourseList(APIView):
                 if not stucou:
                     stu_cou = StudentCourse.objects.create(student_id=userid, course_key=courseid, course_number=coursenum)
                     stu_cou.save()
-                print(23333)
-                print(self.input['week'])
+                #print(self.input['week'])
                 if int(course_json['week'][int(self.input['week']) - 1]) == 1:
                     result.append({
                         'name':course_json['coursename'],
