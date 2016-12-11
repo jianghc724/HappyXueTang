@@ -3,6 +3,7 @@ from codex.baseview import APIView
 
 import requests
 import json
+from datetime import datetime
 
 from wechat.models import User, Course, StudentCourse
 from HappyXueTang.settings import API_KEY, API_SECRET
@@ -116,4 +117,33 @@ class CourseDetail(APIView):
                 else:
                     continue
             raise LogicError('No such course')
+        raise LogicError('Username Invalid')
+
+
+class GetDeadline(APIView):
+    def get(self):
+        self.check_input('open_id')
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        userid = User.get_by_openid(self.input['open_id']).user_id
+        addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
+        return_json = r.json()
+        # current_time = 
+        if return_json['message'] == 'Success':
+            result = []
+            for course_json in return_json['classes']:
+                course_num_list = course_json['courseid'].split('-')
+                courseid = course_num_list[3]
+                addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid \
+                       + '/assignments?username=' + userid
+                r = requests.post(addr, data=json.dumps(data), headers=headers)
+                _return_json = r.json()
+                if _return_json['message'] == 'Success':
+                    pass
+                else:
+                    pass
         raise LogicError('Username Invalid')
