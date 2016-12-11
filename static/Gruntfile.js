@@ -1,7 +1,7 @@
 <!-- code begin -->
 module.exports = function(grunt) {
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),  
+    pkg: grunt.file.readJSON('package.json'),
     less: {
       development: {
         options: {
@@ -10,7 +10,8 @@ module.exports = function(grunt) {
         },
         files: {
           "css/user/bind.css": "less/user/bind.less",
-          "css/base.css": "less/base.less"
+          "css/base.css": "less/base.less",
+          "css/user/ddlcenter.css": "less/user/ddlcenter.less"
         }
       },
       production: {
@@ -25,10 +26,11 @@ module.exports = function(grunt) {
         },
         files: {
           "css/user/bind.css": "less/user/bind.less",
-          "css/base.css": "less/base.less"
+          "css/base.css": "less/base.less",
+          "css/user/ddlcenter.css": "less/user/ddlcenter.less"
         }
       }
-    },     
+    },
     watch: {
       grunt: {
         files: ['Gruntfile.js']
@@ -71,7 +73,7 @@ module.exports = function(grunt) {
           livereload: true,
         }
       },
-    }    
+    }
   });
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
