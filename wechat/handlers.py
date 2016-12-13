@@ -98,7 +98,7 @@ class CourseListHandler(WeChatHandler):
 class BulletScreenHandler(WeChatHandler):
 
     def check(self):
-        return self.is_text_command('弹幕')
+        return self.is_text_command('弹幕') or self.is_event_click(self.view.event_keys['bullet_screen'])
 
     def handle(self):
-        pass
+        return self.reply_text(self.get_message('class_talk'))
