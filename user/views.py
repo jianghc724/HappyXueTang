@@ -75,6 +75,9 @@ class CourseList(APIView):
                     cou = Course.objects.create(name=course_json['coursename'], key=courseid, teacher=course_json['teacher'],
                                                 week=weeks, location=course_json['classroom'], course_time=time, number=coursenum)
                     cou.save()
+                else:
+                    # judge semester
+                    pass
 
                 stucou = StudentCourse.objects.filter(student_id=userid).filter(course_key=courseid).filter(course_number=coursenum)
                 if not stucou:
@@ -109,10 +112,10 @@ class CourseDetail(APIView):
                 courseid = course_num_list[3]
                 if courseid == self.input['course_id']:
                     result = {
-                        'name':course_json['coursename'],
-                        'notice':course_json['unreadnotice'],
-                        'file':course_json['newfile'],
-                        'homework':course_json['unsubmittedoperations']
+                        'name': course_json['coursename'],
+                        'notice': course_json['unreadnotice'],
+                        'file': course_json['newfile'],
+                        'homework': course_json['unsubmittedoperations']
                     }
                 else:
                     continue
@@ -163,3 +166,17 @@ class GetDeadline(APIView):
                         raise LogicError('Unknown error')
             return result
         raise LogicError('Username Invalid')
+
+
+class CommentOverview(APIView):
+    def get(self):
+        pass
+
+
+class MakeComment(APIView):
+    def get(self):
+        pass
+
+    def post(self):
+        pass
+    

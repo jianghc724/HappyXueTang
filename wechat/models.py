@@ -33,7 +33,10 @@ class Course(models.Model):
     exam_start_time = models.DateTimeField(null=True, blank=True)
     exam_end_time = models.DateTimeField(null=True, blank=True)
     exam_location = models.CharField(max_length=128,null=True, blank=True)
-    rating = models.FloatField(null=True, blank=True)
+    rating_people = models.IntegerField(default=0)
+    rating_one = models.FloatField(default=-1)
+    rating_two = models.FloatField(default=-1)
+    rating_three = models.FloatField(default=-1)
 
     COURSE_CANCELLED = -1
     COURSE_AUTUMN_ONLY = 1
@@ -73,9 +76,11 @@ class Comment(models.Model):
     student_id = models.CharField(max_length=16)
     course_key = models.CharField(max_length=16,db_index=True)
     course_number = models.IntegerField()
-    semester = models.CharField(max_length=8)
+    semester = models.CharField(max_length=16)
     rating_time = models.DateTimeField()
-    rating = models.IntegerField()
+    rating_one = models.IntegerField()
+    rating_two = models.IntegerField()
+    rating_three = models.IntegerField()
     rating_comment = models.TextField()
 
 
@@ -83,7 +88,7 @@ class StudentCourse(models.Model):
     student_id = models.CharField(max_length=16, db_index=True)
     course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
-    semester = models.CharField(max_length=8)
+    semester = models.CharField(max_length=16)
     status = models.IntegerField(default=0, null=True, blank=True)
     grading_policy = models.IntegerField(null=True, blank=True)
     grade = models.IntegerField(null=True, blank=True)
