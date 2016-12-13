@@ -132,12 +132,9 @@ class GetDeadline(APIView):
         addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
         r = requests.post(addr, data=json.dumps(data), headers=headers)
         return_json = r.json()
-        # current_time =
+        current_time = datetime.now().timestamp()
         if return_json['message'] == 'Success':
-            result = {
-                'index':[], #描述ddl总体状况
-                'assignments':[], #显示所有ddl
-            }
+            result = []
             for course_json in return_json['classes']:
                 course_num_list = course_json['courseid'].split('-')
                 courseid = course_num_list[3]
@@ -145,31 +142,18 @@ class GetDeadline(APIView):
                        + '/assignments?username=' + userid
                 r = requests.post(addr, data=json.dumps(data), headers=headers)
                 _return_json = r.json()
-                print(_return_json)
+                # print(_return_json)
                 if _return_json['message'] == 'Success':
                     assignments = _return_json['assignments']
-                    total = len(assignments)
-                    complete = 0
                     for assignment in assignments:
-                        result['assignments'].append({
-                            'course':course_json['coursename'],
-                            'title':assignment['title'],
-                            'startdate':assignment['startdate'], #时间戳
-                            'duedate':assignment['duedate'], #时间戳
-                            'state':assignment['state'], #提交状况（中文）
-                            'detail':assignment['detail'],
-                            'scored':assignment['scored'],
-                            'grade':assignment['grade'],
-                            'comment':assignment['comment'],
-                        })
-                        if assignment['state'] == '已经提交':
-                            complete += 1
-                    result['index'].append({
-                        'course':course_json['coursename'],
-                        'total':total,
-                        'complete':complete,
-                        'due':(total - complete),
-                    })
+                        if current_time > assignment['duedate'] and assignment['state'] == '尚未提交':
+                            result.append({
+                                'course_name':course_json['coursename'],
+                                'homework_title':assignment['title'],
+                                'homework_start_date':assignment['startdate'], #时间戳
+                                'homework_end_date':assignment['duedate'], #时间戳
+                                'current_time':current_time,
+                            })
                 else:
                     if _return_json['reason'] == 'Invalid username':
                         raise LogicError('Username Invalid')
