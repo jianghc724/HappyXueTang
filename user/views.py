@@ -3,6 +3,7 @@ from codex.baseview import APIView
 
 import requests
 import json
+from datetime import datetime
 
 from wechat.models import User, Course, StudentCourse
 from HappyXueTang.settings import API_KEY, API_SECRET
@@ -117,6 +118,7 @@ class CourseDetail(APIView):
                     continue
             raise LogicError('No such course')
         raise LogicError('Username Invalid')
+
 
 class GetDeadline(APIView):
     def get(self):
