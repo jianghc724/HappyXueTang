@@ -32,7 +32,7 @@ class Course(models.Model):
     course_time = models.IntegerField()
     exam_start_time = models.DateTimeField(null=True, blank=True)
     exam_end_time = models.DateTimeField(null=True, blank=True)
-    exam_location = models.CharField(max_length=128,null=True, blank=True)
+    exam_location = models.CharField(max_length=128, null=True, blank=True)
     rating_people = models.IntegerField(default=0)
     rating_one = models.FloatField(default=-1)
     rating_two = models.FloatField(default=-1)
@@ -46,7 +46,7 @@ class Course(models.Model):
 
 
 class Notice(models.Model):
-    course_key = models.CharField(max_length=16,db_index=True)
+    course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
     title = models.CharField(max_length=32)
     content = models.TextField()
@@ -55,7 +55,7 @@ class Notice(models.Model):
 
 
 class Homework(models.Model):
-    course_key = models.CharField(max_length=16,db_index=True)
+    course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
     title = models.CharField(max_length=32)
     instructions = models.TextField()
@@ -66,7 +66,7 @@ class Homework(models.Model):
 
 class Discussion(models.Model):
     student_id = models.CharField(max_length=16)
-    course_key = models.CharField(max_length=16,db_index=True)
+    course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
     release_time = models.DateTimeField()
     content = models.TextField()
@@ -74,7 +74,7 @@ class Discussion(models.Model):
 
 class Comment(models.Model):
     student_id = models.CharField(max_length=16)
-    course_key = models.CharField(max_length=16,db_index=True)
+    course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
     semester = models.CharField(max_length=16)
     rating_time = models.DateTimeField()

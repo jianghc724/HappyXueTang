@@ -5,7 +5,7 @@ import requests
 import json
 from datetime import datetime
 
-from wechat.models import User, Course, StudentCourse
+from wechat.models import *
 from HappyXueTang.settings import API_KEY, API_SECRET
 
 
@@ -117,10 +117,11 @@ class CourseDetail(APIView):
                         'file': course_json['newfile'],
                         'homework': course_json['unsubmittedoperations']
                     }
+                    return result
                 else:
                     continue
-            raise LogicError('No such course')
-        raise LogicError('Username Invalid')
+            raise CourseError('No such course')
+        raise GetInfoError('Username Invalid')
 
 
 class GetDeadline(APIView):
@@ -153,24 +154,67 @@ class GetDeadline(APIView):
                             result.append({
                                 'course_name':course_json['coursename'],
                                 'homework_title':assignment['title'],
-                                'homework_start_date':assignment['startdate'], #时间戳
-                                'homework_end_date':assignment['duedate'], #时间戳
+                                'homework_start_date':assignment['startdate'],
+                                'homework_end_date':assignment['duedate'],
                                 'current_time':current_time,
                             })
                 else:
                     if _return_json['reason'] == 'Invalid username':
-                        raise LogicError('Username Invalid')
+                        raise GetInfoError('Username Invalid')
                     elif _return_json['reason'] == 'Invalid courseID':
-                        raise LogicError('CourseID Invalid')
+                        raise GetInfoError('CourseID Invalid')
                     else:
-                        raise LogicError('Unknown error')
+                        raise GetInfoError('Unknown error')
             return result
-        raise LogicError('Username Invalid')
+        raise GetInfoError('Username Invalid')
 
 
 class CommentOverview(APIView):
     def get(self):
-        pass
+        self.check_input('course_id', 'course_number')
+        try:
+            cou = Course.objects.filter(key=self.input['course_id']).get(number=self.input['course_number'])
+        except:
+            raise CourseError('No such course')
+        result = {
+            'ratings': [],
+            'comments': [],
+        }
+        result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
+        result['comments'] = self.get_comment_list(cou)
+        return result
+
+    def get_comment_list(self, cou):
+        all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
+        comments = []
+        for comment in all_comments:
+            if len(comments) == 10 and comment.rating_time < comments[9]['rating_time']:
+                continue
+            student = User.objects.get(user_id=comment.student_id)
+            com = {
+                'student': student.name,
+                'time':comment.rating_time,
+                'comment':comment.rating_comment,
+            }
+            if len(comments) == 10:
+                comments[9] = com
+            else:
+                comments[len(comments)] = com
+            comments = self.sort_comment_list(comments)
+        return comments
+
+    def sort_comment_list(self, comment_list):
+        i = len(comment_list) - 1
+        while True:
+            if i == 0:
+                break
+            if comment_list[i]['time'] < comment_list[i - 1]['time']:
+                break
+            temp_com = comment_list[i]
+            comment_list[i] = comment_list[i - 1]
+            comment_list[i - 1] = temp_com
+            i = i - 1
+        return comment_list
 
 
 class MakeComment(APIView):
@@ -179,4 +223,3 @@ class MakeComment(APIView):
 
     def post(self):
         pass
-    

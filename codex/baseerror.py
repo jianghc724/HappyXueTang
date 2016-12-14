@@ -35,3 +35,8 @@ class GetInfoError(BaseError):
 
     def __init__(self, msg):
         super(GetInfoError, self).__init__(4, msg)
+
+class CourseError(BaseError):
+
+    def __init__(self, msg):
+        super(GetInfoError, self).__init__(5, msg)
