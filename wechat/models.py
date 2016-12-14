@@ -76,7 +76,7 @@ class Comment(models.Model):
     student_id = models.CharField(max_length=16)
     course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
-    semester = models.CharField(max_length=16)
+    semester = models.CharField(max_length=16, blank=True)
     rating_time = models.DateTimeField()
     rating_one = models.IntegerField()
     rating_two = models.IntegerField()

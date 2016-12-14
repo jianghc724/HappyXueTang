@@ -22,24 +22,24 @@ class UserBind(APIView):
         return_json = r.json()
         if return_json['message'] == 'Success':
             user = User.get_by_openid(self.input['open_id'])
-            #print(return_json['information']['studentnumber'])
+            # print(return_json['information']['studentnumber'])
             user.user_id = return_json['information']['studentnumber']
-            #print(return_json['information']['position'])
+            # print(return_json['information']['position'])
             if return_json['information']['position'] == 'teacher':
                 user.user_status = User.STATUS_TEACHER
             else:
-                #print(1)
+                # print(1)
                 user.user_status = User.STATUS_STUDENT
-            #print(return_json['information']['realname'])
+            # print(return_json['information']['realname'])
             user.name = return_json['information']['realname']
-            #print(2333)
+            # print(2333)
             user.save()
         else:
             raise ValidateError("Password and Student ID is not matched")
 
     def get(self):
         self.check_input('open_id')
-        #print(User.get_by_openid(self.input['open_id']).user_status)
+        # print(User.get_by_openid(self.input['open_id']).user_status)
         return User.get_by_openid(self.input['open_id']).user_status
 
     def post(self):
@@ -83,7 +83,7 @@ class CourseList(APIView):
                 if not stucou:
                     stu_cou = StudentCourse.objects.create(student_id=userid, course_key=courseid, course_number=coursenum)
                     stu_cou.save()
-                #print(self.input['week'])
+                # print(self.input['week'])
                 if int(course_json['week'][int(self.input['week']) - 1]) == 1:
                     result.append({
                         'name':course_json['coursename'],
@@ -224,7 +224,40 @@ class CommentOverview(APIView):
 
 class MakeComment(APIView):
     def get(self):
-        pass
+        self.check_input('course_id', 'course_number')
+        try:
+            cou = Course.objects.filter(key=self.input['course_id']).get(number=self.input['course_number'])
+        except:
+            raise CourseError('No such course')
+        result = {
+            'ratings': [],
+            'course_info': {
+                'course_id': cou.key,
+                'course_number': cou.number,
+                'course_name': cou.name,
+            },
+        }
+        result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
+        return result
 
     def post(self):
-        pass
+        self.check_input('open_id', 'course_id', 'course_number', 'rating_one', 'rating_two', 'rating_three', 'comment')
+        try:
+            cou = Course.objects.filter(key=self.input['course_id']).get(number=self.input['course_number'])
+        except:
+            raise CourseError('No such course')
+        user = User.get_by_openid(self.input['open_id'])
+        current_time = datetime.now().timestamp()
+        com = Comment.objects.create(student_id=user.user_id, course_key=self.input['course_id'], course_number=self.input['course_number'],
+                                     rating_one=self.input['rating_one'], rating_two=self.input['rating_two'], rating_three=self.input['rating_three'],
+                                     rating_time=current_time, rating_comment = self.input['comment'])
+        com.save()
+        total_people = cou.rating_people
+        total_rating_one = cou.rating_one * total_people
+        cou.rating_one = (total_rating_one + self.input['rating_one']) / (total_people + 1)
+        total_rating_two = cou.rating_two * total_people
+        cou.rating_two = (total_rating_two + self.input['rating_two']) / (total_people + 1)
+        total_rating_three = cou.rating_three * total_people
+        cou.rating_three = (total_rating_three + self.input['rating_three']) / (total_people + 1)
+        cou.rating_people = total_people + 1
+        cou.save()
