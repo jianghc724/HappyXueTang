@@ -179,6 +179,11 @@ class CommentOverview(APIView):
         result = {
             'ratings': [],
             'comments': [],
+            'course_info':{
+                'course_id': cou.key,
+                'course_number': cou.number,
+                'course_name': cou.name,
+            },
         }
         result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
         result['comments'] = self.get_comment_list(cou)
