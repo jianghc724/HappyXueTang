@@ -1,9 +1,10 @@
 from wechat.wrapper import WeChatHandler
 from HappyXueTang import settings
-from wechat.models import User
+from wechat.models import *
 from django.http import HttpResponse
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
+from datetime import datetime
 import requests, json
 
 
@@ -101,4 +102,15 @@ class BulletScreenHandler(WeChatHandler):
         return self.is_text_command('弹幕') or self.is_event_click(self.view.event_keys['bullet_screen'])
 
     def handle(self):
+        dict = self.input['Content'].split(' ')
+        student_id = self.user.user_id
+        course_k_a_n = dict[1]
+        course_detail = dict[1].split('-')
+        course_key = course_detail[0]
+        course_number = course_detail[10]
+        bullet_content = dict[2]
+        current_time = datetime.now().timestamp()
+        dis = Discussion.objects.create(student_id=student_id, course_key=course_key, course_number = course_number,
+                                        content=bullet_content, status=False, release_time=current_time)
+        dis.save()
         return self.reply_text(self.get_message('class_talk'))

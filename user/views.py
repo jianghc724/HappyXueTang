@@ -340,3 +340,18 @@ class UserNotify(APIView):
             return result
         else:
             raise GetInfoError('Username Invalid')
+
+class BulletScreen(APIView):
+    def get(self):
+        self.check_input('course_id', 'course_number')
+        discussions = Discussion.objects.filter(course_key=self.input['course_id']).\
+            filter(course_number=self.input['course_number']).filter(status=False)
+        result = []
+        for discuss in discussions:
+            result.append({
+                'content':discuss.content,
+                'release_time':discuss.release_time,
+            })
+            discuss.status = True
+            discuss.save()
+        return result

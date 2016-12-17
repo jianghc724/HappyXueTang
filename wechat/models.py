@@ -70,6 +70,7 @@ class Discussion(models.Model):
     course_number = models.IntegerField()
     release_time = models.DateTimeField()
     content = models.TextField()
+    status = models.BooleanField()
 
 
 class Comment(models.Model):
