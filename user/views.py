@@ -308,6 +308,9 @@ class UserNotify(APIView):
                     raise GetInfoError[operation_json['reason'] + "for operation"]
                 notices = notice_json['notices']
                 for notice in notices:
+                    noticeid = notice['noticeid']
+                    if not Notice.objects.filter(notice_key=noticeid).exists():
+                        pass
                     if notice.state == "unread":
                         result['new_notices'].append({
                             'title': notice['title'],
@@ -355,3 +358,57 @@ class BulletScreen(APIView):
             discuss.status = True
             discuss.save()
         return result
+
+class LibraryStatus(APIView):
+    def get(self):
+        self.check_input('open_id', 'course_id')
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        userid = User.get_by_openid(self.input['open_id']).user_id
+        addr = 'http://se.zhuangty.com:8000/library/hs'
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
+        return_json = r.json()
+        if return_json['message'] == 'Success':
+            areas = return_json['areas']
+            result = areas
+            return result
+        raise LogicError('Library Info Unavailable')
+
+class InfoSearch(APIView):
+    def get(self):
+        self.check_input('open_id', 'course_id', 'search')
+        search = self.input['search']
+        courseid = self.input['course_id']
+        userid = User.get_by_openid(self.input['open_id']).user_id
+        result = {
+            'notices': [],
+            'files': [],
+            'operations': [],
+        }
+        studentnotices = StudentNotice.objects.filter(student_id=userid)
+        for studentnotice in studentnotices:
+            notice = studentnotice.notice
+            if notice.course_key == courseid and ((search in notice.title) or (search in notice.content)):
+                result['notices'].append({
+                    'title': notice.title,
+                    'content': notice.content,
+                })
+        studentfiles = StudentFile.objects.filter(student_id=userid)
+        for studentfile in studentfiles:
+            file = studentfile.file
+            if file.course_key == courseid and ((search in file.title) or (search in file.content)):
+                result['files'].append({
+                    'title': file.title,
+                    'content': file.content,
+                })
+        studentoperations = StudentHomework.objects.filter(student_id=userid)
+        for studentoperation in studentoperations:
+            operation = studentoperation.homework
+            if operation.coursekey == courseid and ((search in operation.title) or (search in operation.content)):
+                result['operations'].append({
+                    'title': operation.title,
+                    'content': operation.instructions,
+                })
