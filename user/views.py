@@ -50,6 +50,7 @@ class UserBind(APIView):
 class CourseList(APIView):
     def get(self):
         self.check_input('open_id', 'week')
+        print(self.input['week'])
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
@@ -91,6 +92,7 @@ class CourseList(APIView):
                     })
             return result
         else:
+            pass
             raise GetInfoError('Get Course List Failed')
 
 

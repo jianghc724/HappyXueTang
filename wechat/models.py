@@ -8,7 +8,7 @@ class User(models.Model):
     user_id = models.CharField(max_length=16, db_index=True)
     user_status = models.IntegerField(default=-1)
     name = models.CharField(max_length=32)
-    total_unread_notice = models.IntegerField()
+    total_unread_notice = models.IntegerField(default=0)
 
     STATUS_UNBIND = -1
     STATUS_STUDENT = 0
@@ -58,8 +58,8 @@ class Notice(models.Model):
 
 class Homework(models.Model):
     course_key = models.CharField(max_length=16, db_index=True)
-    course_number = models.IntegerField()
-    assignment_id = models.IntegerField()
+    course_number = models.IntegerField(blank=True)
+    assignment_id = models.IntegerField(blank=True)
     title = models.CharField(max_length=32)
     instructions = models.TextField()
     start_time = models.DateTimeField()
@@ -114,6 +114,6 @@ class StudentNotice(models.Model):
 
 class StudentHomework(models.Model):
     student_id = models.CharField(max_length=16, db_index=True)
-    assignment_id = models.IntegerField()
+    assignment_id = models.IntegerField(blank=True)
     status = models.BooleanField()
     content = models.TextField()

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/dropdown.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
+    <link href="//cdn.bootcss.com/semantic-ui/2.2.7/components/grid.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
     <title>快乐学堂</title>
 </head>
@@ -23,7 +24,7 @@
                     <div class = "column"></div>
                     <div class = "column">
                         <div id="show-week" class ="ui inline dropdown">
-                            <input id="selected-week" type="hidden" value="13" >
+                            <input id="selected-week" type="hidden" value="0" >
                             <div id="show-week-text" class="text">第13周</div>
                             <i class="dropdown icon"></i>
                             <ul id="week-menu" class="menu">
@@ -37,12 +38,12 @@
                 </div>
                 <hr>
                 <div id="day-banner" class="eight column row">
-                    <ul id="day-list">
-                        <li v-for="day in week">
+                    <div id="day-list" class="row">
+                        <div v-for="day in week" class="two wide column">
                             <span class="day">{{day.text}}</span>
                             <span class="date">{{day.date}}</span>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
     </div>

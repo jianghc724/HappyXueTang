@@ -9,9 +9,9 @@ new Vue({
     el:'#week-menu'
 })
 var selected_week = new Vue({
-    el: '#selected_week',
+    el: '#selected-week',
     data: {
-        selected_week:
+        selected_week:"第0周"
     }
 })
 var day_list = new Vue({
@@ -50,7 +50,9 @@ var day_list = new Vue({
     }
 })
 $(function () {
-    api.get('/api/u/course/list', {open_id: urlParam.open_id, week:}, function (data) {
+    var week = (selected_week.selected_week);
+    week = week.replace(/[^0-9]/g,'');
+    api.get('/api/u/course/list', {open_id: urlParam.open_id, week:parseInt(week)}, function (data) {
         successHolder.loading = false;
         successHolder.loaded = true;
     }, dftFail);
