@@ -24,12 +24,13 @@ window.api = {
         fail = fail || $.noop;
         complete = complete || $.noop;
         return $.get(url, data).done(function (response, status, xhr) {
+            return success(response.data);
             console.log(response);
-            if (response.code != 0) {
+            /*if (response.code != 0) {
                 return fail(response.code, response.msg);
             } else {
                 return success(response.data);
-            }
+            }*/
         }).fail(function (xhr, errmsg, e) {
             return fail(-2, errmsg, e);
         }).always(complete);
