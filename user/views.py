@@ -113,6 +113,7 @@ class CourseDetail(APIView):
                 if courseid == self.input['course_id']:
                     result = {
                         'name': course_json['coursename'],
+                        'status': 1,
                         'notice': course_json['unreadnotice'],
                         'file': course_json['newfile'],
                         'homework': course_json['unsubmittedoperations']
@@ -120,7 +121,11 @@ class CourseDetail(APIView):
                     return result
                 else:
                     continue
-            raise CourseError('No such course')
+            result = {
+                'name': course_json['coursename'],
+                'status': -1,
+            }
+            return result
         raise GetInfoError('Username Invalid')
 
 
@@ -143,7 +148,7 @@ class GetDeadline(APIView):
                 course_num_list = course_json['courseid'].split('-')
                 courseid = course_num_list[3]
                 addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid \
-                       + '/assignments?username=' + userid
+                       + '/assignments?username=' + userid + '&courseid=' + courseid
                 r = requests.post(addr, data=json.dumps(data), headers=headers)
                 _return_json = r.json()
                 # print(_return_json)
@@ -167,6 +172,67 @@ class GetDeadline(APIView):
                         raise GetInfoError('Unknown error')
             return result
         raise GetInfoError('Username Invalid')
+
+
+class GetNotice(APIView):
+    def get(self):
+        self.check_input('open_id')
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        userid = User.get_by_openid(self.input['open_id']).user_id
+        addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
+        return_json = r.json()
+        current_time = datetime.now().timestamp()
+        if return_json['message'] == 'Success':
+            result = []
+            for course_json in return_json['classes']:
+                course_num_list = course_json['courseid'].split('-')
+                courseid = course_num_list[3]
+                addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid \
+                       + '/notices?username=' + userid + '&courseid=' + courseid
+                r = requests.post(addr, data=json.dumps(data), headers=headers)
+                _return_json = r.json()
+                # print(_return_json)
+                if _return_json['message'] == 'Success':
+                    notices = _return_json['notices']
+                    for notice in notices:
+                        noticeid = notice['noticeid']
+                        _notices = StudentNotice.objects.filter(notice_id=noticeid).filter(student_id=userid)
+                        if not _notices:
+                            noc = StudentNotice.objects.create(notice_id=noticeid, student_id=userid, is_read=notice['state'])
+                            noc.save()
+                        else:
+                            noc = StudentNotice.objects.filter(notice_id=noticeid).get(student_id=userid)
+                        if notice['state'] == 'unread' and noc.is_read == False:
+                            result.append({
+                                'course_name':course_json['coursename'],
+                                'notice_id':notice['noticeid'],
+                                'notice_title':notice['title'],
+                                'notice_publisher':notice['publisher'],
+                                'notice_publishtime':notice['publishtime'],
+                                'notice_content':notice['content'],
+                                'current_time':current_time,
+                            })
+                else:
+                    if _return_json['reason'] == 'Invalid username':
+                        raise GetInfoError('Username Invalid')
+                    elif _return_json['reason'] == 'Invalid courseID':
+                        raise GetInfoError('CourseID Invalid')
+                    else:
+                        raise GetInfoError('Unknown error')
+            return result
+        raise GetInfoError('Username Invalid')
+
+    def post(self):
+        self.check_input('open_id', 'notice_id')
+        userid = User.get_by_openid(self.input['open_id']).user_id
+        noc = StudentNotice.objects.filter(notice_id=self.input['notice_id']).get(student_id=userid)
+        noc.is_read = True
+        noc.save()
 
 
 class CommentOverview(APIView):
@@ -294,9 +360,9 @@ class UserNotify(APIView):
                 total_newfile += course['newfile']
                 total_unsubmittedoperations += course['unsubmittedoperations']
                 courseid = course['courseid']
-                notice_addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid + '/notices?username=' + userid
-                file_addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid + '/documents?username=' + userid
-                operation_addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid + '/assignments?username=' + userid
+                notice_addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid + '/notices?username=' + userid + '&courseid=' + courseid
+                file_addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid + '/documents?username=' + userid + '&courseid=' + courseid
+                operation_addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid + '/assignments?username=' + userid + '&courseid=' + courseid
                 notice_json = requests.post(notice_addr, data=json.dumps(data), headers=headers).json()
                 file_json = requests.post(file_addr, data=json.dumps(data), headers=headers).json()
                 operation_json = requests.post(operation_addr, data=json.dumps(data), headers=headers).json()
@@ -344,6 +410,7 @@ class UserNotify(APIView):
         else:
             raise GetInfoError('Username Invalid')
 
+
 class BulletScreen(APIView):
     def get(self):
         self.check_input('course_id', 'course_number')
@@ -358,6 +425,7 @@ class BulletScreen(APIView):
             discuss.status = True
             discuss.save()
         return result
+
 
 class LibraryStatus(APIView):
     def get(self):
@@ -377,6 +445,7 @@ class LibraryStatus(APIView):
             return result
         raise LogicError('Library Info Unavailable')
 
+
 class InfoSearch(APIView):
     def get(self):
         self.check_input('open_id', 'course_id', 'search')
@@ -384,31 +453,34 @@ class InfoSearch(APIView):
         courseid = self.input['course_id']
         userid = User.get_by_openid(self.input['open_id']).user_id
         result = {
+            'courses':[],
             'notices': [],
-            'files': [],
             'operations': [],
         }
         studentnotices = StudentNotice.objects.filter(student_id=userid)
         for studentnotice in studentnotices:
             notice = studentnotice.notice
-            if notice.course_key == courseid and ((search in notice.title) or (search in notice.content)):
+            if (search in notice.title) or (search in notice.content):
                 result['notices'].append({
                     'title': notice.title,
                     'content': notice.content,
                 })
-        studentfiles = StudentFile.objects.filter(student_id=userid)
-        for studentfile in studentfiles:
-            file = studentfile.file
-            if file.course_key == courseid and ((search in file.title) or (search in file.content)):
-                result['files'].append({
-                    'title': file.title,
-                    'content': file.content,
-                })
         studentoperations = StudentHomework.objects.filter(student_id=userid)
         for studentoperation in studentoperations:
             operation = studentoperation.homework
-            if operation.coursekey == courseid and ((search in operation.title) or (search in operation.content)):
+            if (search in operation.title) or (search in operation.content):
                 result['operations'].append({
                     'title': operation.title,
                     'content': operation.instructions,
                 })
+        courses = Course.objects.all()
+        for cou in courses:
+            if search in cou.name:
+                result['courses'].append({
+                    'course_id': cou.key,
+                    'course_number': cou.number,
+                    'course_name': cou.name,
+                    'course_teacher': cou.teacher,
+                })
+        return result
+

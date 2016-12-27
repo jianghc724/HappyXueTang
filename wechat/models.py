@@ -48,6 +48,7 @@ class Course(models.Model):
 class Notice(models.Model):
     course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
+    notice_id = models.IntegerField()
     title = models.CharField(max_length=32)
     content = models.TextField()
     release_person = models.CharField(max_length=32)
@@ -104,7 +105,7 @@ class StudentCourse(models.Model):
 
 class StudentNotice(models.Model):
     student_id = models.CharField(max_length=16, db_index=True)
-    notice = models.ForeignKey(Notice)
+    notice_id = models.IntegerField()
     is_read = models.BooleanField()
 
 
