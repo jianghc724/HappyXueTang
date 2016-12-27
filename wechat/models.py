@@ -8,6 +8,7 @@ class User(models.Model):
     user_id = models.CharField(max_length=16, db_index=True)
     user_status = models.IntegerField(default=-1)
     name = models.CharField(max_length=32)
+    total_unread_notice = models.IntegerField()
 
     STATUS_UNBIND = -1
     STATUS_STUDENT = 0
@@ -48,6 +49,7 @@ class Course(models.Model):
 class Notice(models.Model):
     course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
+    notice_id = models.IntegerField()
     title = models.CharField(max_length=32)
     content = models.TextField()
     release_person = models.CharField(max_length=32)
@@ -57,6 +59,7 @@ class Notice(models.Model):
 class Homework(models.Model):
     course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
+    assignment_id = models.IntegerField()
     title = models.CharField(max_length=32)
     instructions = models.TextField()
     start_time = models.DateTimeField()
@@ -93,6 +96,7 @@ class StudentCourse(models.Model):
     status = models.IntegerField(default=0, null=True, blank=True)
     grading_policy = models.IntegerField(null=True, blank=True)
     grade = models.IntegerField(null=True, blank=True)
+    unread_notices = models.IntegerField()
 
     COURSE_WITHDRAWN = -1
     COURSE_IN_PROGRESS = 0
@@ -104,12 +108,12 @@ class StudentCourse(models.Model):
 
 class StudentNotice(models.Model):
     student_id = models.CharField(max_length=16, db_index=True)
-    notice = models.ForeignKey(Notice)
+    notice_id = models.IntegerField()
     is_read = models.BooleanField()
 
 
 class StudentHomework(models.Model):
     student_id = models.CharField(max_length=16, db_index=True)
-    homework = models.ForeignKey(Homework)
+    assignment_id = models.IntegerField()
     status = models.BooleanField()
     content = models.TextField()
