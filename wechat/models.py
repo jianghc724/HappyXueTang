@@ -35,9 +35,9 @@ class Course(models.Model):
     exam_end_time = models.DateTimeField(null=True, blank=True)
     exam_location = models.CharField(max_length=128, null=True, blank=True)
     rating_people = models.IntegerField(default=0)
-    rating_one = models.FloatField(default=-1)
-    rating_two = models.FloatField(default=-1)
-    rating_three = models.FloatField(default=-1)
+    rating_one = models.FloatField(default=-1.0)
+    rating_two = models.FloatField(default=-1.0)
+    rating_three = models.FloatField(default=-1.0)
 
     COURSE_CANCELLED = -1
     COURSE_AUTUMN_ONLY = 1
@@ -49,7 +49,7 @@ class Course(models.Model):
 class Notice(models.Model):
     course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
-    notice_id = models.IntegerField()
+    notice_id = models.IntegerField(blank=True)
     title = models.CharField(max_length=32)
     content = models.TextField()
     release_person = models.CharField(max_length=32)
@@ -59,7 +59,7 @@ class Notice(models.Model):
 class Homework(models.Model):
     course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
-    assignment_id = models.IntegerField()
+    assignment_id = models.IntegerField(blank=True)
     title = models.CharField(max_length=32)
     instructions = models.TextField()
     start_time = models.DateTimeField()
@@ -108,12 +108,12 @@ class StudentCourse(models.Model):
 
 class StudentNotice(models.Model):
     student_id = models.CharField(max_length=16, db_index=True)
-    notice_id = models.IntegerField()
+    notice_id = models.IntegerField(blank=True)
     is_read = models.BooleanField()
 
 
 class StudentHomework(models.Model):
     student_id = models.CharField(max_length=16, db_index=True)
-    assignment_id = models.IntegerField()
+    assignment_id = models.IntegerField(blank=True)
     status = models.BooleanField()
     content = models.TextField()

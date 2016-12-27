@@ -59,6 +59,9 @@ INSTALLED_APPS = [
     'teacher',
     'notice_celery',
     'djcelery',
+    'kombu.transport.django',
+    #'djkombu',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
