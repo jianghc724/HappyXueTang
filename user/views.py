@@ -33,6 +33,7 @@ class UserBind(APIView):
             # print(return_json['information']['realname'])
             user.name = return_json['information']['realname']
             # print(2333)
+            user.total_unread_notice = 0
             user.save()
         else:
             raise ValidateError("Password and Student ID is not matched")
@@ -96,7 +97,7 @@ class CourseList(APIView):
 
 class CourseDetail(APIView):
     def get(self):
-        self.check_input('open_id', 'course_id')
+        self.check_input('open_id', 'course_id', 'status')
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,

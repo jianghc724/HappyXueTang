@@ -14,6 +14,8 @@ import os
 import json
 import logging
 import urllib.parse
+import djcelery
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -55,6 +57,8 @@ INSTALLED_APPS = [
     'user',
     'student',
     'teacher',
+    'notice_celery',
+    'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +157,20 @@ def get_url(path, params=None):
 
 STATIC_URL = '/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+djcelery.setup_loader()
+
+BROKER_URL = 'django://'
+
+CELERY_IMPORTS = ('notice_celery.tasks', )
+
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+CELERYBEAT_SCHEDULE = {
+    'add-every-2-hours': {
+        'task': 'notice_celery.tasks.get_notice_task',
+        'schedule': timedelta(minutes=1)
+    },
+}
