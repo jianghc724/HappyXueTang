@@ -1,8 +1,9 @@
 from django.utils import timezone
 
 from wechat.wrapper import WeChatView, WeChatLib
+from wechat.models import User
 from wechat.handlers import *
-from HappyXueTang.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
+from HappyXueTang.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET, get_url
 
 
 class CustomWeChatView(WeChatView):
@@ -11,11 +12,12 @@ class CustomWeChatView(WeChatView):
 
     handlers = [
         UnbindOrUnsubscribeHandler, BindAccountHandler, CourseListHandler,
-        BulletScreenHandler,
+        BulletScreenHandler, DDLCenterHandler
     ]
 
     error_message_handler = ErrorHandler
     default_handler = DefaultHandler
+    #SITE_DOMAIN = "http://59.66.250.60/"
 
     event_keys = {
         'get_curriculum_schedule': 'SERVICE_GET_CURRICULUM_SCHEDULE',
@@ -36,14 +38,14 @@ class CustomWeChatView(WeChatView):
                 "name": "我的课程",
                 "sub_button": [
                     {
-                        "type": "click",
+                        "type": "view",
                         "name": "课程表",
-                        "key": event_keys['get_curriculum_schedule'],
+                        "url": settings.get_url('student/course_list', {'open_id': WeChatView.wechatUser.open_id})
                     },
                     {
-                        "type": "click",
+                        "type": "view",
                         "name": "DDL中心",
-                        "key": event_keys['get_ddl'],
+                        "url": settings.get_url('student/ddl_center', {'open_id': WeChatView.wechatUser.open_id})
                     },
                     {
                         "type": "click",

@@ -188,6 +188,7 @@ class WeChatView(BaseView):
     handlers = []
     error_message_handler = WeChatEmptyHandler
     default_handler = WeChatEmptyHandler
+    wechatUser = User.objects.first()
 
     def _check_signature(self):
         query = self.request.GET
@@ -209,6 +210,9 @@ class WeChatView(BaseView):
         if 'FromUserName' not in msg:
             return self.error_message_handler(self, msg, None).handle()
         user, created = User.objects.get_or_create(open_id=msg['FromUserName'])
+        self.wechatUser = user
+        print(self.wechatUser.open_id)
+        print(settings.get_url('student/course_list', {'open_id': self.wechatUser.open_id}))
         if created:
             self.logger.info('New user: %s', user.open_id)
         try:

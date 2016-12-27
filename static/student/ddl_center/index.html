@@ -10,13 +10,21 @@
 </head>
 
 <body>
+
+    <footer id="footer">
+        <hr/>
+        <a href="" target="_blank">快乐学堂</a>
+        &copy; 2016
+    </footer>
+
     <h4 class="ui block header">
         <i class="write icon"></i>
         <div class="content">DDL 中心<div class="sub header">Do you know your DDLs?</div></div>
     </h4>
+
     <div id="wrap">
     <div id="mainbody">
-        <div class="ui cards">
+        <div class="ui cards" id="uicards">
             <div class="card">
                 <div class="content">
                     <div class="header">Elliot Fu</div>
@@ -38,10 +46,64 @@
                     <div class="description">Elliot Fu is a film-maker from New York. </div>
                  </div>
             </div>
+            <div id="card_head">
+            </div>
         </div>
     </div>
     </div>
+    <script src="/3rd/jquery.js"></script>
+    <script src="/3rd/swig.js"></script>
+    <script src="/3rd/vue.js"></script>
+    <script src="/js/weixin_lib.js"></script>
+    <script src="/js/base.js"></script>
+    <script src="/js/user/validation.js"></script>
+    <script>
+    var locals = {
+        isBinding: false,
+        ddlData:[]
+    };
+    $(function (){
+        data = [{homework_title:"微信抢票-迭代2",course_name:"软件工程3",homework_end_date:4,current_time:6}];
+        for (var i=0;i<data.length;i++)
+            {
+                var elem1 = $("<div></div>").text(data[i].homework_title).addClass("head");
+                var elem2 = $("<div></div>").text(data[i].course_name).addClass("meta");
+                var leftTime = data[i].homework_end_date - data[i].current_time;
+                var elem3 = $("<div></div>").text("距离截止还有" + leftTime).addClass("description");
+                var content = $("<div></div>").addClass("content");
+                var cardblock = $("<div></div>").addClass("card");
+                content.prepend(elem1,elem2,elem3);
+                cardblock.prepend(content);
+                $("#uicards").prepend(cardblock);
+            }
+    });
+/*
+    $(function () {
+        console.log(locals.isValidated);
+        api.get('/api/u/ddl/list', {open_id: urlParam.open_id}, function (data) {
+            locals.isLoading = false;
+            locals.ddlData = data;
+            if(data != Null){
+                for (var i=0;i<data.length;i++)
+                {
+                    var elem1 = $("<div></div>").text(data[i].homework_title).addClass("head");
+                    var elem2 = $("<div></div>").text(data[i].course_name).addClass("meta");
+                    var leftTime = data[i].homework_end_date - data[i].current_time;
+                    var elem3 = $("<div></div>").text("距离截止还有" + homework_end_date).addClass("description");
+                    var content = $("<div></div>").addClass("content");
+                    var cardblock = $("<div></div>").addClass("card");
+                    content.prepend(elem1,elem2,elem3);
+                    cardblock.prepend(content);
+                    $("#uicards").append(cardblock);
+                    document.write(cars[i] + "<br>");
+                }
+            }
 
+            alert("数据: " + data );
+        }, dftFail);
+    });*/
+    </script>
 
 </body>
 </html>
+

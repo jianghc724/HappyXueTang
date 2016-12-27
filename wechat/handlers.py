@@ -1,12 +1,14 @@
 from wechat.wrapper import WeChatHandler
 from HappyXueTang import settings
 from wechat.models import *
-from django.http import HttpResponse
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
 from datetime import datetime
 import requests, json
-
+from django.http import *
+from django.http import HttpResponse,request
+from django.shortcuts import render
+from django.shortcuts import redirect
 
 class ErrorHandler(WeChatHandler):
 
@@ -95,6 +97,13 @@ class CourseListHandler(WeChatHandler):
             return self.reply_text(self.get_message('bind_account'))
         return self.reply_text(self.get_message('list'))
 
+class DDLCenterHandler(WeChatHandler):
+
+    def check(self):
+        return self.is_event_click(self.view.event_keys['get_ddl'])
+
+    def handle(self):
+        pass
 
 class BulletScreenHandler(WeChatHandler):
 
