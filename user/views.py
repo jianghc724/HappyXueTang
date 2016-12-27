@@ -114,10 +114,40 @@ class CourseDetail(APIView):
                     result = {
                         'name': course_json['coursename'],
                         'status': 1,
-                        'notice': course_json['unreadnotice'],
+                        'unread_notice': course_json['unreadnotice'],
                         'file': course_json['newfile'],
-                        'homework': course_json['unsubmittedoperations']
+                        'unsubmitted_homework': course_json['unsubmittedoperations'],
+                        'notice_detail':[],
+                        'homework_detail':[],
                     }
+                    notice_addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' \
+                                  + courseid + '/notices?username=' + userid + '&courseid=' + courseid
+                    operation_addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' \
+                                     + courseid + '/assignments?username=' + userid + '&courseid=' + courseid
+                    notice_json = requests.post(notice_addr, data=json.dumps(data), headers=headers).json()
+                    operation_json = requests.post(operation_addr, data=json.dumps(data), headers=headers).json()
+                    if notice_json['message'] == "Failure":
+                        raise GetInfoError(notice_json['reason'] + "for notice")
+                    if operation_json['message'] == "Failure":
+                        raise GetInfoError(operation_json['reason'] + "for operation")
+                    notices = notice_json['notices']
+                    for notice in notices:
+                        noticeid = notice['noticeid']
+                        result['notice_detail'].append({
+                            'title': notice['title'],
+                            'publishtime': notice['publishtime'],
+                            'content': notice['content'],
+                        })
+                    operations = operation_json['assignments']
+                    for operation in operations:
+                        if operation.state == "尚未提交":
+                            result['new_operations'].append({
+                                'title': operation['title'],
+                                'startdate': operation['startdate'],
+                                'duedate': operation['duedate'],
+                                'detail': operation['detail'],
+                                'fileurl': operation['fileurl'],
+                            })
                     return result
                 else:
                     continue
@@ -226,13 +256,6 @@ class GetNotice(APIView):
                         raise GetInfoError('Unknown error')
             return result
         raise GetInfoError('Username Invalid')
-
-    def post(self):
-        self.check_input('open_id', 'notice_id')
-        userid = User.get_by_openid(self.input['open_id']).user_id
-        noc = StudentNotice.objects.filter(notice_id=self.input['notice_id']).get(student_id=userid)
-        noc.is_read = True
-        noc.save()
 
 
 class CommentOverview(APIView):
@@ -371,13 +394,11 @@ class UserNotify(APIView):
                 if file_json['message'] == "Failure":
                     raise GetInfoError(file_json['reason'] + "for file")
                 if operation_json['message'] == "Failure":
-                    raise GetInfoError[operation_json['reason'] + "for operation"]
+                    raise GetInfoError(operation_json['reason'] + "for operation")
                 notices = notice_json['notices']
                 for notice in notices:
                     noticeid = notice['noticeid']
-                    if not Notice.objects.filter(notice_key=noticeid).exists():
-                        pass
-                    if notice.state == "unread":
+                    if notice['state'] == "unread":
                         result['new_notices'].append({
                             'title': notice['title'],
                             'publishtime': notice['publishtime'],
