@@ -114,6 +114,61 @@ class CourseList(APIView):
         else:
             raise GetInfoError('Get Course List Failed')
 
+class CommentOverview(APIView):
+    def get(self):
+        self.check_input('course_id')
+        course_number_list = self.input['course_id'].split('-')
+        course_key = course_number_list[3]
+        course_number = course_number_list[4]
+        try:
+            cou = Course.objects.filter(key=course_key).get(number=course_number)
+        except:
+            raise CourseError('No such course')
+        result = {
+            'ratings': [],
+            'comments': [],
+            'course_info':{
+                'course_id': self.input['course_id'],
+                'course_key': cou.key,
+                'course_number': cou.number,
+                'course_name': cou.name,
+            },
+        }
+        result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
+        result['comments'] = self.get_comment_list(cou)
+        return result
+
+    def get_comment_list(self, cou):
+        all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
+        comments = []
+        for comment in all_comments:
+            if len(comments) == 10 and comment.rating_time < comments[9]['rating_time']:
+                continue
+            student = User.objects.get(user_id=comment.student_id)
+            com = {
+                'student': student.name,
+                'time':comment.rating_time,
+                'comment':comment.rating_comment,
+            }
+            if len(comments) == 10:
+                comments[9] = com
+            else:
+                comments[len(comments)] = com
+            comments = self.sort_comment_list(comments)
+        return comments
+
+    def sort_comment_list(self, comment_list):
+        i = len(comment_list) - 1
+        while True:
+            if i == 0:
+                break
+            if comment_list[i]['time'] < comment_list[i - 1]['time']:
+                break
+            temp_com = comment_list[i]
+            comment_list[i] = comment_list[i - 1]
+            comment_list[i - 1] = temp_com
+            i = i - 1
+        return comment_list
 
 class CourseDetail(APIView):
     def get(self):
@@ -138,8 +193,8 @@ class CourseDetail(APIView):
         r = requests.post(addr, data=json.dumps(data), headers=headers)
         return_json = r.json()
         if status == '0':
-            print(return_json["courses"])
             if return_json['message'] == 'Success':
+                ratings = (CommentOverview.get(self))["ratings"]
                 for course_json in return_json['courses']:
                     if course_json['courseid'] == input_course_id:
                         result = {
@@ -150,7 +205,8 @@ class CourseDetail(APIView):
                             'file': course_json['newfile'],
                             'unsubmitted_homework': course_json['unsubmittedoperations'],
                             'teacher': course_json['teacher'],
-                            'email': course_json['email']
+                            'email': course_json['email'],
+                            'ratings':ratings
                         }
                         return result
                 cous = Course.objects.filter(course_id=input_course_id)
@@ -158,6 +214,7 @@ class CourseDetail(APIView):
                     result = {
                         'name': cous[0].name,
                         'status': -1,
+                        'ratings':ratings,
                         'teacher': course_json['teacher'],
                         'email': course_json['email']
                     }
@@ -328,64 +385,6 @@ class GetNotice(APIView):
                         raise GetInfoError('Unknown error')
             return result
         raise GetInfoError('Username Invalid')
-
-
-class CommentOverview(APIView):
-    def get(self):
-        self.check_input('course_id')
-        course_number_list = self.input['course_id'].split('-')
-        course_key = course_number_list[3]
-        course_number = course_number_list[4]
-        try:
-            cou = Course.objects.filter(key=course_key).get(number=course_number)
-        except:
-            raise CourseError('No such course')
-        result = {
-            'ratings': [],
-            'comments': [],
-            'course_info':{
-                'course_id': self.input['course_id'],
-                'course_key': cou.key,
-                'course_number': cou.number,
-                'course_name': cou.name,
-            },
-        }
-        result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
-        result['comments'] = self.get_comment_list(cou)
-        return result
-
-    def get_comment_list(self, cou):
-        all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
-        comments = []
-        for comment in all_comments:
-            if len(comments) == 10 and comment.rating_time < comments[9]['rating_time']:
-                continue
-            student = User.objects.get(user_id=comment.student_id)
-            com = {
-                'student': student.name,
-                'time':comment.rating_time,
-                'comment':comment.rating_comment,
-            }
-            if len(comments) == 10:
-                comments[9] = com
-            else:
-                comments[len(comments)] = com
-            comments = self.sort_comment_list(comments)
-        return comments
-
-    def sort_comment_list(self, comment_list):
-        i = len(comment_list) - 1
-        while True:
-            if i == 0:
-                break
-            if comment_list[i]['time'] < comment_list[i - 1]['time']:
-                break
-            temp_com = comment_list[i]
-            comment_list[i] = comment_list[i - 1]
-            comment_list[i - 1] = temp_com
-            i = i - 1
-        return comment_list
-
 
 class MakeComment(APIView):
     def get(self):
