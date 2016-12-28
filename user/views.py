@@ -404,7 +404,7 @@ class MakeComment(APIView):
         except:
             raise CourseError('No such course')
         user = User.get_by_openid(self.input['open_id'])
-        current_time = datetime.now().timestamp()
+        current_time = datetime.now()
         com = Comment.objects.create(student_id=user.user_id, course_key=course_key, course_number=course_number,
                                      rating_one=self.input['rating_one'], rating_two=self.input['rating_two'], rating_three=self.input['rating_three'],
                                      rating_time=current_time, rating_comment = self.input['comment'])
@@ -432,7 +432,6 @@ class UserNotify(APIView):
         addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
         r = requests.post(addr, data=json.dumps(data), headers=headers)
         return_json = r.json()
-        current_time = datetime.now().timestamp()
         result = {
             "total": {}, #字典，显示用户全部的未读公告数、未下载文件数和未交作业数
             "new_detail": {
@@ -504,15 +503,15 @@ class BulletScreen(APIView):
     def get(self):
         self.check_input('course_id')
         course_number_list = self.input['course_id'].split('-')
-        course_key = course_number_list[3]
-        course_number = course_number_list[4]
+        course_key = course_number_list[0]
+        course_number = course_number_list[1]
         discussions = Discussion.objects.filter(course_key=course_key).filter(course_number=course_number).\
             filter(status=False)
         result = []
         for discuss in discussions:
             result.append({
                 'content':discuss.content,
-                'release_time':discuss.release_time,
+                'release_time':discuss.release_time.timestamp(),
             })
             discuss.status = True
             discuss.save()

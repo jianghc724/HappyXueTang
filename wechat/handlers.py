@@ -120,9 +120,9 @@ class BulletScreenHandler(WeChatHandler):
         course_k_a_n = dict[1]
         course_detail = dict[1].split('-')
         course_key = course_detail[0]
-        course_number = course_detail[10]
+        course_number = course_detail[1]
         bullet_content = dict[2]
-        current_time = datetime.now().timestamp()
+        current_time = datetime.now()
         dis = Discussion.objects.create(student_id=student_id, course_key=course_key, course_number = course_number,
                                         content=bullet_content, status=False, release_time=current_time)
         dis.save()
