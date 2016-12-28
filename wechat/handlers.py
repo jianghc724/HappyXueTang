@@ -134,13 +134,16 @@ class GetBulletScreenHandler(WeChatHandler):
     def handle(self):
         str = '发送弹幕方式\n弹幕 课程id 想说的话\n以下为您的选课列表：\n课程名 课程id'
         userid = self.user.user_id
+        userid = "2014013433"
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
         }
         headers = {'content-type': 'application/json'}
         addr = 'http://se.zhuangty.com:8000/curriculum/' + userid + '?username=' + userid
+        print (addr)
         r = requests.post(addr, data=json.dumps(data), headers=headers)
+        print(r)
         return_json = r.json()
         s = set([])
         print("233")
