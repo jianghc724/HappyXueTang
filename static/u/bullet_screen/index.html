@@ -41,7 +41,7 @@
         $('#theme').html(swig.render($('#tpl-theme').html(), {locals: locals}));
         $('#mainbody').html(swig.render($('#tpl-mainbody').html(), {locals: locals}));
     };
-    setInterval("getBullet()", 100);
+    setInterval("getBullet()", 1000);
     var getBullet = function () {
         api.get('/api/u/bullet/screen', {course_id: urlParam.course_id}, function (data) {
             locals.new_bullet.length = 0;
@@ -62,6 +62,7 @@
                     marquee.innerHTML = data[i].content;
                     marquee.behavior = "slide";
                     mainbody.appendChild(marquee);
+                    setTimeout("mainbody.removeChild(marquee)",20000);
                 }
             }
             locals.pre_bullet = data;
