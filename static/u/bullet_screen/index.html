@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" background-color="transparent">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,7 +8,7 @@
     <title>快乐学堂</title>
 </head>
 
-<body>
+<body background-color="transparent">
     <div id="wrap">
     <header></header>
 
@@ -41,7 +41,7 @@
         $('#theme').html(swig.render($('#tpl-theme').html(), {locals: locals}));
         $('#mainbody').html(swig.render($('#tpl-mainbody').html(), {locals: locals}));
     };
-    setInterval("getBullet()", 30000);
+    setInterval("getBullet()", 100);
     var getBullet = function () {
         api.get('/api/u/bullet/screen', {course_id: urlParam.course_id}, function (data) {
             locals.new_bullet.length = 0;
@@ -55,13 +55,12 @@
                         break;
                     }
                 }
-                if (flag == 1) {
+                if (flag == 0) {
                     locals.new_bullet.push(data[i]);
-                    $("#mainbody").append($("<marquee></marquee>").text(data[i].content));
+                    $("#mainbody").append($("<marquee></marquee>").text(data[i].content).attr("loop","1"));
                 }
             }
             locals.pre_bullet = data;
-            //$('marquee').attr("loop", 1);
             render();
         }, dftFail);
     };
