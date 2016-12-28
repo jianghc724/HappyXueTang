@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.7/components/grid.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/card.min.css" >
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/breadcrumb.min.css">
     <title>快乐学堂</title>
 </head>
 
@@ -46,7 +47,14 @@
                 <button id="go-comment" class="ui inverted blue button" v-on:click="jump(1)">评价课程</button>
             </div>
             <div id="new-pannel" class="extra content" v-if="status > 0">
-
+                <div id="nav-bar" class= "ui three column grid">
+                    <div id="overall" class="five wide column">
+                    </div>
+                    <div id="announcements" class="five wide column">
+                    </div>
+                    <div id="homework" class="five wide column">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
