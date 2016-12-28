@@ -6,6 +6,7 @@
     <link href="../../css/base.css" rel="stylesheet" type="text/css" />
     <link href="../../css/user/ddlcenter.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/semantic-ui/2.2.7/components/modal.css">
     <title>快乐学堂-自习室</title>
 </head>
 
@@ -26,12 +27,38 @@
     <div id="mainbody">
     <div id="seat_cover">
         <form class="ui icon input" id="search_course">
-            <input type="text" placeholder="Search...">
+            <input type="text" id="search_content" placeholder="Search...">
             <i class="circular search link icon"></i>
         </form>
         <a class="ui button" id="h-submitBtn">提交</a>
-        <div class="ui relaxed divided" id="list_start"></div>
+        <div class="ui divider"></div>
+        <div class="ui cards" id="list_start"></div>
     </div>
+
+
+
+    <div class="ui basic modal" id="notify">
+  <i class="close icon"></i>
+  <div class="header">
+    提示：
+  </div>
+  <div class="image content">
+    <div class="image">
+      <i class="frown icon"></i>
+    </div>
+    <div class="description">
+      <p>对不起, 没有找到相关课程，请重新查找~</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="fluid ui inverted buttons">
+      <div class="ui ok green basic inverted button">
+        <i class="checkmark icon"></i>
+        Yes
+      </div>
+    </div>
+  </div>
+</div>
 
 
     </div>
@@ -44,34 +71,34 @@
     <script src="/js/user/validation.js"></script>
     <script src="http://cdn.bootcss.com/semantic-ui/2.2.7/components/search.js"></script>
     <script src="http://cdn.bootcss.com/semantic-ui/2.2.7/components/api.js"></script>
+    <script src="http://cdn.bootcss.com/semantic-ui/2.2.7/components/modal.js"></script>
+    <script src="http://cdn.bootcss.com/semantic-ui/2.2.7/components/transition.js"></script>
+    <script src="http://cdn.bootcss.com/semantic-ui/2.2.7/components/dimmer.js"></script>
+
+
     <script>
     var locals = {
         isBinding: false,
         ddlData:[],
         seats:[]
     };
+
     $("#h-submitBtn").click(function(){
-        api.get('/api/u/search/course', {open_id: urlParam.open_id}, function (data) {
-            alert("in");
-            for (var i=0;i<data.length;i++)
-            {
-                var elem0 = $("<div></div>").addClass("item");
-                var elem1 = $("<div></div>").addClass("three ui basic buttons");
-                var elem2 =  $("<div></div>").addClass("ui button").text(data[i].course_name);
-                var elem3 =  $("<div></div>").addClass("ui button").text(data[i].course_teacher);
-                elem1.prepend(elem2,elem3);
-                elem0.prepend(elem1);
-                $("#list_start").prepend(elem0);
+        api.get('/api/u/search/course', {open_id: urlParam.open_id,search:$("#test").text()}, function (data) {
+            $("#list_start").empty();
+            if(data.courses.length == 0){
+                $('#notify').modal('show');
             }
-            var head0 = $("<div></div>").addClass("item");
-            var head1 = $("<div></div>").addClass("three ui buttons");
-            var head2 =  $("<div></div>").addClass("ui button").text("区域");
-            var head3 =  $("<div></div>").addClass("ui button").text("剩余座位");
-            var head4 =  $("<div></div>").addClass("ui button").text("已用座位");
-            head1.prepend(head2,head3,head4);
-            head0.prepend(head1);
-            $("#list_start").prepend(head0);
-            console.log(locals.seats);
+            for (var i=0;i<data.courses.length;i++)
+            {
+                var elem1 = $("<div></div>").text(data.courses[i].course_name).addClass("head");
+                var elem2 = $("<div></div>").text(data.courses[i].course_teacher).addClass("meta");
+                var content = $("<div></div>").addClass("content");
+                var cardblock = $("<div></div>").addClass("card");
+                content.prepend(elem1,elem2);
+                cardblock.prepend(content);
+                $("#list_start").prepend(cardblock);
+            }
             console.log(data);
         }, dftFail);
     });
