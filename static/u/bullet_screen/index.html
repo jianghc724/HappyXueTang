@@ -55,7 +55,7 @@
                 }
                 if (flag == 0) {
                     var marquee = $("<marquee></marquee>").text(data[i].content);
-                    $("#mb").prepend(marquee);
+                    $("#mainbody").append(marquee);
                     setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 30000);
                 }
             }
