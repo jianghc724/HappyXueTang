@@ -8,17 +8,14 @@
     <title>快乐学堂</title>
 </head>
 
-<body>
-    <marquee>我不听</marquee>
-    <div id="wrap">
+<body height="1000px">
+    <div id="wrap" height="1000px">
     <header></header>
-
     <div class="theme" id="theme"></div>
-
     <hr/>
-    <div id="mainbody"></div>
-    </div>
+    <div id="mainbody" height="1000px"><marquee position="absolute" top="300px">我不听4</marquee><marquee position="absolute" top="500px">我不听4</marquee><marquee position="absolute" top="200px">我不听4</marquee><marquee position="absolute" top="600px">我不听4</marquee><marquee position="absolute" top="100px">我不听4</marquee></div>
 
+    </div>
     <footer id="footer">
         <hr/>
         <a href="" target="_blank">快乐学堂</a>
@@ -56,8 +53,11 @@
                 }
                 if (flag == 0) {
                     var mainbody = document.getElementById("mainbody");
-                    var marquee = document.createElement("marquee");
-                    marquee.innerHTML = data[i].content;
+                    var marquee = document.createElement("div");
+                    marquee.style.backgroundColor = "red";
+                    marquee.innerText = data[i].content;
+                    marquee.style.fontSize = "200%";
+                    marquee.style.fontFamily = "Consolas";
                     marquee.style.position = "absolute";
                     marquee.style.top = 500 * Math.random() + "px";
                     mainbody.appendChild(marquee); 
