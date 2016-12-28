@@ -11,10 +11,10 @@ from HappyXueTang.settings import WECHAT_APPID
 def get_notice():
     users = User.objects.all()
     for user in users:
-        print(user)
+        print(user.student_id)
         if user.user_status != 0:
             continue
-        print(user)
+        print(user.student_id)
         msg = {
             'FromUserName': user.open_id,
             'ToUserName': WECHAT_APPID,
@@ -24,7 +24,8 @@ def get_notice():
         }
         for handler in WeChatView.handlers:
             inst = handler(WeChatView, msg, user)
-            print(inst)
+            print("233")
+            print(handler)
             if inst.check():
                 print("in handler")
                 return inst.handle()
