@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="../../css/base.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/user/ddlcenter.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <title>快乐学堂-自习室</title>
+</head>
+
+<body>
+
+    <footer id="footer">
+        <hr/>
+        <a href="" target="_blank">快乐学堂</a>
+        &copy; 2016
+    </footer>
+
+    <h4 class="ui block header">
+        <i class="book icon"></i>
+        <div class="content">文图自习室<div class="sub header">Have a seat for youself!</div></div>
+    </h4>
+
+    <div id="wrap">
+    <div id="mainbody">
+
+    <div class="ui buttons">
+        <div class="ui inverted olive button" id="btn1">文图座位</div>
+        <div class="ui inverted olive button" id="btn2">文图预约</div>
+        <div class="ui inverted olive button" id="btn3">研读间预约</div>
+    </div>
+
+    <div class="ui divider"></div>
+    <div id="seat_cover">
+        <div class="ui relaxed divided" id="list_start">
+
+        </div>
+    </div>
+
+
+    </div>
+    </div>
+    <script src="/3rd/jquery.js"></script>
+    <script src="/3rd/swig.js"></script>
+    <script src="/3rd/vue.js"></script>
+    <script src="/js/weixin_lib.js"></script>
+    <script src="/js/base.js"></script>
+    <script src="/js/user/validation.js"></script>
+    <script>
+    var locals = {
+        isBinding: false,
+        ddlData:[],
+        seats:[]
+    };
+    $(function () {
+        console.log(locals.isValidated);
+        api.get('/api/u/library/status', {open_id: urlParam.open_id}, function (data) {
+            locals.isLoading = false;
+            locals.seats = data;
+            $("#btn1").addClass("active");
+            for (var i=0;i<locals.seats.length;i++)
+            {
+                var elem0 = $("<div></div>").addClass("item");
+                var elem1 = $("<div></div>").addClass("three ui basic buttons");
+                var elem2 =  $("<div></div>").addClass("ui button").text(locals.seats[i].name);
+                var elem3 =  $("<div></div>").addClass("ui button").text(locals.seats[i].left);
+                var elem4 =  $("<div></div>").addClass("ui button").text(locals.seats[i].used);
+                elem1.prepend(elem2,elem3,elem4);
+                elem0.prepend(elem1);
+                $("#list_start").prepend(elem0);
+            }
+            var head0 = $("<div></div>").addClass("item");
+            var head1 = $("<div></div>").addClass("three ui buttons");
+            var head2 =  $("<div></div>").addClass("ui button").text("区域");
+            var head3 =  $("<div></div>").addClass("ui button").text("剩余座位");
+            var head4 =  $("<div></div>").addClass("ui button").text("已用座位");
+            head1.prepend(head2,head3,head4);
+            head0.prepend(head1);
+            $("#list_start").prepend(head0);
+            console.log(locals.seats);
+            console.log(data);
+        }, dftFail);
+        console.log(locals.seats);
+
+    });
+    </script>
+
+</body>
+</html>
+
