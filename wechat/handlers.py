@@ -97,6 +97,7 @@ class CourseListHandler(WeChatHandler):
             return self.reply_text(self.get_message('bind_account'))
         return self.reply_text(self.get_message('list'))
 
+
 class DDLCenterHandler(WeChatHandler):
 
     def check(self):
@@ -105,10 +106,11 @@ class DDLCenterHandler(WeChatHandler):
     def handle(self):
         pass
 
+
 class BulletScreenHandler(WeChatHandler):
 
     def check(self):
-        return self.is_text_command('弹幕') or self.is_event_click(self.view.event_keys['bullet_screen'])
+        return self.is_text_command('弹幕')
 
     def handle(self):
         dict = self.input['Content'].split(' ')
@@ -123,3 +125,30 @@ class BulletScreenHandler(WeChatHandler):
                                         content=bullet_content, status=False, release_time=current_time)
         dis.save()
         return self.reply_text(self.get_message('class_talk'))
+
+
+class getBulletScreen(WeChatHandler):
+    def check(self):
+        return self.is_event_click(self.view.event_keys['bullet_screen'])
+
+    def handle(self):
+        str = '发送"弹幕 课程id 想说的话"发送弹幕\n以下为您的选课列表：\n课程名 课程id'
+        userid = self.user.user_id
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        addr = 'http://se.zhuangty.com:8000/curriculum/' + userid + '?username=' + userid
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
+        return_json = r.json()
+        if return_json['message'] == 'Success':
+            for course_json in return_json['classes']:
+                course_num_list = course_json['courseid'].split('-')
+                courseid = course_num_list[3]
+                coursenum = course_num_list[4]
+                bulletid = courseid + '-' + coursenum
+                coursename = course_json['coursename']
+                course_str = '\n' + coursename + ' ' + bulletid
+                str = str + course_str
+        return self.reply_text(str)
