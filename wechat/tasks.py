@@ -9,6 +9,7 @@ from HappyXueTang.settings import WECHAT_APPID
 
 @app.task(name='wechat.tasks.get_notice')
 def get_notice():
+    print("in celery#########################################")
     users = User.objects.all()
     for user in users:
         if user.user_status != 0:
