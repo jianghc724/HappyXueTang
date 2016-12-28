@@ -29,5 +29,5 @@ def get_notice():
             # print(handler)
             if inst.check():
                 print("in handler")
-                inst.handle()
+                print(inst.handle())
     print("celery end")
