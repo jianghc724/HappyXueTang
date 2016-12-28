@@ -1,10 +1,10 @@
+from __future__ import absolute_import
 from wechat.wrapper import WeChatHandler
 from HappyXueTang import settings
 from wechat.models import *
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
 from datetime import datetime
-from __future__ import absolute_import
 from HappyXueTang.celery import app
 import requests, json
 from django.http import *
