@@ -1,5 +1,6 @@
 from wechat.wrapper import WeChatHandler
 from HappyXueTang import settings
+from HappyXueTang.celery import app
 from wechat.models import *
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
@@ -172,4 +173,6 @@ class GetNewNoticeHandler(WeChatHandler):
         return self.is_text('动态') or self.is_event_click(self.view.event_keys['get_new_trend'])
 
     def handle(self):
-        get_notice(self)
+        handler = self
+        # app.send_task()
+        get_notice(handler)
