@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^course/list?$', user.views.CourseList.as_view()),
     url(r'^ddl/list?$', user.views.GetDeadline.as_view()),
     url(r'^library/status?$', user.views.LibraryStatus.as_view()),
+    url(r'^bullet/screen?$', user.views.BulletScreen.as_view()),
 ]

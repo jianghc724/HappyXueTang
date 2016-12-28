@@ -504,8 +504,8 @@ class BulletScreen(APIView):
     def get(self):
         self.check_input('course_id')
         course_number_list = self.input['course_id'].split('-')
-        course_key = course_number_list[3]
-        course_number = course_number_list[4]
+        course_key = course_number_list[0]
+        course_number = course_number_list[1]
         discussions = Discussion.objects.filter(course_key=course_key).filter(course_number=course_number).\
             filter(status=False)
         result = []
