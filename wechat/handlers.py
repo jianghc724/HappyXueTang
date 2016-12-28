@@ -174,5 +174,5 @@ class GetNewNoticeHandler(WeChatHandler):
 
     def handle(self):
         handler = self
-        # app.send_task()
-        get_notice(handler)
+        app.send_task('tasks.get_notice', args=[handler])
+        # get_notice(handler)
