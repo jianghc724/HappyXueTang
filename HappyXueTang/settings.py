@@ -165,7 +165,7 @@ djcelery.setup_loader()
 
 BROKER_URL = 'django://'
 
-CELERY_IMPORTS = ('notice_celery.tasks', )
+CELERY_IMPORTS = ('wechat.tasks', )
 
 CELERY_TIMEZONE = TIME_ZONE
 
