@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" background-color="transparent">
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,7 +8,7 @@
     <title>快乐学堂</title>
 </head>
 
-<body background-color="transparent">
+<body>
     <div id="wrap">
     <header></header>
 
@@ -58,7 +58,7 @@
                     var marquee = document.createElement("marquee");
                     marquee.innerHTML = data[i].content;
                     mainbody.appendChild(marquee);
-                    setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 30000);
+                    setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 22000);
                 }
             }
             locals.pre_bullet = data;
