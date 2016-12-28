@@ -60,7 +60,7 @@
                     var mainbody = document.getElementById("mainbody");
                     var marquee = document.createElement("marquee");
                     marquee.innerHTML = data[i].content;
-                    marquee.loop = "1";
+                    marquee.behavior = "slide";
                     mainbody.appendChild(marquee);
                 }
             }
