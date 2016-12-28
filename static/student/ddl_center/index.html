@@ -6,6 +6,7 @@
     <link href="../../css/base.css" rel="stylesheet" type="text/css" />
     <link href="../../css/user/ddlcenter.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/semantic-ui/2.2.7/components/divider.css">
     <title>快乐学堂-DDL中心</title>
 </head>
 
@@ -25,33 +26,8 @@
     <div id="wrap">
     <div id="mainbody">
         <div class="ui cards" id="uicards">
-            <div class="card">
-                <div class="content">
-                    <div class="header">Elliot Fu</div>
-                    <div class="meta">Friend</div>
-                    <div class="description">Elliot Fu is a film-maker from New York. </div>
-                 </div>
-            </div>
-            <div class="card">
-                <div class="content">
-                    <div class="header">Elliot Fu</div>
-                    <div class="meta">Friend</div>
-                    <div class="description">Elliot Fu is a film-maker from New York. </div>
-                 </div>
-            </div>
-            <div class="card">
-                <div class="content ">
-                    <div class="header">Elliot Fu</div>
-                    <div class="meta">Friend</div>
-                    <div class="description">Elliot Fu is a film-maker from New York. </div>
-                    <div class="ui tiny orange progress" id="example2">
-                        <div class="bar"></div>
-                        <div class="progress"></div>
-                    </div>
-                 </div>
-            </div>
-            <div id="card_head">
-            </div>
+
+
         </div>
     </div>
     </div>
@@ -70,44 +46,57 @@
     $('#example2').progress({
         percent: 22
     });
-    $(function (){
-        data = [{homework_title:"微信抢票-迭代2",course_name:"软件工程3",homework_end_date:4,current_time:6}];
-        for (var i=0;i<data.length;i++)
-            {
-                var elem1 = $("<div></div>").text(data[i].homework_title).addClass("head");
-                var elem2 = $("<div></div>").text(data[i].course_name).addClass("meta");
-                var leftTime = data[i].homework_end_date - data[i].current_time;
-                var elem3 = $("<div></div>").text("距离截止还有" + leftTime).addClass("description");
-                var content = $("<div></div>").addClass("content");
-                var cardblock = $("<div></div>").addClass("card");
-                content.prepend(elem1,elem2,elem3);
-                cardblock.prepend(content);
-                $("#uicards").prepend(cardblock);
-            }
-    });
+
 
     $(function () {
         console.log(locals.isValidated);
         api.get('/api/u/ddl/list', {open_id: urlParam.open_id}, function (data) {
             locals.isLoading = false;
             locals.ddlData = data;
-            if(data != Null){
-                for (var i=0;i<data.length;i++)
-                {
-                    var elem1 = $("<div></div>").text(data[i].homework_title).addClass("head");
-                    var elem2 = $("<div></div>").text(data[i].course_name).addClass("meta");
-                    var leftTime = data[i].homework_end_date - data[i].current_time;
-                    var elem3 = $("<div></div>").text("距离截止还有" + homework_end_date).addClass("description");
-                    var content = $("<div></div>").addClass("content");
-                    var cardblock = $("<div></div>").addClass("card");
-                    content.prepend(elem1,elem2,elem3);
-                    cardblock.prepend(content);
-                    $("#uicards").append(cardblock);
-                    document.write(cars[i] + "<br>");
-                }
+            console.log(data);
+            if (data.length == 0){
+                var succ1 = $("<div></div>").text("Congrates!").addClass("head");
+                var succ2 = $("<div></div>").text("你已经提交当前所有作业啦！去复习吧~").addClass("meta");
+                var contentS = $("<div></div>").addClass("content");
+                var cardblockS = $("<div></div>").addClass("card");
+                contentS.prepend(succ1,succ2);
+                cardblockS.prepend(contentS);
+                $("#uicards").prepend(head0);
             }
+            for (var i=0;i<data.length;i++)
+            {
+                var elem1 = $("<div></div>").text(data[i].homework_title).addClass("head");
+                var elem2 = $("<div></div>").text(data[i].course_name).addClass("meta");
+                var due_time = new Date(data[i].homework_end_date);
+                var now_time = new Date(1000*data[i].current_time);
+                var sta_time = new Date(data[i].homework_start_date);
 
-            alert("数据: " + data );
+                var leftTime = (due_time.getTime() - now_time.getTime())/1000;
+                var left_day = Math.floor(leftTime/86400);
+                var left_hour = Math.floor(leftTime%86400/3600);
+                var left_minute = Math.floor(leftTime%86400%3600/60);
+
+                var ful_time = (due_time.getTime() - sta_time.getTime());
+                var lef_time = leftTime * 1000;
+
+                var elem3 = $("<div></div>").text("距离截止还有" + left_day + "天" + left_hour + "时" + left_minute + "分").addClass("description");
+                var content = $("<div></div>").addClass("content");
+                var cardblock = $("<div></div>").addClass("card");
+                var line = $("<div></div>").addClass("ui horizontal divider").text("rate of time passed");
+                var bar_box = $("<div ></div>").addClass("ui tiny orange progress");
+                var bar = $("<div></div>").addClass("bar");
+                var progress = $("<div></div>").addClass("progress");
+                bar.prepend(progress)
+                bar_box.prepend(bar);
+                content.prepend(elem1,elem2,elem3,line,bar_box);
+                cardblock.prepend(content);
+
+                bar_box.progress({
+                    percent: Math.floor(lef_time*100/ful_time)
+                });
+
+                $("#uicards").append(cardblock);
+            }
         }, dftFail);
     });
 

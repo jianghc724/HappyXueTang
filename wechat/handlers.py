@@ -172,7 +172,23 @@ class GetNewNoticeHandler(WeChatHandler):
     def check(self):
         return self.is_text('动态') or self.is_event_click(self.view.event_keys['get_new_trend'])
 
+    @app.task(name='wechat.handlers.GetNotice.get_notice')
     def handle(self):
-        handler = self
-        app.send_task('tasks.get_notice', args=[handler])
-        # get_notice(handler)
+        userid = self.user.user_id
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
+        return_json = r.json()
+        if return_json['message'] == 'Success':
+            total_notice = 0
+            total_homework = 0
+            course_json = return_json['courses']
+            for course in course_json:
+                print(course)
+                total_homework = total_homework + course['unsubmittedoperations']
+                total_notice = total_notice + course['unreadnotice']
+            return WeChatHandler.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")
