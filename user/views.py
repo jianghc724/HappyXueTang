@@ -511,7 +511,7 @@ class BulletScreen(APIView):
         for discuss in discussions:
             result.append({
                 'content':discuss.content,
-                'release_time':discuss.release_time,
+                'release_time':discuss.release_time.timestamp(),
             })
             discuss.status = True
             discuss.save()
