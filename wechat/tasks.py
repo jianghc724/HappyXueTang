@@ -1,14 +1,14 @@
 from __future__ import absolute_import
 from HappyXueTang.celery import app
-from wechat.models import *
+from HappyXueTang.wrapper import *
 from HappyXueTang.settings import API_SECRET, API_KEY
 
 import requests
 import json
 
-@app.tasks
-def get_notice(self):
-    userid = self.user.user_id
+@app.task
+def get_notice(WeChatHandler):
+    userid = WeChatHandler.user.user_id
     data = {
         "apikey": API_KEY,
         "apisecret": API_SECRET,
@@ -25,4 +25,4 @@ def get_notice(self):
             print (course)
             total_homework = total_homework + course['unsubmittedoperations']
             total_notice = total_notice + course['unreadnotice']
-        return self.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")
+        return WeChatHandler.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")
