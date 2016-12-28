@@ -18,19 +18,19 @@
     </footer>
 
     <h4 class="ui block header">
-        <i class="book icon"></i>
-        <div class="content">我要搜客<div class="sub header">Find every course info you want!</div></div>
+        <i class="student icon"></i>
+        <div class="content">我要搜课<div class="sub header">Find every course info you want!</div></div>
     </h4>
 
     <div id="wrap">
     <div id="mainbody">
-        
-
-    <div class="ui divider"></div>
     <div id="seat_cover">
-        <div class="ui relaxed divided" id="list_start">
-
-        </div>
+        <form class="ui icon input" id="search_course">
+            <input type="text" placeholder="Search...">
+            <i class="circular search link icon"></i>
+        </form>
+        <a class="ui button" id="h-submitBtn">提交</a>
+        <div class="ui relaxed divided" id="list_start"></div>
     </div>
 
 
@@ -42,26 +42,24 @@
     <script src="/js/weixin_lib.js"></script>
     <script src="/js/base.js"></script>
     <script src="/js/user/validation.js"></script>
+    <script src="http://cdn.bootcss.com/semantic-ui/2.2.7/components/search.js"></script>
+    <script src="http://cdn.bootcss.com/semantic-ui/2.2.7/components/api.js"></script>
     <script>
     var locals = {
         isBinding: false,
         ddlData:[],
         seats:[]
     };
-    $(function () {
-        console.log(locals.isValidated);
-        api.get('/api/u/library/status', {open_id: urlParam.open_id}, function (data) {
-            locals.isLoading = false;
-            locals.seats = data;
-            $("#btn1").addClass("active");
-            for (var i=0;i<locals.seats.length;i++)
+    $("#h-submitBtn").click(function(){
+        api.get('/api/u/search/course', {open_id: urlParam.open_id}, function (data) {
+            alert("in");
+            for (var i=0;i<data.length;i++)
             {
                 var elem0 = $("<div></div>").addClass("item");
                 var elem1 = $("<div></div>").addClass("three ui basic buttons");
-                var elem2 =  $("<div></div>").addClass("ui button").text(locals.seats[i].name);
-                var elem3 =  $("<div></div>").addClass("ui button").text(locals.seats[i].left);
-                var elem4 =  $("<div></div>").addClass("ui button").text(locals.seats[i].used);
-                elem1.prepend(elem2,elem3,elem4);
+                var elem2 =  $("<div></div>").addClass("ui button").text(data[i].course_name);
+                var elem3 =  $("<div></div>").addClass("ui button").text(data[i].course_teacher);
+                elem1.prepend(elem2,elem3);
                 elem0.prepend(elem1);
                 $("#list_start").prepend(elem0);
             }
@@ -76,9 +74,8 @@
             console.log(locals.seats);
             console.log(data);
         }, dftFail);
-        console.log(locals.seats);
-
     });
+
     </script>
 
 </body>

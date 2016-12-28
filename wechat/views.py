@@ -89,9 +89,9 @@ class CustomWeChatView(WeChatView):
                         "url": settings.get_url('student/library_status', {'open_id': WeChatView.wechatUser.open_id}),
                     },
                     {
-                        "type": "click",
+                        "type": "view",
                         "name": "我要搜课",
-                        "key": event_keys['search_lecture'],
+                        "url": settings.get_url('student/search_course', {'open_id': WeChatView.wechatUser.open_id}),
                     },
                     {
                         "type": "click",
