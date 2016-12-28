@@ -26,8 +26,8 @@ def get_notice():
         for handler in CustomWeChatView.handlers:
             inst = handler(CustomWeChatView, msg, user)
             # print("233")
-            print(handler)
+            # print(handler)
             if inst.check():
                 print("in handler")
-                return inst.handle()
+                inst.handle()
     print("celery end")
