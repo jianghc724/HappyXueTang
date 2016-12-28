@@ -9,3 +9,6 @@
 .button {
   font-size: 12px;
 }
+#comment-list {
+  margin-bottom: 5px;
+}

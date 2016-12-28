@@ -42,8 +42,8 @@
                 </div>
             </div>
             <div id="comment-buttons"class="seven wide column">
-                <button id= "comment-list" class="ui inverted blue button">评价列表</button>
-                <button id="go-comment" class="ui inverted blue button">评价课程</button>
+                <button id= "comment-list" class="ui inverted blue button" v-on:click="jump(0)">评价列表</button>
+                <button id="go-comment" class="ui inverted blue button" v-on:click="jump(1)">评价课程</button>
             </div>
             <div id="new-pannel" class="extra content" v-if="status > 0">
 
