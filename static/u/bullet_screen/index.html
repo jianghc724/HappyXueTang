@@ -9,7 +9,6 @@
 </head>
 
 <body background-color="transparent">
-    <marquee behavior="slide">aaaa</marquee>
     <div id="wrap">
     <header></header>
 
@@ -34,8 +33,7 @@
     <script src="/js/user/validation.js"></script>
     <script>
     var locals = {
-        pre_bullet: [],
-        new_bullet: []
+        pre_bullet: []
     }
     var render = function () {
         $('header').html(swig.render($('#tpl-header').html(), {locals: locals}));
@@ -45,7 +43,6 @@
     setInterval("getBullet()", 1000);
     var getBullet = function () {
         api.get('/api/u/bullet/screen', {course_id: urlParam.course_id}, function (data) {
-            locals.new_bullet.length = 0;
             var length = data.length;
             var pre_length = locals.pre_bullet.length;
             for (var i = 0; i < length; i++) {
@@ -61,8 +58,10 @@
                     var mainbody = document.getElementById("mainbody");
                     var marquee = document.createElement("marquee");
                     marquee.innerHTML = data[i].content;
-                    marquee.style.loop = 1;
                     mainbody.appendChild(marquee);
+                    setTimeout(function() {
+                        marquee.parentNode.removeChild(marquee);
+                    }, 20000);
                 }
             }
             locals.pre_bullet = data;
