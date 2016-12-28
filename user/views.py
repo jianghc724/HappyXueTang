@@ -250,7 +250,8 @@ class GetDeadline(APIView):
                 if _return_json['message'] == 'Success':
                     assignments = _return_json['assignments']
                     for assignment in assignments:
-                        if current_time > assignment['duedate'] and assignment['state'] == '尚未提交':
+                        if current_time * 1000 < assignment['duedate'] and assignment['state'] == '尚未提交':
+                            print("in if")
                             result.append({
                                 'course_name':course_json['coursename'],
                                 'homework_title':assignment['title'],
