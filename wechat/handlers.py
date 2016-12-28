@@ -1,5 +1,7 @@
+from __future__ import absolute_import
 from wechat.wrapper import WeChatHandler
 from HappyXueTang import settings
+from HappyXueTang.celery import app
 from wechat.models import *
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
@@ -164,3 +166,32 @@ class GetBulletScreenHandler(WeChatHandler):
                 course_str = '\n' + coursename + ' ' + bulletid
                 str = str + course_str
         return self.reply_text(str)
+
+
+class GetNewNoticeHandler(WeChatHandler):
+    def check(self):
+        return self.is_text('动态') or self.is_event_click(self.view.event_keys['get_new_trend'])
+
+    def handle(self):
+        get_notice(self)
+
+@app.tasks
+def get_notice(self):
+    userid = self.user.user_id
+    data = {
+        "apikey": API_KEY,
+        "apisecret": API_SECRET,
+    }
+    headers = {'content-type': 'application/json'}
+    addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
+    r = requests.post(addr, data=json.dumps(data), headers=headers)
+    return_json = r.json()
+    if return_json['message'] == 'Success':
+        total_notice = 0
+        total_homework = 0
+        course_json = return_json['courses']
+        for course in course_json:
+            print(course)
+            total_homework = total_homework + course['unsubmittedoperations']
+            total_notice = total_notice + course['unreadnotice']
+        return self.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")

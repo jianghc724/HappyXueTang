@@ -165,7 +165,7 @@ djcelery.setup_loader()
 
 BROKER_URL = 'django://'
 
-CELERY_IMPORTS = ('wechat.tasks', )
+CELERY_IMPORTS = ('wechat.handlers', )
 
 CELERY_TIMEZONE = TIME_ZONE
 
@@ -173,7 +173,7 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 CELERYBEAT_SCHEDULE = {
     'add-every-2-hours': {
-        'task': 'wechat.tasks.GetNewNoticeHandler.handle',
+        'task': 'wechat.handlers.get_notice',
         'schedule': timedelta(minutes=1)
     },
 }
