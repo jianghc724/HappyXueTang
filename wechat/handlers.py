@@ -5,7 +5,6 @@ from wechat.models import *
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
 from datetime import datetime
-from wechat.tasks import *
 import requests, json
 from django.http import *
 from django.http import HttpResponse,request
