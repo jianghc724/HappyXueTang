@@ -11,7 +11,7 @@ from HappyXueTang.settings import WECHAT_APPID
 def get_notice():
     users = User.objects.all()
     for user in users:
-        print(user.student_id)
+        print(user.user_id)
         if user.user_status != 0:
             continue
         print(user.user_id)
