@@ -3,6 +3,7 @@ from django.utils import timezone
 from wechat.wrapper import WeChatView, WeChatLib
 from wechat.models import User
 from wechat.handlers import *
+from wechat.tasks import *
 from HappyXueTang.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET, get_url
 
 
@@ -12,7 +13,7 @@ class CustomWeChatView(WeChatView):
 
     handlers = [
         UnbindOrUnsubscribeHandler, BindAccountHandler, CourseListHandler,
-        BulletScreenHandler, DDLCenterHandler
+        BulletScreenHandler, DDLCenterHandler, GetBulletScreenHandler, GetNewNoticeHandler
     ]
 
     error_message_handler = ErrorHandler
