@@ -46,7 +46,7 @@ def get_notice():
             "msgtype": "text",
             "text":
                 {
-                    "content": return_str.encode('gb2132')
+                    "content": return_str.encode('gbk')
                 }
 
         }
