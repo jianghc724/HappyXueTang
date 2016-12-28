@@ -14,7 +14,7 @@ def get_notice():
         print(user.student_id)
         if user.user_status != 0:
             continue
-        print(user.student_id)
+        print(user.user_id)
         msg = {
             'FromUserName': user.open_id,
             'ToUserName': WECHAT_APPID,
