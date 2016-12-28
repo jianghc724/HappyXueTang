@@ -6,8 +6,8 @@ from HappyXueTang.settings import API_SECRET, API_KEY
 import requests
 import json
 
-
-def handle(self):
+@app.tasks
+def get_notice(self):
     userid = self.user.user_id
     data = {
         "apikey": API_KEY,
