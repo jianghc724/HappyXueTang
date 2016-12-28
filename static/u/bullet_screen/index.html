@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" background-color="transparent">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,7 +8,7 @@
     <title>快乐学堂</title>
 </head>
 
-<body>
+<body background-color="transparent">
     <div id="wrap">
     <header></header>
 
@@ -16,7 +16,6 @@
 
     <hr/>
     <div id="mainbody"></div>
-
     </div>
 
     <footer id="footer">
@@ -25,14 +24,7 @@
         &copy; 2016
     </footer>
 
-    <script type="text/template" id="tpl-header">
-        <img class="header-img" src="/img/xuetang-header.png"/>
-    </script>
-
     <script type="text/template" id="tpl-theme">课程弹幕</script>
-
-    <script type="text/template" id="tpl-mainbody">
-    </script>
     <script src="/3rd/jquery.js"></script>
     <script src="/3rd/swig.js"></script>
     <script src="/3rd/vue.js"></script>
@@ -42,16 +34,16 @@
     <script>
     var locals = {
         pre_bullet: [],
-        new_bullet: [{content:"cant find conglinag liyou", src:"df"},{content:"abc", src:"dfsfsd"},{content:"i dont want to go to school", src:"aaa"}]
+        new_bullet: []
     }
     var render = function () {
         $('header').html(swig.render($('#tpl-header').html(), {locals: locals}));
         $('#theme').html(swig.render($('#tpl-theme').html(), {locals: locals}));
         $('#mainbody').html(swig.render($('#tpl-mainbody').html(), {locals: locals}));
     };
-    setInterval("getBullet()", 1000);
+    setInterval("getBullet()", 100);
     var getBullet = function () {
-        api.get('/api/u/bullet/screen', {course_id: urlParam.course_id, course_number: urlParam.course_number}, function (data) {
+        api.get('/api/u/bullet/screen', {course_id: urlParam.course_id}, function (data) {
             locals.new_bullet.length = 0;
             var length = data.length;
             var pre_length = locals.pre_bullet.length;
@@ -63,13 +55,12 @@
                         break;
                     }
                 }
-                if (flag == 1) {
+                if (flag == 0) {
                     locals.new_bullet.push(data[i]);
-                    $("#tpl-mainbody").append($("<marquee></marquee>").text(data[i].content)).attr("scrollamount", 5*data[i].content.length);
+                    $("#mainbody").append($("<marquee></marquee>").text(data[i].content).attr("loop","1"));
                 }
             }
             locals.pre_bullet = data;
-            $('marquee').attr("loop", 1);
             render();
         }, dftFail);
     };
