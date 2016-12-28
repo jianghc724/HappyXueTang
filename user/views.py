@@ -621,5 +621,7 @@ class InfoSearch(APIView):
                     'course_teacher': cou.teacher,
                 })
         print(result)
+        if search=="":
+            return {'courses':[]}
         return result
 
