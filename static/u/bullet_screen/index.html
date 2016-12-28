@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <marquee>我不听</marquee>
     <div id="wrap">
     <header></header>
 
@@ -57,7 +58,9 @@
                     var mainbody = document.getElementById("mainbody");
                     var marquee = document.createElement("marquee");
                     marquee.innerHTML = data[i].content;
-                    mainbody.appendChild(marquee);
+                    marquee.style.position = "absolute";
+                    marquee.style.top = 500 * Math.random() + "px";
+                    mainbody.appendChild(marquee); 
                     setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 22000);
                 }
             }
