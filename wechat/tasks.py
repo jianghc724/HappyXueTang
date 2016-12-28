@@ -40,7 +40,7 @@ def get_notice():
         # print(access_json)
         access_token = access_json['access_token']
         return_unistr = "您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业"
-        return_str = return_unistr.encode('utf-8')
+        return_str = return_unistr.encode('utf8')
         print(return_str)
         we_addr = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + access_token
         we_data = {
