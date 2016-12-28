@@ -54,10 +54,8 @@
                     }
                 }
                 if (flag == 0) {
-                    var mainbody = document.getElementById("mb");
-                    var marquee = document.createElement("marquee");
-                    marquee.innerHTML = data[i].content;
-                    mainbody.appendChild(marquee);
+                    var marquee = $("<marquee></marquee>").text(data[i].content);
+                    $("#mb").prepend(marquee);
                     setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 30000);
                 }
             }
