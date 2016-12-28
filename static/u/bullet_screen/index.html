@@ -54,14 +54,11 @@
                     }
                 }
                 if (flag == 0) {
-                    locals.new_bullet.push(data[i]);
                     var mainbody = document.getElementById("mainbody");
                     var marquee = document.createElement("marquee");
                     marquee.innerHTML = data[i].content;
                     mainbody.appendChild(marquee);
-                    setTimeout(function() {
-                        marquee.parentNode.removeChild(marquee);
-                    }, 20000);
+                    setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 20000);
                 }
             }
             locals.pre_bullet = data;
