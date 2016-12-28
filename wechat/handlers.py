@@ -1,9 +1,11 @@
 from wechat.wrapper import WeChatHandler
 from HappyXueTang import settings
+from HappyXueTang.celery import app
 from wechat.models import *
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
 from datetime import datetime
+from wechat.tasks import *
 import requests, json
 from django.http import *
 from django.http import HttpResponse,request
@@ -119,9 +121,9 @@ class BulletScreenHandler(WeChatHandler):
         course_k_a_n = dict[1]
         course_detail = dict[1].split('-')
         course_key = course_detail[0]
-        course_number = course_detail[10]
+        course_number = course_detail[1]
         bullet_content = dict[2]
-        current_time = datetime.now().timestamp()
+        current_time = datetime.now()
         dis = Discussion.objects.create(student_id=student_id, course_key=course_key, course_number = course_number,
                                         content=bullet_content, status=False, release_time=current_time)
         dis.save()
@@ -164,3 +166,13 @@ class GetBulletScreenHandler(WeChatHandler):
                 course_str = '\n' + coursename + ' ' + bulletid
                 str = str + course_str
         return self.reply_text(str)
+
+
+class GetNewNoticeHandler(WeChatHandler):
+    def check(self):
+        return self.is_text('动态') or self.is_event_click(self.view.event_keys['get_new_trend'])
+
+    def handle(self):
+        handler = self
+        app.send_task('tasks.get_notice', args=[handler])
+        # get_notice(handler)

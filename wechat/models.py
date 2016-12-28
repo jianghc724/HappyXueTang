@@ -25,6 +25,7 @@ class Course(models.Model):
     name = models.CharField(max_length=128)
     key = models.CharField(max_length=16, db_index=True)
     number = models.IntegerField()
+    course_id = models.CharField(max_length=32)
     teacher = models.CharField(max_length=32)
     semester = models.IntegerField(default=3)
     week = models.IntegerField()
@@ -43,6 +44,7 @@ class Course(models.Model):
     COURSE_SPRING_ONLY = 2
     COURSE_BOTH_SEMESTER = 3
     COURSE_SUMMER_ONLY = 4
+
 
 class Discussion(models.Model):
     student_id = models.CharField(max_length=16)
@@ -69,6 +71,7 @@ class StudentCourse(models.Model):
     student_id = models.CharField(max_length=16, db_index=True)
     course_key = models.CharField(max_length=16, db_index=True)
     course_number = models.IntegerField()
+    course_id = models.CharField(max_length=32)
     semester = models.CharField(max_length=16)
     status = models.IntegerField(default=0, null=True, blank=True)
     grading_policy = models.IntegerField(null=True, blank=True)

@@ -18,7 +18,7 @@ class CustomWeChatView(WeChatView):
 
     error_message_handler = ErrorHandler
     default_handler = DefaultHandler
-    #SITE_DOMAIN = "http://59.66.250.60/"
+    SITE_DOMAIN = "http://59.66.250.60/"
 
     event_keys = {
         'get_curriculum_schedule': 'SERVICE_GET_CURRICULUM_SCHEDULE',
@@ -84,9 +84,9 @@ class CustomWeChatView(WeChatView):
                 "name": "学习助手",
                 "sub_button": [
                     {
-                        "type": "click",
+                        "type": "view",
                         "name": "我要自习",
-                        "key": event_keys['get_library'],
+                        "url": settings.get_url('student/library_status', {'open_id': WeChatView.wechatUser.open_id}),
                     },
                     {
                         "type": "click",

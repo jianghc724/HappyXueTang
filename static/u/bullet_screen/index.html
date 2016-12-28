@@ -16,7 +16,6 @@
 
     <hr/>
     <div id="mainbody"></div>
-
     </div>
 
     <footer id="footer">
@@ -25,17 +24,7 @@
         &copy; 2016
     </footer>
 
-    <script type="text/template" id="tpl-header">
-        <img class="header-img" src="/img/xuetang-header.png"/>
-    </script>
-
     <script type="text/template" id="tpl-theme">课程弹幕</script>
-
-    <script type="text/template" id="tpl-mainbody">
-        {% for bullet in new_bullet %}
-        <span>{{ bullet.content }}</span>
-        {% endfor %}
-    </script>
     <script src="/3rd/jquery.js"></script>
     <script src="/3rd/swig.js"></script>
     <script src="/3rd/vue.js"></script>
@@ -43,31 +32,39 @@
     <script src="/js/base.js"></script>
     <script src="/js/user/validation.js"></script>
     <script>
-    var pre_bullet = [];
-    var new_bullet = [{content:"cant find conglinag liyou", src:"df"},{content:"abc", src:"dfsfsd"},{content:"i dont want to go to school", src:"aaa"}];
+    var locals = {
+        pre_bullet: [],
+        new_bullet: []
+    }
     var render = function () {
         $('header').html(swig.render($('#tpl-header').html(), {locals: locals}));
         $('#theme').html(swig.render($('#tpl-theme').html(), {locals: locals}));
         $('#mainbody').html(swig.render($('#tpl-mainbody').html(), {locals: locals}));
     };
+    setInterval("getBullet()", 30000);
     var getBullet = function () {
-        api.get('/api/u/bullet/screen', {course_id: , course_number:}, function (data) {
-            new_bullet.length = 0;
-            var new_length = data.length;
-            var pre_length = pre_bullet.length;
-            for (var i = 0; i < new_length; i++) {
+        api.get('/api/u/bullet/screen', {course_id: urlParam.course_id}, function (data) {
+            locals.new_bullet.length = 0;
+            var length = data.length;
+            var pre_length = locals.pre_bullet.length;
+            console.log("heihei");
+            for (var i = 0; i < length; i++) {
                 var flag = 0;
                 for (var j = 0; j < pre_length; j++) {
-                    if (data[i] == pre_bullet[j]) {
+                    if (data[i] == locals.pre_bullet[j]) {
                         flag = 1;
                         break;
                     }
                 }
-                if (flag == 1) {
-                    new_bullet.push(data[i]);
+                if (flag == 0) {
+                    locals.new_bullet.push(data[i]);
+                    $("#mainbody").append($("<marquee></marquee>").text(data[i].content)).attr("scrollamount", 5*data[i].content.length);
+                    console.log("xixi");
                 }
             }
-            pre_bullet = data;
+            locals.pre_bullet = data;
+            $('marquee').attr("loop", 1);
+            render();
         }, dftFail);
     };
     </script>

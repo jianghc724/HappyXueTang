@@ -137,7 +137,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'zh-Hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -173,7 +173,7 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 CELERYBEAT_SCHEDULE = {
     'add-every-2-hours': {
-        'task': 'wechat.tasks.GetNewNoticeHandler.handle',
+        'task': 'wechat.tasks.get_notice',
         'schedule': timedelta(minutes=1)
     },
 }
