@@ -46,13 +46,28 @@
                 <button id= "comment-list" class="ui inverted blue button" v-on:click="jump(0)">评价列表</button>
                 <button id="go-comment" class="ui inverted blue button" v-on:click="jump(1)">评价课程</button>
             </div>
-            <div id="new-pannel" class="extra content" v-if="status > 0">
-                <div id="nav-bar" class= "ui three column grid">
+            </div>
+            <div id="new-pannel" class="ui extra content grid" v-if="status > 0">
+                <div id="nav-bar" class= "ui three column row">
                     <div id="overall" class="five wide column">
+                    全部
                     </div>
                     <div id="announcements" class="five wide column">
+                    公告
                     </div>
                     <div id="homework" class="five wide column">
+                    作业
+                    </div>
+                </div>
+                <div id="content-pannel" class= "row">
+                    <div id="overall" class="five wide column" v-if="status==0">
+                    全部
+                    </div>
+                    <div id="announcements" class="five wide column" v-if="status==1">
+                    公告
+                    </div>
+                    <div id="homework" class="five wide column" v-if="status==2">
+                    作业
                     </div>
                 </div>
             </div>
