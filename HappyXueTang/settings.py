@@ -148,6 +148,7 @@ USE_TZ = True
 
 SITE_DOMAIN = CONFIGS['SITE_DOMAIN'].rstrip('/')
 
+
 def get_url(path, params=None):
     full_path = urllib.parse.urljoin(SITE_DOMAIN, path)
     if params:
@@ -173,7 +174,7 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 CELERYBEAT_SCHEDULE = {
     'add-every-2-hours': {
-        'task': 'notice_celery.tasks.get_notice_task',
+        'task': 'wechat.tasks.get_notice_task',
         'schedule': timedelta(minutes=1)
     },
 }
