@@ -28,5 +28,5 @@ def get_notice():
             print(handler)
             if inst.check():
                 print("in handler")
-                return inst.handle()
-        return WeChatView.default_handler(WeChatView, msg, user).handle()
+                inst.handle()
+    print("celery end")
