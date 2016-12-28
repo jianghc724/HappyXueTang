@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-
+from wechat.wrapper import WeChatHandler
 from HappyXueTang.celery import app
 from wechat.models import *
 from HappyXueTang.settings import API_SECRET, API_KEY
@@ -8,13 +8,13 @@ import requests
 import json
 
 
-@app.task
-def get_notice_task():
-    users = User.objects.all()
-    for user in users:
-        if user.user_status != 0:
-            continue
-        userid = user.user_id
+class GetNewNoticeHandler(WeChatHandler):
+    def check(self):
+        return self.is_text('动态') or self.is_event_click(self.view.event_keys['get_new_trend'])
+
+    @app.task()
+    def handle(self):
+        userid = self.user.user_id
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
@@ -28,11 +28,7 @@ def get_notice_task():
             total_homework = 0
             course_json = return_json['courses']
             for course in course_json:
-                total_homework = total_homework + course['unsubmittedopertions']
+                print (course)
+                total_homework = total_homework + course['unsubmittedoperations']
                 total_notice = total_notice + course['unreadnotice']
-            result = {
-                'notices': total_notice,
-                'homework': total_homework,
-            }
-    # print ("celery work")
-    pass
+            return self.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")
