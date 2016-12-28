@@ -155,18 +155,7 @@ class CourseDetail(APIView):
                             'unsubmitted_homework': course_json['unsubmittedoperations'],
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
-                            'ratings':[],
-                            'comments':[]
                         }
-                        print(result)
-                        cou = Course.objects.filter(key=course_key).filter(number=course_number)
-                        try:
-                            result['ratings'].append(cou[0].rating_one)
-                            result['ratings'].append(cou[0].rating_two)
-                            result['ratings'].append(cou[0].rating_three)
-                            result['comments'] = self.get_comment_list(cou[0])
-                        except:
-                            raise CourseError('No such course')
                         return result
                 cous = Course.objects.filter(course_id=input_course_id)
                 if cous:
@@ -176,13 +165,7 @@ class CourseDetail(APIView):
                         'ratings':ratings,
                         'teacher': course_json['teacher'],
                         'email': course_json['email'],
-                        'ratings':[],
-                        'comments':[]
                     }
-                    result['ratings'].append(cous[0].rating_one)
-                    result['ratings'].append(cous[0].rating_two)
-                    result['ratings'].append(cous[0].rating_three)
-                    result['comments'] = self.get_comment_list(cous[0])
                     return result
                 else:
                     raise CourseError('No such course')
@@ -198,18 +181,8 @@ class CourseDetail(APIView):
                     'status': 1,
                     'notice_detail':[],
                     'teacher': course_json['teacher'],
-                    'email': course_json['email'],
-                    'ratings':[],
-                    'comments':[]
+                    'email': course_json['email']
                 }
-                cou = Course.objects.filter(key=course_key).filter(number=course_number)
-                try:
-                    result['ratings'].append(cou[0].rating_one)
-                    result['ratings'].append(cou[0].rating_two)
-                    result['ratings'].append(cou[0].rating_three)
-                    result['comments'] = self.get_comment_list(cou[0])
-                except:
-                    raise CourseError('No such course')
                 for notice in notices:
                     result['notice_detail'].append({
                         'title': notice['title'],
@@ -228,13 +201,7 @@ class CourseDetail(APIView):
                             'status': -1,
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
-                            'ratings':[],
-                            'comments':[]
                         }
-                        result['ratings'].append(cous[0].rating_one)
-                        result['ratings'].append(cous[0].rating_two)
-                        result['ratings'].append(cous[0].rating_three)
-                        result['comments'] = self.get_comment_list(cous[0])
                     else:
                         raise CourseError('No such course')
         if status == '2':
@@ -248,17 +215,7 @@ class CourseDetail(APIView):
                     'teacher': course_json['teacher'],
                     'email': course_json['email'],
                     'new_operations': [],
-                    'ratings':[],
-                    'comments':[]
                 }
-                cou = Course.objects.filter(key=course_key).filter(number=course_number)
-                try:
-                    result['ratings'].append(cou[0].rating_one)
-                    result['ratings'].append(cou[0].rating_two)
-                    result['ratings'].append(cou[0].rating_three)
-                    result['comments'] = self.get_comment_list(cou[0])
-                except:
-                    raise CourseError('No such course')
                 for operation in operations:
                     if operation['state'] == "尚未提交":
                         result['new_operations'].append({
@@ -280,16 +237,36 @@ class CourseDetail(APIView):
                             'status': -1,
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
-                            'ratings':[],
-                            'comments':[]
                         }
-                        result['ratings'].append(cous[0].rating_one)
-                        result['ratings'].append(cous[0].rating_two)
-                        result['ratings'].append(cous[0].rating_three)
-                        result['comments'] = self.get_comment_list(cous[0])
                     else:
                         raise CourseError('No such course')
         
+class CommentOverview(APIView):
+    def get(self):
+        self.check_input('course_id','open_id')
+        course_number_list = self.input['course_id'].split('-')
+        course_key = course_number_list[3]
+        course_number = course_number_list[4]
+        cou = Course.objects.filter(key=course_key).filter(number=course_number)
+        try:
+            result = {
+                'ratings': [],
+                'comments': [],
+                'course_info':{
+                    'course_id': self.input['course_id'],
+                    'course_key': cou[0].key,
+                    'course_number': cou[0].number,
+                    'course_name': cou[0].name,
+                },
+            }
+            result['ratings'].append(cou[0].rating_one)
+            result['ratings'].append(cou[0].rating_two)
+            result['ratings'].append(cou[0].rating_three)
+            result['comments'] = self.get_comment_list(cou[0])
+        except:
+            raise CourseError('No such course')
+        return result
+
     def get_comment_list(self, cou):
         all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
         comments = []
@@ -321,6 +298,54 @@ class CourseDetail(APIView):
             comment_list[i - 1] = temp_com
             i = i - 1
         return comment_list
+
+
+class MakeComment(APIView):
+    def get(self):
+        self.check_input('course_id')
+        course_number_list = self.input['course_id'].split('-')
+        course_key = course_number_list[3]
+        course_number = course_number_list[4]
+        try:
+            cou = Course.objects.filter(key=course_key).get(number=course_number)
+        except:
+            raise CourseError('No such course')
+        result = {
+            'ratings': [],
+            'course_info': {
+                'course_id': self.input['course_id'],
+                'course_key': cou.key,
+                'course_number': cou.number,
+                'course_name': cou.name,
+            },
+        }
+        result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
+        return result
+
+    def post(self):
+        self.check_input('open_id', 'course_id', 'rating_one', 'rating_two', 'rating_three', 'comment')
+        course_number_list = self.input['course_id'].split('-')
+        course_key = course_number_list[3]
+        course_number = course_number_list[4]
+        try:
+            cou = Course.objects.filter(key=course_key).get(number=course_number)
+        except:
+            raise CourseError('No such course')
+        user = User.get_by_openid(self.input['open_id'])
+        current_time = datetime.now()
+        com = Comment.objects.create(student_id=user.user_id, course_key=course_key, course_number=course_number,
+                                     rating_one=self.input['rating_one'], rating_two=self.input['rating_two'], rating_three=self.input['rating_three'],
+                                     rating_time=current_time, rating_comment = self.input['comment'])
+        com.save()
+        total_people = cou.rating_people
+        total_rating_one = cou.rating_one * total_people
+        cou.rating_one = (total_rating_one + self.input['rating_one']) / (total_people + 1)
+        total_rating_two = cou.rating_two * total_people
+        cou.rating_two = (total_rating_two + self.input['rating_two']) / (total_people + 1)
+        total_rating_three = cou.rating_three * total_people
+        cou.rating_three = (total_rating_three + self.input['rating_three']) / (total_people + 1)
+        cou.rating_people = total_people + 1
+        cou.save()
 
 class GetDeadline(APIView):
     def get(self):
@@ -596,5 +621,7 @@ class InfoSearch(APIView):
                     'course_teacher': cou.teacher,
                 })
         print(result)
+        if search=="":
+            return {'courses':[]}
         return result
 
