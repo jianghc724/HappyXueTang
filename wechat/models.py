@@ -45,28 +45,6 @@ class Course(models.Model):
     COURSE_BOTH_SEMESTER = 3
     COURSE_SUMMER_ONLY = 4
 
-
-class Notice(models.Model):
-    course_key = models.CharField(max_length=16, db_index=True)
-    course_number = models.IntegerField()
-    notice_id = models.IntegerField(blank=True)
-    title = models.CharField(max_length=32)
-    content = models.TextField()
-    release_person = models.CharField(max_length=32)
-    release_time = models.DateTimeField()
-
-
-class Homework(models.Model):
-    course_key = models.CharField(max_length=16, db_index=True)
-    course_number = models.IntegerField(blank=True)
-    assignment_id = models.IntegerField(blank=True)
-    title = models.CharField(max_length=32)
-    instructions = models.TextField()
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField(db_index=True)
-    has_attachment = models.BooleanField()
-
-
 class Discussion(models.Model):
     student_id = models.CharField(max_length=16)
     course_key = models.CharField(max_length=16, db_index=True)
@@ -103,14 +81,3 @@ class StudentCourse(models.Model):
 
     COURSE_PF = 0
     COURSE_RATING = 1
-
-
-class StudentNotice(models.Model):
-    student_id = models.CharField(max_length=16, db_index=True)
-    notice_id = models.IntegerField(blank=True)
-
-
-class StudentHomework(models.Model):
-    student_id = models.CharField(max_length=16, db_index=True)
-    assignment_id = models.IntegerField(blank=True)
-    status = models.BooleanField()

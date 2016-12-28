@@ -159,9 +159,6 @@ class CourseDetail(APIView):
                         'publishtime': notice['publishtime'],
                         'content': notice['content'],
                     })
-                    nocs = StudentNotice.objects.filter(notice_id=noticeid).filter(student_id=userid)
-                    if not nocs:
-                        noc = StudentNotice.objects.create(notice_id=noticeid, student_id=userid)
                 return result
             else:
                 if return_json['reason'] == 'Invalid username':
@@ -195,20 +192,6 @@ class CourseDetail(APIView):
                             'detail': operation['detail'],
                             'fileurl': operation['fileurl'],
                         })
-                    assis = StudentHomework.objects.filter(student_id=userid).filter(assignment_id=assignment_id)
-                    if assis:
-                        if operation['state'] == "尚未提交":
-                            assis[0].status = False
-                        else:
-                            assis[0].status = True
-                        assis[0].save()
-                    else:
-                        if operation['state'] == "尚未提交":
-                            assi_status = False
-                        else:
-                            assi_status = True
-                        assi = StudentHomework.objects.create(student_id=userid, assignment_id=assignment_id, status=assi_status)
-                        assi.save()
                 return result
             else:
                 if return_json['reason'] == 'Invalid username':
@@ -297,12 +280,6 @@ class GetNotice(APIView):
                     notices = _return_json['notices']
                     for notice in notices:
                         noticeid = notice['noticeid']
-                        _notices = StudentNotice.objects.filter(notice_id=noticeid).filter(student_id=userid)
-                        if not _notices:
-                            noc = StudentNotice.objects.create(notice_id=noticeid, student_id=userid)
-                            noc.save()
-                        else:
-                            noc = StudentNotice.objects.filter(notice_id=noticeid).get(student_id=userid)
                         if notice['state'] == 'unread':
                             result.append({
                                 'course_name':course_json['coursename'],
@@ -541,25 +518,7 @@ class InfoSearch(APIView):
         userid = User.get_by_openid(self.input['open_id']).user_id
         result = {
             'courses':[],
-            'notices': [],
-            'operations': [],
         }
-        studentnotices = StudentNotice.objects.filter(student_id=userid)
-        for studentnotice in studentnotices:
-            notice = studentnotice.notice
-            if (search in notice.title) or (search in notice.content):
-                result['notices'].append({
-                    'title': notice.title,
-                    'content': notice.content,
-                })
-        studentoperations = StudentHomework.objects.filter(student_id=userid)
-        for studentoperation in studentoperations:
-            operation = studentoperation.homework
-            if (search in operation.title) or (search in operation.content):
-                result['operations'].append({
-                    'title': operation.title,
-                    'content': operation.instructions,
-                })
         courses = Course.objects.all()
         for cou in courses:
             if search in cou.name:
