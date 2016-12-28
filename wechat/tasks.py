@@ -6,6 +6,7 @@ from HappyXueTang.settings import API_SECRET, API_KEY
 import requests
 import json
 
+
 @app.task
 def get_notice(WeChatHandler):
     userid = WeChatHandler.user.user_id
