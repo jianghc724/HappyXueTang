@@ -126,27 +126,6 @@ class CourseDetail(APIView):
         course_number_list = self.input['course_id'].split('-')
         course_key = course_number_list[3]
         course_number = course_number_list[4]
-        try:
-            spe-cou = Course.objects.filter(key=course_key).get(number=course_number)
-        except:
-            raise CourseError('No such course')
-        result = {
-            'ratings': [],
-            'comments': [],
-            'course_info':{
-                'course_id': self.input['course_id'],
-                'course_key': cou.key,
-                'course_number': cou.number,
-                'course_name': cou.name,
-            },
-        }
-        try:
-            spe-cou = Course.objects.filter(key=course_key).get(number=course_number)
-        except:
-            raise CourseError('No such course')
-        result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
-        result['comments'] = self.get_comment_list(cou)
-        return result
 
         headers = {'content-type': 'application/json'}
         userid = User.get_by_openid(self.input['open_id']).user_id
@@ -165,7 +144,6 @@ class CourseDetail(APIView):
         return_json = r.json()
         if status == '0':
             if return_json['message'] == 'Success':
-                ratings = (CommentOverview.get(self))["ratings"]
                 for course_json in return_json['courses']:
                     if course_json['courseid'] == input_course_id:
                         result = {
@@ -180,12 +158,14 @@ class CourseDetail(APIView):
                             'ratings':[],
                             'comments':[]
                         }
+                        cou = Course.objects.filter(key=course_key).filter(number=course_number)
                         try:
-                            cou = Course.objects.filter(key=course_key).get(number=course_number)
+                            result['ratings'].append(cou[0].rating_one)
+                            result['ratings'].append(cou[0].rating_two)
+                            result['ratings'].append(cou[0].rating_three)
+                            result['comments'] = self.get_comment_list(cou[0])
                         except:
                             raise CourseError('No such course')
-                        result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
-                        result['comments'] = self.get_comment_list(cou)
                         return result
                 cous = Course.objects.filter(course_id=input_course_id)
                 if cous:
@@ -198,8 +178,10 @@ class CourseDetail(APIView):
                         'ratings':[],
                         'comments':[]
                     }
-                    result['ratings'].append(cou[0].rating_one, cou[0].rating_two, cou[0].rating_three)
-                    result['comments'] = self.get_comment_list(cou[0])
+                    result['ratings'].append(cous[0].rating_one)
+                    result['ratings'].append(cous[0].rating_two)
+                    result['ratings'].append(cous[0].rating_three)
+                    result['comments'] = self.get_comment_list(cous[0])
                     return result
                 else:
                     raise CourseError('No such course')
@@ -215,8 +197,18 @@ class CourseDetail(APIView):
                     'status': 1,
                     'notice_detail':[],
                     'teacher': course_json['teacher'],
-                    'email': course_json['email']
+                    'email': course_json['email'],
+                    'ratings':[],
+                    'comments':[]
                 }
+                cou = Course.objects.filter(key=course_key).filter(number=course_number)
+                try:
+                    result['ratings'].append(cou[0].rating_one)
+                    result['ratings'].append(cou[0].rating_two)
+                    result['ratings'].append(cou[0].rating_three)
+                    result['comments'] = self.get_comment_list(cou[0])
+                except:
+                    raise CourseError('No such course')
                 for notice in notices:
                     result['notice_detail'].append({
                         'title': notice['title'],
@@ -234,9 +226,14 @@ class CourseDetail(APIView):
                             'name': cous[0].name,
                             'status': -1,
                             'teacher': course_json['teacher'],
-                            'email': course_json['email']
+                            'email': course_json['email'],
+                            'ratings':[],
+                            'comments':[]
                         }
-                        return result
+                        result['ratings'].append(cous[0].rating_one)
+                        result['ratings'].append(cous[0].rating_two)
+                        result['ratings'].append(cous[0].rating_three)
+                        result['comments'] = self.get_comment_list(cous[0])
                     else:
                         raise CourseError('No such course')
         if status == '2':
@@ -250,7 +247,17 @@ class CourseDetail(APIView):
                     'teacher': course_json['teacher'],
                     'email': course_json['email'],
                     'new_operations': [],
+                    'ratings':[],
+                    'comments':[]
                 }
+                cou = Course.objects.filter(key=course_key).filter(number=course_number)
+                try:
+                    result['ratings'].append(cou[0].rating_one)
+                    result['ratings'].append(cou[0].rating_two)
+                    result['ratings'].append(cou[0].rating_three)
+                    result['comments'] = self.get_comment_list(cou[0])
+                except:
+                    raise CourseError('No such course')
                 for operation in operations:
                     if operation['state'] == "尚未提交":
                         result['new_operations'].append({
@@ -271,9 +278,14 @@ class CourseDetail(APIView):
                             'name': cous[0].name,
                             'status': -1,
                             'teacher': course_json['teacher'],
-                            'email': course_json['email']
+                            'email': course_json['email'],
+                            'ratings':[],
+                            'comments':[]
                         }
-                        return result
+                        result['ratings'].append(cous[0].rating_one)
+                        result['ratings'].append(cous[0].rating_two)
+                        result['ratings'].append(cous[0].rating_three)
+                        result['comments'] = self.get_comment_list(cous[0])
                     else:
                         raise CourseError('No such course')
         

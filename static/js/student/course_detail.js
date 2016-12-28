@@ -12,7 +12,9 @@ var course_meta = new Vue({
         name:"",
         status:0,
         teacher:"",
-        email:""
+        email:"",
+        ratings:[],
+        rating_texts:["课堂氛围：","课程收获：", "课程负担："]
     }
 })
 
@@ -24,6 +26,13 @@ $(function () {
         course_meta.status = data["status"];
         course_meta.teacher = data["teacher"];
         course_meta.email = data["email"];
+        course_meta.ratings = data["ratings"];
+        console.log(data["ratings"]);
+        for(var i = 0; i < 3; i++){
+            course_meta.ratings[i] = Math.round(course_meta.ratings[i]);
+            if(course_meta.ratings[i] < 0)
+                course_meta.ratings[i] = 0;
+        }
         successHolder.loading = false;
         course_meta.loaded = true;
     }, dftFail);

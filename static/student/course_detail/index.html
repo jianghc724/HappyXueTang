@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/user/course_detail.css"  type="text/css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/rating.min.css" >
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/button.min.css" >
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.7/components/grid.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
@@ -23,17 +24,29 @@
         </div>
         <div class="block">空行</div>
         <div id = "course-meta" class="ui card" v-if="loaded">
-            <div id = "" class="content">
+            <div id = "" class="content ">
                 <div class="header">{{name}}</div>
                 <div class="description">
                     <p v-if="teacher != ''">任课老师：{{teacher}}</p>
                     <p v-if="email != ''">联系邮箱：{{email}}</p>
                 </div>
             </div>
-            <div id="average-comments" class="extra content">
-                课堂氛围：<div class="ui star rating" data-rating="5"></div>
-                <span>课程收获：<i class="ui star rating" data-rating="5"></i></span>
-                <span>课程负担：<i class="ui star rating" data-rating="5"></i></span>
+            <div class="ui extra content grid">
+            <div id="average-comments" class="nine wide column">
+                <div v-for="m in 3">
+                    {{rating_texts[m-1]}}
+                    <span class="ui heart rating" data-rating="5">
+                        <i class="icon active" v-for="n in ratings[m-1]"></i>
+                        <i class="icon " v-for="n in 5 - ratings[m-1]"></i>
+                    </span>
+                </div>
+            </div>
+            <div id="comment-buttons"class="seven wide column">
+                <button id= "comment-list" class="ui inverted blue button">评价列表</button>
+                <button id="go-comment" class="ui inverted blue button">评价课程</button>
+            </div>
+            <div id="new-pannel" class="extra content" v-if="status > 0">
+
             </div>
         </div>
     </div>
