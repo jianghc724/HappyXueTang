@@ -89,7 +89,8 @@ class CourseList(APIView):
                 if int(course_json['week'][int(self.input['week']) - 1]) == 1:
                     result.append({
                         'name':course_json['coursename'],
-                        'time':times
+                        'time':times,
+                        'course_id':courseid
                     })
             return result
         else:

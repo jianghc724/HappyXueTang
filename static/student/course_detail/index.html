@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/dropdown.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
-    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/grid.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.7/components/grid.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
     <title>快乐学堂</title>
 </head>
@@ -39,24 +39,25 @@
                 <hr>
                 <div id="day-list" class="ui eight column row">
                     <div class="two wide column"></div>
-                    <div v-for="day in week" :id='"day"+ day.id'class="two wide column" v-on:click="setCurrentDay(day.id)":transation="transation_names[transation_name_index]">
+                    <div v-for="day in week" class="two wide column">
                         <span class="day">{{day.text}}</span>
+                        <span class="date">{{day.date}}</span>
                     </div>
                 </div>
-                <div id="course-list" class="ui grid">
-                    <div  v-for="m in 6" class="two column row">
-                        <div :id='"time"+m' class="four wide column">
-                            <span class="ord">第{{m}}节</span>
-                            <span class="time">{{times[m]}}</span>
-                        </div>
-                        <div  v-for="n in 7"  :id= '"course"  class="twelve wide column" v-if="n == current_day">
-                            zhan
+                <div id="course-pannel" class="two column row">
+                    <div id="time-list" class="two wide column">
+                        <div v-for="n in 6" class="two wide column">
+                            <span class="ord">第{{n}}节</span>
+                            <span class="time">{{ times.text}}</span>
                         </div>
                     </div>
-                </div>
+                    <div id="course-list" class="fourteen wide row">
+                        <div  v-for="n in 7" id="" class="two wide column">
+                            <div v-for="n in 6" id="" class="row">
 
-
-
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
     </div>
@@ -76,7 +77,7 @@
     <script src="/js/base.js"></script>
     <script src="/js/student/course_list.js"></script>
     <script>
-    
+
     </script>
     <script>
     </script>

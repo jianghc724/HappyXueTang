@@ -11,7 +11,8 @@ module.exports = function(grunt) {
         files: {
           "css/user/bind.css": "less/user/bind.less",
           "css/base.css": "less/base.less",
-          "css/user/ddlcenter.css": "less/user/ddlcenter.less"
+          "css/user/ddlcenter.css": "less/user/ddlcenter.less",
+          "css/user/course_list.css": "less/user/course_list.less"
         }
       },
       production: {
@@ -27,7 +28,8 @@ module.exports = function(grunt) {
         files: {
           "css/user/bind.css": "less/user/bind.less",
           "css/base.css": "less/base.less",
-          "css/user/ddlcenter.css": "less/user/ddlcenter.less"
+          "css/user/ddlcenter.css": "less/user/ddlcenter.less",
+          "css/user/course_list.css": "less/user/course_list.less"
         }
       }
     },
