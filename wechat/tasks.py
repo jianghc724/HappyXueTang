@@ -5,7 +5,7 @@ from wechat.wrapper import *
 from wechat.models import *
 from wechat.views import CustomWeChatView
 from datetime import datetime
-from HappyXueTang.settings import WECHAT_APPID
+from HappyXueTang.settings import WECHAT_APPID, WECHAT_SECRET
 
 
 @app.task(name='wechat.tasks.get_notice')
@@ -33,7 +33,7 @@ def get_notice():
                 total_homework = total_homework + course['unsubmittedoperations']
                 total_notice = total_notice + course['unreadnotice']
         ac_addr = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="\
-                  + WECHAT_APPID + "&secret=" + API_SECRET
+                  + WECHAT_APPID + "&secret=" + WECHAT_SECRET
         r = requests.get(ac_addr)
         print(r)
         access_json = r.json()
