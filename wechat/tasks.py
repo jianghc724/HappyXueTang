@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from HappyXueTang.celery import app
-from HappyXueTang.wrapper import *
+from wechat.wrapper import WeChatHandler
 from HappyXueTang.settings import API_SECRET, API_KEY
 
 import requests
