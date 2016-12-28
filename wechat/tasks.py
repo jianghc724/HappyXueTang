@@ -35,7 +35,9 @@ def get_notice():
         ac_addr = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="\
                   + WECHAT_APPID + "&secret=" + API_SECRET
         r = requests.get(ac_addr)
+        print(r)
         access_json = r.json()
+        print(access_json)
         access_token = access_json['access_token']
         we_addr = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + access_token
         we_data = {
