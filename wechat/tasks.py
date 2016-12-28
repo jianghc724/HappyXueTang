@@ -9,11 +9,12 @@ from HappyXueTang.settings import WECHAT_APPID
 
 @app.task(name='wechat.tasks.get_notice')
 def get_notice():
-    print("in celery#########################################")
     users = User.objects.all()
     for user in users:
+        print(user)
         if user.user_status != 0:
             continue
+        print(user)
         msg = {
             'FromUserName': user.open_id,
             'ToUserName': WECHAT_APPID,
@@ -23,6 +24,8 @@ def get_notice():
         }
         for handler in WeChatView.handlers:
             inst = handler(WeChatView, msg, user)
+            print(inst)
             if inst.check():
+                print("in handler")
                 return inst.handle()
         return WeChatView.default_handler(WeChatView, msg, user).handle()
