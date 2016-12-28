@@ -11,5 +11,9 @@ def get_notice():
     for user in users:
         if user.user_status != 0:
             continue
-        inst = GetNewNoticeHandler(WeChatView, "动态", user)
-        inst.handle()
+        msg = "动态"
+        for handler in WeChatView.handlers:
+            inst = handler(WeChatView, msg, user)
+            if inst.check():
+                return inst.handle()
+        return WeChatView.default_handler(WeChatView, msg, user).handle()
