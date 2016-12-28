@@ -322,6 +322,112 @@ class CourseDetail(APIView):
             i = i - 1
         return comment_list
 
+class CommentOverview(APIView):
+    def get(self):
+        self.check_input('course_id')
+        course_number_list = self.input['course_id'].split('-')
+        course_key = course_number_list[3]
+        course_number = course_number_list[4]
+        result = {
+            'ratings': [],
+            'comments': [],
+            'course_info':{
+                'course_id': self.input['course_id'],
+                'course_key': cou.key,
+                'course_number': cou.number,
+                'course_name': cou.name,
+            },
+        }
+        cou = Course.objects.filter(key=course_key).filter(number=course_number)
+        try:
+            result['ratings'].append(cou[0].rating_one)
+            result['ratings'].append(cou[0].rating_two)
+            result['ratings'].append(cou[0].rating_three)
+            result['comments'] = self.get_comment_list(cou[0])
+        except:
+            raise CourseError('No such course')
+        return result
+
+    def get_comment_list(self, cou):
+        all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
+        comments = []
+        for comment in all_comments:
+            if len(comments) == 10 and comment.rating_time < comments[9]['rating_time']:
+                continue
+            student = User.objects.get(user_id=comment.student_id)
+            com = {
+                'student': student.name,
+                'time':comment.rating_time,
+                'comment':comment.rating_comment,
+            }
+            if len(comments) == 10:
+                comments[9] = com
+            else:
+                comments[len(comments)] = com
+            comments = self.sort_comment_list(comments)
+        return comments
+
+    def sort_comment_list(self, comment_list):
+        i = len(comment_list) - 1
+        while True:
+            if i == 0:
+                break
+            if comment_list[i]['time'] < comment_list[i - 1]['time']:
+                break
+            temp_com = comment_list[i]
+            comment_list[i] = comment_list[i - 1]
+            comment_list[i - 1] = temp_com
+            i = i - 1
+        return comment_list
+
+
+class MakeComment(APIView):
+    def get(self):
+        self.check_input('course_id')
+        course_number_list = self.input['course_id'].split('-')
+        course_key = course_number_list[3]
+        course_number = course_number_list[4]
+        try:
+            cou = Course.objects.filter(key=course_key).get(number=course_number)
+        except:
+            raise CourseError('No such course')
+        result = {
+            'ratings': [],
+            'course_info': {
+                'course_id': self.input['course_id'],
+                'course_key': cou.key,
+                'course_number': cou.number,
+                'course_name': cou.name,
+            },
+        }
+        result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
+        return result
+
+    def post(self):
+        self.check_input('open_id', 'course_id', 'rating_one', 'rating_two', 'rating_three', 'comment')
+        course_number_list = self.input['course_id'].split('-')
+        course_key = course_number_list[3]
+        course_number = course_number_list[4]
+        try:
+            cou = Course.objects.filter(key=course_key).get(number=course_number)
+        except:
+            raise CourseError('No such course')
+        user = User.get_by_openid(self.input['open_id'])
+        current_time = datetime.now()
+        com = Comment.objects.create(student_id=user.user_id, course_key=course_key, course_number=course_number,
+                                     rating_one=self.input['rating_one'], rating_two=self.input['rating_two'], rating_three=self.input['rating_three'],
+                                     rating_time=current_time, rating_comment = self.input['comment'])
+        com.save()
+        total_people = cou.rating_people
+        total_rating_one = cou.rating_one * total_people
+        cou.rating_one = (total_rating_one + self.input['rating_one']) / (total_people + 1)
+        total_rating_two = cou.rating_two * total_people
+        cou.rating_two = (total_rating_two + self.input['rating_two']) / (total_people + 1)
+        total_rating_three = cou.rating_three * total_people
+        cou.rating_three = (total_rating_three + self.input['rating_three']) / (total_people + 1)
+        cou.rating_people = total_people + 1
+        cou.save()
+
 class GetDeadline(APIView):
     def get(self):
         self.check_input('open_id')
