@@ -39,15 +39,14 @@ def get_notice():
         access_json = r.json()
         # print(access_json)
         access_token = access_json['access_token']
-        # return_str = "您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业"
-        return_str = str(total_notice)
+        return_str = "您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业"
         we_addr = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + access_token
         we_data = {
             "touser": user.open_id,
             "msgtype": "text",
             "text":
                 {
-                    "content": return_str
+                    "content": return_str.encode('gb2132')
                 }
 
         }
