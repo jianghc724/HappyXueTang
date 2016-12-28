@@ -223,7 +223,7 @@ class GetDeadline(APIView):
         current_time = datetime.now().timestamp()
         if return_json['message'] == 'Success':
             result = []
-            for course_json in return_json['classes']:
+            for course_json in return_json['courses']:
                 course_num_list = course_json['courseid'].split('-')
                 courseid = course_num_list[3]
                 addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid \

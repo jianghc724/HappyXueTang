@@ -84,9 +84,9 @@ class CustomWeChatView(WeChatView):
                 "name": "学习助手",
                 "sub_button": [
                     {
-                        "type": "click",
+                        "type": "view",
                         "name": "我要自习",
-                        "key": event_keys['get_library'],
+                        "url": settings.get_url('student/library_status', {'open_id': WeChatView.wechatUser.open_id}),
                     },
                     {
                         "type": "click",

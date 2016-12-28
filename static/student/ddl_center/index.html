@@ -44,6 +44,10 @@
                     <div class="header">Elliot Fu</div>
                     <div class="meta">Friend</div>
                     <div class="description">Elliot Fu is a film-maker from New York. </div>
+                    <div class="ui tiny orange progress" id="example2">
+                        <div class="bar"></div>
+                        <div class="progress"></div>
+                    </div>
                  </div>
             </div>
             <div id="card_head">
@@ -57,11 +61,15 @@
     <script src="/js/weixin_lib.js"></script>
     <script src="/js/base.js"></script>
     <script src="/js/user/validation.js"></script>
+    <script src="http://cdn.bootcss.com/semantic-ui/2.2.7/components/progress.js"></script>
     <script>
     var locals = {
         isBinding: false,
         ddlData:[]
     };
+    $('#example2').progress({
+        percent: 22
+    });
     $(function (){
         data = [{homework_title:"微信抢票-迭代2",course_name:"软件工程3",homework_end_date:4,current_time:6}];
         for (var i=0;i<data.length;i++)
@@ -77,7 +85,7 @@
                 $("#uicards").prepend(cardblock);
             }
     });
-/*
+
     $(function () {
         console.log(locals.isValidated);
         api.get('/api/u/ddl/list', {open_id: urlParam.open_id}, function (data) {
@@ -101,7 +109,8 @@
 
             alert("数据: " + data );
         }, dftFail);
-    });*/
+    });
+
     </script>
 
 </body>
