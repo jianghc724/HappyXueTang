@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'user',
     'student',
     'teacher',
-    'notice_celery',
     'djcelery',
     'kombu.transport.django',
     #'djkombu',
@@ -148,6 +147,7 @@ USE_TZ = True
 
 SITE_DOMAIN = CONFIGS['SITE_DOMAIN'].rstrip('/')
 
+
 def get_url(path, params=None):
     full_path = urllib.parse.urljoin(SITE_DOMAIN, path)
     if params:
@@ -165,7 +165,7 @@ djcelery.setup_loader()
 
 BROKER_URL = 'django://'
 
-CELERY_IMPORTS = ('notice_celery.tasks', )
+CELERY_IMPORTS = ('wechat.tasks', )
 
 CELERY_TIMEZONE = TIME_ZONE
 
@@ -173,7 +173,7 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 CELERYBEAT_SCHEDULE = {
     'add-every-2-hours': {
-        'task': 'notice_celery.tasks.get_notice_task',
+        'task': 'wechat.tasks.GetNewNoticeHandler.handle',
         'schedule': timedelta(minutes=1)
     },
 }

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.7/components/grid.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/card.min.css" >
     <title>快乐学堂</title>
 </head>
 
@@ -19,47 +20,20 @@
             <img src="/img/loading.gif" />
             <div>正在加载……</div>
         </div>
-        <div id="curriculumn" class="ui grid" v-if="loaded">
-                <div id="week-banner" class="three column row">
-                    <div class = "column"></div>
-                    <div class = "column">
-                        <div id="show-week" class ="ui inline dropdown">
-                            <input id="selected-week" type="hidden" value="0" >
-                            <div id="show-week-text" class="text">第13周</div>
-                            <i class="dropdown icon"></i>
-                            <ul id="week-menu" class="menu">
-                                <li class="item" v-for="n in 7">
-                                第{{ n }}周
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class = "column"></div>
-                </div>
-                <hr>
-                <div id="day-list" class="ui eight column row">
-                    <div class="two wide column"></div>
-                    <div v-for="day in week" class="two wide column">
-                        <span class="day">{{day.text}}</span>
-                        <span class="date">{{day.date}}</span>
-                    </div>
-                </div>
-                <div id="course-pannel" class="two column row">
-                    <div id="time-list" class="two wide column">
-                        <div v-for="n in 6" class="two wide column">
-                            <span class="ord">第{{n}}节</span>
-                            <span class="time">{{ times.text}}</span>
-                        </div>
-                    </div>
-                    <div id="course-list" class="fourteen wide row">
-                        <div  v-for="n in 7" id="" class="two wide column">
-                            <div v-for="n in 6" id="" class="row">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div id = "course-meta" class="ui card" v-if="loaded">
+            <div id = "" class="content">
+                <i class="right floated like icon"></i>
+                <i class="right floated star icon"></i>
+                <div class="header">{{name}}</div>
+            <div class="description">
+                <p></p>
             </div>
+            </div>
+            <div class="extra content">
+                <span class="left floated like"><i class="like icon"></i> Like </span>
+                <span class="right floated star"><i class="star icon"></i> Favorite </span>
+            </div>
+        </div>
     </div>
     </div>
 
@@ -75,7 +49,7 @@
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/dropdown.min.js"></script>
     <script src="/js/weixin_lib.js"></script>
     <script src="/js/base.js"></script>
-    <script src="/js/student/course_list.js"></script>
+    <script src="/js/student/course_detail.js"></script>
     <script>
 
     </script>

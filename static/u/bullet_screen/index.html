@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="/css/user/bind.css" rel="stylesheet" type="text/css"/>
+    <title>快乐学堂</title>
+</head>
+
+<body>
+    <div id="wrap">
+    <header></header>
+
+    <div class="theme" id="theme"></div>
+
+    <hr/>
+    <div id="mainbody"></div>
+
+    </div>
+
+    <footer id="footer">
+        <hr/>
+        <a href="" target="_blank">快乐学堂</a>
+        &copy; 2016
+    </footer>
+
+    <script type="text/template" id="tpl-header">
+        <img class="header-img" src="/img/xuetang-header.png"/>
+    </script>
+
+    <script type="text/template" id="tpl-theme">课程弹幕</script>
+
+    <script type="text/template" id="tpl-mainbody">
+        {% for bullet in new_bullet %}
+        <span>{{ bullet.content }}</span>
+        {% endfor %}
+    </script>
+    <script src="/3rd/jquery.js"></script>
+    <script src="/3rd/swig.js"></script>
+    <script src="/3rd/vue.js"></script>
+    <script src="/js/weixin_lib.js"></script>
+    <script src="/js/base.js"></script>
+    <script src="/js/user/validation.js"></script>
+    <script>
+    var pre_bullet = [];
+    var new_bullet = [{content:"cant find conglinag liyou", src:"df"},{content:"abc", src:"dfsfsd"},{content:"i dont want to go to school", src:"aaa"}];
+    var render = function () {
+        $('header').html(swig.render($('#tpl-header').html(), {locals: locals}));
+        $('#theme').html(swig.render($('#tpl-theme').html(), {locals: locals}));
+        $('#mainbody').html(swig.render($('#tpl-mainbody').html(), {locals: locals}));
+    };
+    var getBullet = function () {
+        api.get('/api/u/bullet/screen', {course_id: , course_number:}, function (data) {
+            new_bullet.length = 0;
+            var new_length = data.length;
+            var pre_length = pre_bullet.length;
+            for (var i = 0; i < new_length; i++) {
+                var flag = 0;
+                for (var j = 0; j < pre_length; j++) {
+                    if (data[i] == pre_bullet[j]) {
+                        flag = 1;
+                        break;
+                    }
+                }
+                if (flag == 1) {
+                    new_bullet.push(data[i]);
+                }
+            }
+            pre_bullet = data;
+        }, dftFail);
+    };
+    </script>
+</body>
+</html>

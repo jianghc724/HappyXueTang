@@ -8,7 +8,6 @@ class User(models.Model):
     user_id = models.CharField(max_length=16, db_index=True)
     user_status = models.IntegerField(default=-1)
     name = models.CharField(max_length=32)
-    total_unread_notice = models.IntegerField(default=0)
 
     STATUS_UNBIND = -1
     STATUS_STUDENT = 0
@@ -45,28 +44,6 @@ class Course(models.Model):
     COURSE_BOTH_SEMESTER = 3
     COURSE_SUMMER_ONLY = 4
 
-
-class Notice(models.Model):
-    course_key = models.CharField(max_length=16, db_index=True)
-    course_number = models.IntegerField()
-    notice_id = models.IntegerField(blank=True)
-    title = models.CharField(max_length=32)
-    content = models.TextField()
-    release_person = models.CharField(max_length=32)
-    release_time = models.DateTimeField()
-
-
-class Homework(models.Model):
-    course_key = models.CharField(max_length=16, db_index=True)
-    course_number = models.IntegerField(blank=True)
-    assignment_id = models.IntegerField(blank=True)
-    title = models.CharField(max_length=32)
-    instructions = models.TextField()
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField(db_index=True)
-    has_attachment = models.BooleanField()
-
-
 class Discussion(models.Model):
     student_id = models.CharField(max_length=16)
     course_key = models.CharField(max_length=16, db_index=True)
@@ -96,7 +73,6 @@ class StudentCourse(models.Model):
     status = models.IntegerField(default=0, null=True, blank=True)
     grading_policy = models.IntegerField(null=True, blank=True)
     grade = models.IntegerField(null=True, blank=True)
-    unread_notices = models.IntegerField(default=0)
 
     COURSE_WITHDRAWN = -1
     COURSE_IN_PROGRESS = 0
@@ -104,16 +80,3 @@ class StudentCourse(models.Model):
 
     COURSE_PF = 0
     COURSE_RATING = 1
-
-
-class StudentNotice(models.Model):
-    student_id = models.CharField(max_length=16, db_index=True)
-    notice_id = models.IntegerField(blank=True)
-    is_read = models.BooleanField()
-
-
-class StudentHomework(models.Model):
-    student_id = models.CharField(max_length=16, db_index=True)
-    assignment_id = models.IntegerField(blank=True)
-    status = models.BooleanField()
-    content = models.TextField()
