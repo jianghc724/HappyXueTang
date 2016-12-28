@@ -132,7 +132,7 @@ class GetBulletScreenHandler(WeChatHandler):
         return self.is_event_click(self.view.event_keys['bullet_screen'])
 
     def handle(self):
-        str = '发送"弹幕 课程id 想说的话"发送弹幕\n以下为您的选课列表：\n课程名 课程id'
+        str = '发送弹幕方式\n弹幕 课程id 想说的话\n以下为您的选课列表：\n课程名 课程id'
         userid = self.user.user_id
         data = {
             "apikey": API_KEY,
@@ -142,13 +142,21 @@ class GetBulletScreenHandler(WeChatHandler):
         addr = 'http://se.zhuangty.com:8000/curriculum/' + userid + '?username=' + userid
         r = requests.post(addr, data=json.dumps(data), headers=headers)
         return_json = r.json()
+        s = set([])
+        print("233")
         if return_json['message'] == 'Success':
             for course_json in return_json['classes']:
+                coursename = course_json['coursename']
+                print("2333")
+                if coursename in s:
+                    continue
+                print("23333")
+                s.add(coursename)
+                print("233333")
                 course_num_list = course_json['courseid'].split('-')
                 courseid = course_num_list[3]
                 coursenum = course_num_list[4]
                 bulletid = courseid + '-' + coursenum
-                coursename = course_json['coursename']
                 course_str = '\n' + coursename + ' ' + bulletid
                 str = str + course_str
         return self.reply_text(str)
