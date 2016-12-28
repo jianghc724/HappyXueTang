@@ -95,7 +95,16 @@ class CourseList(APIView):
                         stu_cou.course_id = course_json['courseid']
                         stu_cou.save()
                 # print(self.input['week'])
-                if int(course_json['week'][int(self.input['week']) - 1]) == 1:
+                input_week = int(self.input['week'])
+                if input_week == 0:
+                    _addr = "http://se.zhuangty.com:8000/current"
+                    r = requests.post(_addr, data=json.dumps(data), headers=headers)
+                    _return_json = r.json()
+                    if _return_json['message'] == 'Success':
+                        input_week = int(_return_json["currentteachinginfo"]["currentteachingweek"]["name"])
+                    else:
+                        raise GetInfoError(return_json['reason'])
+                if int(course_json['week'][input_week - 1]) == 1:
                     result.append({
                         'name': course_json['coursename'],
                         'course_id': course_json['courseid'],
