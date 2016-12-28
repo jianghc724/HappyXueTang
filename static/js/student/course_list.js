@@ -2,11 +2,13 @@ var successHolder = new Vue({
         el: '#successHolder',
         data: {
             loading:true,
-            loaded:false
         }
     })
-new Vue({
-    el:'#week-menu'
+var curriculumn = new Vue({
+    el:'#curriculumn',
+    data:{
+        loaded:false
+    }
 })
 var selected_week = new Vue({
     el: '#selected-week',
@@ -97,7 +99,7 @@ $(function () {
             console.log( course_list.courses[day-1][course-1][1]);
         }
         successHolder.loading = false;
-        successHolder.loaded = true;
+        curriculumn.loaded = true;
     }, dftFail);
     $('#show-week').dropdown();
 });

@@ -129,21 +129,20 @@ class CourseDetail(APIView):
         status = self.input['status']
         print(3333)
         addr = ""
-        if status == 0:
+        if status == '0':
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
             print(addr)
-        elif status == 1:
+        elif status == '1':
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' \
                    + input_course_id + '/notices?username=' + userid + '&courseid=' + input_course_id
-        elif status == 2:
+        elif status == '2':
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' \
                    + input_course_id + '/assignments?username=' + userid + '&courseid=' + input_course_id
-        print(addr)
         r = requests.post(addr, data=json.dumps(data), headers=headers)
         return_json = r.json()
-        if status == 1:
+        if status == '0':
             if return_json['message'] == 'Success':
-                for course_json in return_json['classes']:
+                for course_json in return_json['courses']:
                     if course_json['courseid'] == input_course_id:
                         result = {
                             'name': course_json['coursename'],
@@ -165,7 +164,7 @@ class CourseDetail(APIView):
                     raise CourseError('No such course')
             else:
                 raise GetInfoError('Username Invalid')
-        if status == 2:
+        if status == '1':
             if return_json['message'] == 'Success':
                 cous = Course.objects.filter(course_id=input_course_id)
                 notices = return_json['notice']
@@ -195,7 +194,7 @@ class CourseDetail(APIView):
                         return result
                     else:
                         raise CourseError('No such course')
-        if status == 3:
+        if status == '2':
             if return_json['message'] == 'Success':
                 cous = Course.objects.filter(key=input_course_id)
                 operations = return_json['assignments']
