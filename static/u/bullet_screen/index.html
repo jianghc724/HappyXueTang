@@ -9,6 +9,7 @@
 </head>
 
 <body background-color="transparent">
+    <marquee behavior="slide">aaaa</marquee>
     <div id="wrap">
     <header></header>
 
@@ -60,9 +61,8 @@
                     var mainbody = document.getElementById("mainbody");
                     var marquee = document.createElement("marquee");
                     marquee.innerHTML = data[i].content;
-                    marquee.behavior = "slide";
+                    marquee.style.loop = 1;
                     mainbody.appendChild(marquee);
-                    setTimeout("mainbody.removeChild(marquee)",20000);
                 }
             }
             locals.pre_bullet = data;
