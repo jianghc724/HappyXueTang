@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'user',
     'student',
     'teacher',
-    'notice_celery',
     'djcelery',
     'kombu.transport.django',
     #'djkombu',
