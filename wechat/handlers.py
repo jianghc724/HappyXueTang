@@ -5,7 +5,6 @@ from wechat.models import *
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
 from datetime import datetime
-from wechat.tasks import *
 import requests, json
 from django.http import *
 from django.http import HttpResponse,request
@@ -172,7 +171,6 @@ class GetNewNoticeHandler(WeChatHandler):
     def check(self):
         return self.is_text('动态') or self.is_event_click(self.view.event_keys['get_new_trend'])
 
-    @app.task(name='wechat.handlers.GetNotice.get_notice')
     def handle(self):
         userid = self.user.user_id
         data = {
@@ -191,4 +189,4 @@ class GetNewNoticeHandler(WeChatHandler):
                 print(course)
                 total_homework = total_homework + course['unsubmittedoperations']
                 total_notice = total_notice + course['unreadnotice']
-            return WeChatHandler.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")
+            return self.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")
