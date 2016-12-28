@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" background-color="transparent">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,7 +8,7 @@
     <title>快乐学堂</title>
 </head>
 
-<body>
+<body background-color="transparent">
     <div id="wrap">
     <header></header>
 
@@ -47,7 +47,6 @@
             locals.new_bullet.length = 0;
             var length = data.length;
             var pre_length = locals.pre_bullet.length;
-            console.log("heihei");
             for (var i = 0; i < length; i++) {
                 var flag = 0;
                 for (var j = 0; j < pre_length; j++) {
@@ -58,12 +57,10 @@
                 }
                 if (flag == 0) {
                     locals.new_bullet.push(data[i]);
-                    $("#mainbody").append($("<marquee></marquee>").text(data[i].content));
-                    console.log("xixi");
+                    $("#mainbody").append($("<marquee></marquee>").text(data[i].content).attr("loop","1"));
                 }
             }
             locals.pre_bullet = data;
-            $("marquee").attr("loop", "1");
             render();
         }, dftFail);
     };
