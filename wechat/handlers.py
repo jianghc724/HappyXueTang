@@ -172,7 +172,6 @@ class GetNewNoticeHandler(WeChatHandler):
     def check(self):
         return self.is_text('动态') or self.is_event_click(self.view.event_keys['get_new_trend'])
 
-    @app.task(name='wechat.handlers.GetNotice.get_notice')
     def handle(self):
         userid = self.user.user_id
         data = {
