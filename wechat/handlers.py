@@ -189,4 +189,4 @@ class GetNewNoticeHandler(WeChatHandler):
                 print(course)
                 total_homework = total_homework + course['unsubmittedoperations']
                 total_notice = total_notice + course['unreadnotice']
-            return WeChatHandler.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")
+            return self.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")
