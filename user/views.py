@@ -610,6 +610,7 @@ class InfoSearch(APIView):
             'courses':[],
         }
         courses = Course.objects.all()
+        print(courses.first())
         for cou in courses:
             if search in cou.name:
                 result['courses'].append({
@@ -619,5 +620,6 @@ class InfoSearch(APIView):
                     'course_name': cou.name,
                     'course_teacher': cou.teacher,
                 })
+        print(result)
         return result
 
