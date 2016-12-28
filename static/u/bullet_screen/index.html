@@ -57,7 +57,11 @@
                 }
                 if (flag == 0) {
                     locals.new_bullet.push(data[i]);
-                    $("#mainbody").append($("<marquee></marquee>").text(data[i].content).attr("loop","1"));
+                    var mainbody = document.getElementById("mainbody");
+                    var marquee = document.createElement("marquee");
+                    marquee.innerHTML = data[i].content;
+                    marquee.loop = 1;
+                    mainbody.appendChild(marquee);
                 }
             }
             locals.pre_bullet = data;
