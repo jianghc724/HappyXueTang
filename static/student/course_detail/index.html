@@ -3,9 +3,10 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link href="/css/base.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/css/base.css" type="text/css" />
+    <link rel="stylesheet" href="/css/user/course_detail.css"  type="text/css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/dropdown.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/rating.min.css" >
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.7/components/grid.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
@@ -16,22 +17,24 @@
 <body>
     <div id="wrap">
     <div id="mainbody">
+        <div class="ui star rating" data-rating="5"></div>
         <div id="successHolder" v-if="loading">
             <img src="/img/loading.gif" />
             <div>正在加载……</div>
         </div>
+        <div class="block">空行</div>
         <div id = "course-meta" class="ui card" v-if="loaded">
             <div id = "" class="content">
-                <i class="right floated like icon"></i>
-                <i class="right floated star icon"></i>
                 <div class="header">{{name}}</div>
-            <div class="description">
-                <p></p>
+                <div class="description">
+                    <p v-if="teacher != ''">任课老师：{{teacher}}</p>
+                    <p v-if="email != ''">联系邮箱：{{email}}</p>
+                </div>
             </div>
-            </div>
-            <div class="extra content">
-                <span class="left floated like"><i class="like icon"></i> Like </span>
-                <span class="right floated star"><i class="star icon"></i> Favorite </span>
+            <div id="average-comments" class="extra content">
+                课堂氛围：<div class="ui star rating" data-rating="5"></div>
+                <span>课程收获：<i class="ui star rating" data-rating="5"></i></span>
+                <span>课程负担：<i class="ui star rating" data-rating="5"></i></span>
             </div>
         </div>
     </div>
@@ -46,7 +49,7 @@
     <script src="/3rd/swig.js"></script>
     <script src="/3rd/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/dropdown.min.js"></script>
+    <script src="https://cdn.bootcss.com/semantic-ui/2.2.7/components/rating.min.js"></script>
     <script src="/js/weixin_lib.js"></script>
     <script src="/js/base.js"></script>
     <script src="/js/student/course_detail.js"></script>

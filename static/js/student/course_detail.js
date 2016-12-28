@@ -11,6 +11,8 @@ var course_meta = new Vue({
         loaded:false,
         name:"",
         status:0,
+        teacher:"",
+        email:""
     }
 })
 
@@ -20,6 +22,8 @@ $(function () {
         console.log(data);
         course_meta.name = data["name"];
         course_meta.status = data["status"];
+        course_meta.teacher = data["teacher"];
+        course_meta.email = data["email"];
         successHolder.loading = false;
         course_meta.loaded = true;
     }, dftFail);

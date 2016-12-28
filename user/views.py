@@ -117,7 +117,6 @@ class CourseList(APIView):
 
 class CourseDetail(APIView):
     def get(self):
-        print(self.input)
         self.check_input('open_id', 'course_id', 'status')
         data = {
             "apikey": API_KEY,
@@ -127,11 +126,9 @@ class CourseDetail(APIView):
         userid = User.get_by_openid(self.input['open_id']).user_id
         input_course_id = self.input['course_id']
         status = self.input['status']
-        print(3333)
         addr = ""
         if status == '0':
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
-            print(addr)
         elif status == '1':
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' \
                    + input_course_id + '/notices?username=' + userid + '&courseid=' + input_course_id
@@ -141,6 +138,7 @@ class CourseDetail(APIView):
         r = requests.post(addr, data=json.dumps(data), headers=headers)
         return_json = r.json()
         if status == '0':
+            print(return_json["courses"])
             if return_json['message'] == 'Success':
                 for course_json in return_json['courses']:
                     if course_json['courseid'] == input_course_id:
@@ -151,6 +149,8 @@ class CourseDetail(APIView):
                             'unread_notice': course_json['unreadnotice'],
                             'file': course_json['newfile'],
                             'unsubmitted_homework': course_json['unsubmittedoperations'],
+                            'teacher': course_json['teacher'],
+                            'email': course_json['email']
                         }
                         return result
                 cous = Course.objects.filter(course_id=input_course_id)
@@ -158,6 +158,8 @@ class CourseDetail(APIView):
                     result = {
                         'name': cous[0].name,
                         'status': -1,
+                        'teacher': course_json['teacher'],
+                        'email': course_json['email']
                     }
                     return result
                 else:
@@ -173,6 +175,8 @@ class CourseDetail(APIView):
                     'course_id': input_course_id,
                     'status': 1,
                     'notice_detail':[],
+                    'teacher': course_json['teacher'],
+                    'email': course_json['email']
                 }
                 for notice in notices:
                     result['notice_detail'].append({
@@ -190,6 +194,8 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
+                            'teacher': course_json['teacher'],
+                            'email': course_json['email']
                         }
                         return result
                     else:
@@ -202,6 +208,8 @@ class CourseDetail(APIView):
                     'name': cous[0].name,
                     'course_id': input_course_id,
                     'status': 1,
+                    'teacher': course_json['teacher'],
+                    'email': course_json['email'],
                     'new_operations': [],
                 }
                 for operation in operations:
@@ -223,6 +231,8 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
+                            'teacher': course_json['teacher'],
+                            'email': course_json['email']
                         }
                         return result
                     else:

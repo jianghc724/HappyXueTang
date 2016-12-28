@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="/css/user/course_list.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/dropdown.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
@@ -19,7 +20,7 @@
             <img src="/img/loading.gif" />
             <div>正在加载……</div>
         </div>
-        <div id="curriculumn" class="ui grid" v-if="loaded">
+        <div id="curriculumn" class="ui grid" v-else>
                 <div id="week-banner" class="three column row">
                     <div class = "column"></div>
                     <div class = "column">
