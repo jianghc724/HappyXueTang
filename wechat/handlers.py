@@ -127,7 +127,7 @@ class BulletScreenHandler(WeChatHandler):
         return self.reply_text(self.get_message('class_talk'))
 
 
-class getBulletScreen(WeChatHandler):
+class GetBulletScreenHandler(WeChatHandler):
     def check(self):
         return self.is_event_click(self.view.event_keys['bullet_screen'])
 
