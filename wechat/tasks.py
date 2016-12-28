@@ -32,7 +32,11 @@ def get_notice():
                 # print(course)
                 total_homework = total_homework + course['unsubmittedoperations']
                 total_notice = total_notice + course['unreadnotice']
-        access_token = WeChatLib.get_wechat_access_token()
+        ac_addr = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="\
+                  + WECHAT_APPID + "&secret=" + API_SECRET
+        r = requests.get(ac_addr)
+        access_json = r.json()
+        access_token = access_json['access_token']
         we_addr = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + access_token
         we_data = {
             "touser": user.open_id,
