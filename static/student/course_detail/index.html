@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/base.css" type="text/css" />
+    <link rel="stylesheet" href="/css/user/course_detail.css"  type="text/css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/rating.min.css" >
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/button.min.css" >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.7/components/grid.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/card.min.css" >
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/breadcrumb.min.css">
+    <title>快乐学堂</title>
+</head>
+
+<body>
+    <div id="wrap">
+    <div id="mainbody">
+        <div id="successHolder" v-if="loading">
+            <img src="/img/loading.gif" />
+            <div>正在加载……</div>
+        </div>
+        <div class="block">空行</div>
+        <div id = "course-meta" class="ui card" v-if="loaded">
+            <div id = "" class="content ">
+                <div class="header">{{name}}</div>
+                <div class="description">
+                    <p v-if="teacher != ''">任课老师：{{teacher}}</p>
+                    <p v-if="email != ''">联系邮箱：{{email}}</p>
+                </div>
+            </div>
+            <div class="ui extra content grid">
+            <div id="average-comments" class="nine wide column">
+                <div v-for="m in 3">
+                    {{rating_texts[m-1]}}
+                    <span class="ui heart rating" data-rating="5">
+                        <i class="icon active" v-for="n in ratings[m-1]"></i>
+                        <i class="icon " v-for="n in 5 - ratings[m-1]"></i>
+                    </span>
+                </div>
+            </div>
+            <div id="comment-buttons"class="seven wide column">
+                <button id= "comment-list" class="ui inverted blue button" v-on:click="jump(0)">评价列表</button>
+                <button id="go-comment" class="ui inverted blue button" v-on:click="jump(1)">评价课程</button>
+            </div>
+            </div>
+            <div id="new-pannel" class="ui extra content grid" v-if="status > 0">
+                <div id="nav-bar" class= "ui three column row">
+                    <div id="overall" class="five wide column">
+                    全部
+                    </div>
+                    <div id="announcements" class="five wide column">
+                    公告
+                    </div>
+                    <div id="homework" class="five wide column">
+                    作业
+                    </div>
+                </div>
+                <div id="content-pannel" class= "row">
+                    <div id="overall" class="five wide column" v-if="status==0">
+                    全部
+                    </div>
+                    <div id="announcements" class="five wide column" v-if="status==1">
+                    公告
+                    </div>
+                    <div id="homework" class="five wide column" v-if="status==2">
+                    作业
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <footer id="footer">
+        <hr/>
+        <a href="" target="_blank">快乐学堂</a>
+        &copy; 2016
+    </footer>
+    <script src="/3rd/jquery.js"></script>
+    <script src="/3rd/swig.js"></script>
+    <script src="/3rd/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.js"></script>
+    <script src="https://cdn.bootcss.com/semantic-ui/2.2.7/components/rating.min.js"></script>
+    <script src="/js/weixin_lib.js"></script>
+    <script src="/js/base.js"></script>
+    <script src="/js/student/course_detail.js"></script>
+    <script>
+
+    </script>
+    <script>
+    </script>
+</body>
+</html>

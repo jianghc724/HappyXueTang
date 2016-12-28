@@ -8,7 +8,7 @@
     <title>快乐学堂</title>
 </head>
 
-<body id="mb">
+<body background-color="transparent">
     <div id="wrap">
     <header></header>
 
@@ -54,8 +54,10 @@
                     }
                 }
                 if (flag == 0) {
-                    var marquee = $("<marquee></marquee>").text(data[i].content);
-                    $("#mb").prepend(marquee);
+                    var mainbody = document.getElementById("mainbody");
+                    var marquee = document.createElement("marquee");
+                    marquee.innerHTML = data[i].content;
+                    mainbody.appendChild(marquee);
                     setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 30000);
                 }
             }
