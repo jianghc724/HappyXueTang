@@ -12,7 +12,7 @@ class CustomWeChatView(WeChatView):
 
     handlers = [
         UnbindOrUnsubscribeHandler, BindAccountHandler, CourseListHandler,
-        BulletScreenHandler, DDLCenterHandler, GetBulletScreenHandler
+        BulletScreenHandler, DDLCenterHandler, GetBulletScreenHandler, GetNewNoticeHandler
     ]
 
     error_message_handler = ErrorHandler

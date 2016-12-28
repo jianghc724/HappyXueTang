@@ -4,6 +4,8 @@ from wechat.models import *
 from HappyXueTang.settings import API_KEY, API_SECRET
 from codex.baseerror import *
 from datetime import datetime
+from __future__ import absolute_import
+from HappyXueTang.celery import app
 import requests, json
 from django.http import *
 from django.http import HttpResponse,request
@@ -134,28 +136,28 @@ class GetBulletScreenHandler(WeChatHandler):
     def handle(self):
         str = '发送弹幕方式\n弹幕 课程id 想说的话\n以下为您的选课列表：\n课程名 课程id'
         userid = self.user.user_id
-        userid = "2014013433"
+        # userid = "2014013433"
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
         }
         headers = {'content-type': 'application/json'}
         addr = 'http://se.zhuangty.com:8000/curriculum/' + userid + '?username=' + userid
-        print (addr)
+        # print(addr)
         r = requests.post(addr, data=json.dumps(data), headers=headers)
-        print(r)
+        # print(r)
         return_json = r.json()
         s = set([])
-        print("233")
+        # print("233")
         if return_json['message'] == 'Success':
             for course_json in return_json['classes']:
                 coursename = course_json['coursename']
-                print("2333")
+                # print("2333")
                 if coursename in s:
                     continue
-                print("23333")
+                # print("23333")
                 s.add(coursename)
-                print("233333")
+                # print("233333")
                 course_num_list = course_json['courseid'].split('-')
                 courseid = course_num_list[3]
                 coursenum = course_num_list[4]
@@ -163,3 +165,56 @@ class GetBulletScreenHandler(WeChatHandler):
                 course_str = '\n' + coursename + ' ' + bulletid
                 str = str + course_str
         return self.reply_text(str)
+
+
+class GetNewNoticeHandler(WeChatHandler):
+    def check(self):
+        return self.is_text('动态') or self.is_event_click(self.view.event_keys['get_new_trend'])
+
+    def handle(self):
+        userid = self.user.user_id
+        data = {
+            "apikey": API_KEY,
+            "apisecret": API_SECRET,
+        }
+        headers = {'content-type': 'application/json'}
+        addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
+        r = requests.post(addr, data=json.dumps(data), headers=headers)
+        return_json = r.json()
+        if return_json['message'] == 'Success':
+            total_notice = 0
+            total_homework = 0
+            course_json = return_json['courses']
+            for course in course_json:
+                total_homework = total_homework + course['unsubmittedopertions']
+                total_notice = total_notice + course['unreadnotice']
+            self.reply_text("您还有" + str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")
+
+
+'''class NotifyAllUserHandler(WeChatHandler):
+    def check(self):
+        return False
+
+    @app.task
+    def handle(self):
+        users = User.objects.all()
+        for user in users:
+            if user.user_status != 0:
+                continue
+            userid = user.user_id
+            data = {
+                "apikey": API_KEY,
+                "apisecret": API_SECRET,
+            }
+            headers = {'content-type': 'application/json'}
+            addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
+            r = requests.post(addr, data=json.dumps(data), headers=headers)
+            return_json = r.json()
+            if return_json['message'] == 'Success':
+                total_notice = 0
+                total_homework = 0
+                course_json = return_json['courses']
+                for course in course_json:
+                    total_homework = total_homework + course['unsubmittedopertions']
+                    total_notice = total_notice + course['unreadnotice']
+                self.reply_text("您还有"+ str(total_notice) + "个未读公告，" + str(total_homework) + "个未交作业")'''
