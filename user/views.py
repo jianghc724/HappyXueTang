@@ -158,6 +158,7 @@ class CourseDetail(APIView):
                             'ratings':[],
                             'comments':[]
                         }
+                        print(result)
                         cou = Course.objects.filter(key=course_key).filter(number=course_number)
                         try:
                             result['ratings'].append(cou[0].rating_one)
@@ -418,7 +419,7 @@ class MakeComment(APIView):
         course_key = course_number_list[3]
         course_number = course_number_list[4]
         try:
-            cou = Course.objects.filter(key=course_key).get(number=course_number)
+            cou = Course.objects.filter(key=course_key).filter(number=course_number)
         except:
             raise CourseError('No such course')
         result = {
