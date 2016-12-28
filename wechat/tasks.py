@@ -3,6 +3,7 @@ from HappyXueTang.celery import app
 from wechat.handlers import *
 from wechat.wrapper import *
 from wechat.models import *
+from wechat.views import *
 from datetime import datetime
 from HappyXueTang.settings import WECHAT_APPID
 
@@ -22,8 +23,8 @@ def get_notice():
             'CreateTime': datetime.now().timestamp(),
             'Content': "动态",
         }
-        for handler in WeChatView.handlers:
-            inst = handler(WeChatView, msg, user)
+        for handler in CustomWeChatView.handlers:
+            inst = handler(CustomWeChatView, msg, user)
             print("233")
             print(handler)
             if inst.check():
