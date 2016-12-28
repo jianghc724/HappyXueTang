@@ -19,38 +19,22 @@
 
     <h4 class="ui block header">
         <i class="book icon"></i>
-        <div class="content">文图自习室<div class="sub header">Do you know your DDLs?</div></div>
+        <div class="content">文图自习室<div class="sub header">Have a seat for youself!</div></div>
     </h4>
 
     <div id="wrap">
     <div id="mainbody">
 
-    <div class="ui basic buttons">
+    <div class="ui inverted blue buttons">
         <div class="ui button" id="btn1">文图座位</div>
         <div class="ui button" id="btn2">文图预约</div>
         <div class="ui button" id="btn3">研读间预约</div>
     </div>
+
     <div class="ui divider"></div>
     <div id="seat_cover">
-        <div class="ui relaxed divided list">
-            <div class="item">
-                 <div class="content">
-                    <a class="header">Semantic-Org/Semantic-UI</a>
-                    <div class="description">Updated 10 mins ago</div>
-                 </div>
-            </div>
-            <div class="item">
-                <div class="content">
-                    <a class="header">Semantic-Org/Semantic-UI-Docs</a>
-                    <div class="description">Updated 22 mins ago</div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="content">
-                    <a class="header">Semantic-Org/Semantic-UI-Meteor</a>
-                    <div class="description">Updated 34 mins ago</div>
-                </div>
-            </div>
+        <div class="ui relaxed divided" id="list_start">
+
         </div>
     </div>
 
@@ -74,8 +58,31 @@
         api.get('/api/u/library/status', {open_id: urlParam.open_id}, function (data) {
             locals.isLoading = false;
             locals.seats = data;
+            $("#btn1").addClass("active");
+            for (var i=0;i<locals.seats.length;i++)
+            {
+                var elem0 = $("<div></div>").addClass("item");
+                var elem1 = $("<div></div>").addClass("three ui basic buttons");
+                var elem2 =  $("<div></div>").addClass("ui button").text(locals.seats[i].name);
+                var elem3 =  $("<div></div>").addClass("ui button").text(locals.seats[i].left);
+                var elem4 =  $("<div></div>").addClass("ui button").text(locals.seats[i].used);
+                elem1.prepend(elem2,elem3,elem4);
+                elem0.prepend(elem1);
+                $("#list_start").prepend(elem0);
+            }
+            var head0 = $("<div></div>").addClass("item");
+            var head1 = $("<div></div>").addClass("three ui buttons");
+            var head2 =  $("<div></div>").addClass("ui button").text("区域");
+            var head3 =  $("<div></div>").addClass("ui button").text("剩余座位");
+            var head4 =  $("<div></div>").addClass("ui button").text("已用座位");
+            head1.prepend(head2,head3,head4);
+            head0.prepend(head1);
+            $("#list_start").prepend(head0);
+            console.log(locals.seats);
             console.log(data);
         }, dftFail);
+        console.log(locals.seats);
+
     });
     </script>
 
