@@ -3,7 +3,7 @@ from HappyXueTang.celery import app
 from wechat.handlers import *
 from wechat.wrapper import *
 from wechat.models import *
-from wechat.views import *
+from wechat.views import CustomWeChatView
 from datetime import datetime
 from HappyXueTang.settings import WECHAT_APPID
 
