@@ -8,7 +8,7 @@
     <title>快乐学堂</title>
 </head>
 
-<body background-color="transparent">
+<body id="mb">
     <div id="wrap">
     <header></header>
 
@@ -33,18 +33,16 @@
     <script src="/js/user/validation.js"></script>
     <script>
     var locals = {
-        pre_bullet: [],
-        new_bullet: []
+        pre_bullet: []
     }
     var render = function () {
         $('header').html(swig.render($('#tpl-header').html(), {locals: locals}));
         $('#theme').html(swig.render($('#tpl-theme').html(), {locals: locals}));
         $('#mainbody').html(swig.render($('#tpl-mainbody').html(), {locals: locals}));
     };
-    setInterval("getBullet()", 100);
+    setInterval("getBullet()", 1000);
     var getBullet = function () {
         api.get('/api/u/bullet/screen', {course_id: urlParam.course_id}, function (data) {
-            locals.new_bullet.length = 0;
             var length = data.length;
             var pre_length = locals.pre_bullet.length;
             for (var i = 0; i < length; i++) {
@@ -56,8 +54,9 @@
                     }
                 }
                 if (flag == 0) {
-                    locals.new_bullet.push(data[i]);
-                    $("#mainbody").append($("<marquee></marquee>").text(data[i].content).attr("loop","1"));
+                    var marquee = $("<marquee></marquee>").text(data[i].content);
+                    $("#mb").prepend(marquee);
+                    setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 30000);
                 }
             }
             locals.pre_bullet = data;
