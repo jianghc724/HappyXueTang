@@ -41,7 +41,7 @@
         $('#theme').html(swig.render($('#tpl-theme').html(), {locals: locals}));
         $('#mainbody').html(swig.render($('#tpl-mainbody').html(), {locals: locals}));
     };
-    setInterval("getBullet()", 500);
+    setInterval("getBullet()", 30000);
     var getBullet = function () {
         api.get('/api/u/bullet/screen', {course_id: urlParam.course_id, course_number: urlParam.course_number}, function (data) {
             locals.new_bullet.length = 0;
