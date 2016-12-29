@@ -106,8 +106,7 @@ class DDLCenterHandler(WeChatHandler):
         return self.is_event_click(self.view.event_keys['get_ddl'])
 
     def handle(self):
-        if self.user.user_id == '' or self.user.user_status == -1:
-            return self.reply_text(self.get_message('bind_account'))
+        pass
 
 
 class BulletScreenHandler(WeChatHandler):
@@ -116,8 +115,6 @@ class BulletScreenHandler(WeChatHandler):
         return self.is_text_command('弹幕')
 
     def handle(self):
-        if self.user.user_id == '' or self.user.user_status == -1:
-            return self.reply_text(self.get_message('bind_account'))
         dict = self.input['Content'].split(' ')
         student_id = self.user.user_id
         course_k_a_n = dict[1]
@@ -138,8 +135,6 @@ class GetBulletScreenHandler(WeChatHandler):
         return self.is_event_click(self.view.event_keys['bullet_screen'])
 
     def handle(self):
-        if self.user.user_id == '' or self.user.user_status == -1:
-            return self.reply_text(self.get_message('bind_account'))
         str = '发送弹幕方式\n弹幕 课程id 想说的话\n以下为您的选课列表：\n课程名 课程id'
         userid = self.user.user_id
         # userid = "2014013433"
@@ -178,8 +173,6 @@ class GetNewNoticeHandler(WeChatHandler):
         return self.is_text('动态') or self.is_event_click(self.view.event_keys['get_new_trend'])
 
     def handle(self):
-        if self.user.user_id == '' or self.user.user_status == -1:
-            return self.reply_text(self.get_message('bind_account'))
         userid = self.user.user_id
         data = {
             "apikey": API_KEY,
