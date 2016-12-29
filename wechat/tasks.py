@@ -52,3 +52,4 @@ def get_notice():
 
         }
         r = requests.post(we_addr, data=json.dumps(we_data))
+        print(r)
