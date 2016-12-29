@@ -130,7 +130,7 @@ class BulletScreenHandler(WeChatHandler):
         dis = Discussion.objects.create(student_id=student_id, course_key=course_key, course_number = course_number,
                                         content=bullet_content, status=False, release_time=current_time)
         dis.save()
-        return self.reply_text('您已发送弹幕')
+        return self.reply_text(self.get_message('class_talk'))
 
 
 class GetBulletScreenHandler(WeChatHandler):
