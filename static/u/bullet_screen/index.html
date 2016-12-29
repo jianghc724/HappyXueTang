@@ -8,19 +8,17 @@
     <title>快乐学堂</title>
 </head>
 
-<<<<<<< HEAD
-<body height="1000px">
-    <div id="wrap" height="1000px">
-=======
-<body id="mb">
+<body>
+    <marquee>我不听</marquee>
     <div id="wrap">
->>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
     <header></header>
-    <div class="theme" id="theme"></div>
-    <hr/>
-    <div id="mainbody" height="1000px"></div>
 
+    <div class="theme" id="theme"></div>
+
+    <hr/>
+    <div id="mainbody"></div>
     </div>
+
     <footer id="footer">
         <hr/>
         <a href="" target="_blank">快乐学堂</a>
@@ -57,21 +55,13 @@
                     }
                 }
                 if (flag == 0) {
-<<<<<<< HEAD
                     var mainbody = document.getElementById("mainbody");
                     var marquee = document.createElement("marquee");
                     marquee.innerHTML = data[i].content;
-                    marquee.style.fontSize = "150%";
-                    marquee.style.fontFamily = "Consolas";
                     marquee.style.position = "absolute";
                     marquee.style.top = 500 * Math.random() + "px";
                     mainbody.appendChild(marquee); 
                     setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 22000);
-=======
-                    var marquee = $("<marquee></marquee>").text(data[i].content);
-                    $("#mb").prepend(marquee);
-                    setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 30000);
->>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                 }
             }
             locals.pre_bullet = data;
