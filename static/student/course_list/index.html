@@ -10,12 +10,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/grid.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/semantic-ui/2.2.7/components/table.min.css">
     <title>快乐学堂</title>
 </head>
 
 <body>
+        <h4 class="ui block header">
+            <i class="write icon"></i>
+            <div class="content">课程表<div class="sub header">Be a good student!</div></div>
+        </h4>
     <div id="wrap">
     <div id="mainbody">
+
         <div id="successHolder" v-if="loading">
             <img src="/img/loading.gif" />
             <div>正在加载……</div>
@@ -24,16 +30,26 @@
                 <div id="week-banner" class="three column row">
                     <div class = "column"></div>
                     <div class = "column">
-                        <div id="show-week" class ="ui inline dropdown">
-                            <input id="selected-week" type="hidden" value="0" >
-                            <div id="show-week-text" class="text">第13周</div>
-                            <i class="dropdown icon"></i>
-                            <ul id="week-menu" class="menu">
-                                <li class="item" v-for="n in 7">
-                                第{{ n }}周
-                                </li>
-                            </ul>
-                        </div>
+                        <select class="ui orange dropdown">
+                            <option value="1">第1周</option>
+                            <option value="2">第2周</option>
+                            <option value="3">第3周</option>
+                            <option value="4">第4周</option>
+                            <option value="5">第5周</option>
+                            <option value="6">第6周</option>
+                            <option value="7">第7周</option>
+                            <option value="8">第8周</option>
+                            <option value="9">第9周</option>
+                            <option value="10">第10周</option>
+                            <option value="11">第11周</option>
+                            <option value="12">第12周</option>
+                            <option value="13">第13周</option>
+                            <option value="14">第14周</option>
+                            <option value="15">第15周</option>
+                            <option value="16">第16周</option>
+                            <option value="17">第17周</option>
+                            <option value="18">第18周</option>
+                        </select>
                     </div>
                     <div class = "column"></div>
                 </div>
