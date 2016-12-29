@@ -122,23 +122,28 @@ class CourseDetail(APIView):
             "apikey": API_KEY,
             "apisecret": API_SECRET,
         }
+        course_number_list = self.input['course_id'].split('-')
+        course_key = course_number_list[3]
+        course_number = course_number_list[4]
+
         headers = {'content-type': 'application/json'}
         userid = User.get_by_openid(self.input['open_id']).user_id
         input_course_id = self.input['course_id']
         status = self.input['status']
-        if status == 0:
+        addr = ""
+        if status == '0':
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
-        elif status == 1:
+        elif status == '1':
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' \
                    + input_course_id + '/notices?username=' + userid + '&courseid=' + input_course_id
-        elif status == 2:
+        elif status == '2':
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' \
                    + input_course_id + '/assignments?username=' + userid + '&courseid=' + input_course_id
         r = requests.post(addr, data=json.dumps(data), headers=headers)
         return_json = r.json()
-        if status == 1:
+        if status == '0':
             if return_json['message'] == 'Success':
-                for course_json in return_json['classes']:
+                for course_json in return_json['courses']:
                     if course_json['courseid'] == input_course_id:
                         result = {
                             'name': course_json['coursename'],
@@ -147,11 +152,8 @@ class CourseDetail(APIView):
                             'unread_notice': course_json['unreadnotice'],
                             'file': course_json['newfile'],
                             'unsubmitted_homework': course_json['unsubmittedoperations'],
-<<<<<<< HEAD
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
-=======
->>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                         }
                         return result
                 cous = Course.objects.filter(course_id=input_course_id)
@@ -159,19 +161,16 @@ class CourseDetail(APIView):
                     result = {
                         'name': cous[0].name,
                         'status': -1,
-<<<<<<< HEAD
                         'ratings':ratings,
                         'teacher': course_json['teacher'],
                         'email': course_json['email'],
-=======
->>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                     }
                     return result
                 else:
                     raise CourseError('No such course')
             else:
                 raise GetInfoError('Username Invalid')
-        if status == 2:
+        if status == '1':
             if return_json['message'] == 'Success':
                 cous = Course.objects.filter(course_id=input_course_id)
                 notices = return_json['notice']
@@ -180,11 +179,8 @@ class CourseDetail(APIView):
                     'course_id': input_course_id,
                     'status': 1,
                     'notice_detail':[],
-<<<<<<< HEAD
                     'teacher': course_json['teacher'],
                     'email': course_json['email']
-=======
->>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                 }
                 for notice in notices:
                     result['notice_detail'].append({
@@ -202,17 +198,12 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
-<<<<<<< HEAD
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
                         }
-=======
-                        }
-                        return result
->>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                     else:
                         raise CourseError('No such course')
-        if status == 3:
+        if status == '2':
             if return_json['message'] == 'Success':
                 cous = Course.objects.filter(key=input_course_id)
                 operations = return_json['assignments']
@@ -220,6 +211,8 @@ class CourseDetail(APIView):
                     'name': cous[0].name,
                     'course_id': input_course_id,
                     'status': 1,
+                    'teacher': course_json['teacher'],
+                    'email': course_json['email'],
                     'new_operations': [],
                 }
                 for operation in operations:
@@ -241,7 +234,6 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
-<<<<<<< HEAD
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
                         }
