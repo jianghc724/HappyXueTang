@@ -265,7 +265,6 @@ class CommentOverview(APIView):
         except:
             raise CourseError('No such course')
         return result
-
     def get_comment_list(self, cou):
         all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
         comments = []
@@ -284,14 +283,6 @@ class CommentOverview(APIView):
                 comments[len(comments)] = com
             comments = self.sort_comment_list(comments)
         return comments
-=======
-                        }
-                        return result
-                    else:
-                        raise CourseError('No such course')
->>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
-
-
 
 class MakeComment(APIView):
     def get(self):
