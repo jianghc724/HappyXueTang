@@ -2,19 +2,61 @@ var successHolder = new Vue({
     el: '#successHolder',
     data: {
         loading:true,
-        
     }
 })
 var course_meta = new Vue({
     el:"#course-meta",
     data:{
-        loaded:false,
         name:"",
         status:0,
         teacher:"",
         email:"",
         ratings:[],
         rating_texts:["课堂氛围：","课程收获：", "课程负担："]
+    }
+})
+
+var nav_notice = new Vue({
+    el:"#nav-notice",
+    methods:{
+        getNotice:function(){
+            api.get('/api/u/course/notices', {open_id: urlParam.open_id, course_id:urlParam.course_id}, function (data) {
+                notice.notices = data;
+            }, dftFail);
+        }
+    }
+})
+
+var content_pannel = new Vue({
+    el:"#content-pannel",
+    data:{
+        status:1
+    }
+})
+
+var notice = new Vue({
+    el:"#notice",
+    data:{
+        notices:[]
+    },
+    methods:{
+        lastTime:function(publish, current){
+            var last_time = (current.getTime() - publish.getTime())/1000;
+            var last_day = Math.floor(last_time/86400);
+            var last_hour = Math.floor(last_time%86400/3600);
+            var last_minute = Math.floor(last_time%86400%3600/60);
+            var return_str = "";
+            if(last_day != 0)
+                return_str += last_day + "天";
+            if(last_hour != 0)
+                return_str += last_hour + "小时";
+            if(last_minute != 0)
+                return_str += last_minute + "分钟";
+            if(last_day == 0 && last_hour == 0 && last_minute == 0)
+                return_str += "刚刚发布。"
+            else
+                return_str += "前发布。" 
+        },
     }
 })
 
@@ -33,7 +75,6 @@ $(function () {
                 course_meta.ratings[i] = 0;
             }
             successHolder.loading = false;
-            course_meta.loaded = true;
         }, dftFail);
     }, dftFail);
     $('#show-week').dropdown();

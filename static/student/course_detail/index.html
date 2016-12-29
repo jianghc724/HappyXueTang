@@ -10,9 +10,10 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/button.min.css" >
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.7/components/grid.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/card.min.css" >
-    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/breadcrumb.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/list.min.css" >
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/item.min.css" >
+    <link href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/list.min.css" rel="stylesheet">
     <title>快乐学堂</title>
 </head>
 
@@ -24,7 +25,7 @@
             <div>正在加载……</div>
         </div>
         <div class="block">空行</div>
-        <div id = "course-meta" class="ui card" v-if="loaded">
+        <div id = "course-meta" class="ui card" v-else>
             <div id = "" class="content ">
                 <div class="header">{{name}}</div>
                 <div class="description">
@@ -42,20 +43,20 @@
                     </span>
                 </div>
             </div>
-            <div id="comment-buttons"class="seven wide column">
+            <!--<div id="comment-buttons"class="seven wide column">
                 <button id= "comment-list" class="ui inverted blue button" v-on:click="jump(0)">评价列表</button>
                 <button id="go-comment" class="ui inverted blue button" v-on:click="jump(1)">评价课程</button>
+            </div>-->
             </div>
-            </div>
-            <div id="new-pannel" class="ui extra content grid" v-if="status > 0">
+            <!--<div id="new-pannel" class="ui extra content grid" v-if="status > 0">
                 <div id="nav-bar" class= "ui three column row">
-                    <div id="overall" class="five wide column">
+                    <div id="nav-overall" class="five wide column">
                     全部
                     </div>
-                    <div id="announcements" class="five wide column">
+                    <div id="nav-notice"v-on:click = "getNotice()" class="five wide column">
                     公告
                     </div>
-                    <div id="homework" class="five wide column">
+                    <div id="nav-homework" class="five wide column">
                     作业
                     </div>
                 </div>
@@ -63,13 +64,20 @@
                     <div id="overall" class="five wide column" v-if="status==0">
                         
                     </div>
-                    <div id="announcements" class="five wide column" v-if="status==1">
-                    
+                    <div id="notice" class="five wide column" v-if="status==1">
+                    <div class="ui list">
+                            <div v-for="notice in notices" class="item">
+                            <div class="content">
+                            <a class="header">{{notice.notice_title}}</a>
+                                <div class="description">由<a><b>{{notice.notice_publisher}}</b></a> {{notice.lastTime(notice.notice_publishtime, notice.current_time)}}.</div>
+                            </div>
+                            </div>
+                        </div>
                     </div>
                     <div id="homework" class="five wide column" v-if="status==2">
                     
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

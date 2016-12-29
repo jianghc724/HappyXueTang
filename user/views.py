@@ -407,7 +407,7 @@ class GetNotice(APIView):
         current_time = datetime.now().timestamp()
         if return_json['message'] == 'Success':
             result = []
-            for course_json in return_json['classes']:
+            for course_json in return_json['courses']:
                 courseid = course_json['courseid']
                 addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid \
                        + '/notices?username=' + userid + '&courseid=' + courseid
