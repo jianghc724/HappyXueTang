@@ -44,6 +44,7 @@ class WeChatHandler(object):
         )
 
     def reply_text(self, content):
+        print(content)
         return get_template('text.xml').render(self.get_context(
             Content=content
         ))

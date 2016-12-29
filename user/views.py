@@ -50,8 +50,8 @@ class UserBind(APIView):
 
 class CourseList(APIView):
     def get(self):
-        print("23333")
         self.check_input('open_id', 'week')
+        print(self.input['week'])
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
@@ -115,7 +115,6 @@ class CourseList(APIView):
             raise GetInfoError('Get Course List Failed')
 
 
-
 class CourseDetail(APIView):
     def get(self):
         self.check_input('open_id', 'course_id', 'status')
@@ -123,28 +122,23 @@ class CourseDetail(APIView):
             "apikey": API_KEY,
             "apisecret": API_SECRET,
         }
-        course_number_list = self.input['course_id'].split('-')
-        course_key = course_number_list[3]
-        course_number = course_number_list[4]
-
         headers = {'content-type': 'application/json'}
         userid = User.get_by_openid(self.input['open_id']).user_id
         input_course_id = self.input['course_id']
         status = self.input['status']
-        addr = ""
-        if status == '0':
+        if status == 0:
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses?username=' + userid
-        elif status == '1':
+        elif status == 1:
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' \
                    + input_course_id + '/notices?username=' + userid + '&courseid=' + input_course_id
-        elif status == '2':
+        elif status == 2:
             addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' \
                    + input_course_id + '/assignments?username=' + userid + '&courseid=' + input_course_id
         r = requests.post(addr, data=json.dumps(data), headers=headers)
         return_json = r.json()
-        if status == '0':
+        if status == 1:
             if return_json['message'] == 'Success':
-                for course_json in return_json['courses']:
+                for course_json in return_json['classes']:
                     if course_json['courseid'] == input_course_id:
                         result = {
                             'name': course_json['coursename'],
@@ -153,8 +147,11 @@ class CourseDetail(APIView):
                             'unread_notice': course_json['unreadnotice'],
                             'file': course_json['newfile'],
                             'unsubmitted_homework': course_json['unsubmittedoperations'],
+<<<<<<< HEAD
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
+=======
+>>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                         }
                         return result
                 cous = Course.objects.filter(course_id=input_course_id)
@@ -162,16 +159,19 @@ class CourseDetail(APIView):
                     result = {
                         'name': cous[0].name,
                         'status': -1,
+<<<<<<< HEAD
                         'ratings':ratings,
                         'teacher': course_json['teacher'],
                         'email': course_json['email'],
+=======
+>>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                     }
                     return result
                 else:
                     raise CourseError('No such course')
             else:
                 raise GetInfoError('Username Invalid')
-        if status == '1':
+        if status == 2:
             if return_json['message'] == 'Success':
                 cous = Course.objects.filter(course_id=input_course_id)
                 notices = return_json['notice']
@@ -180,8 +180,11 @@ class CourseDetail(APIView):
                     'course_id': input_course_id,
                     'status': 1,
                     'notice_detail':[],
+<<<<<<< HEAD
                     'teacher': course_json['teacher'],
                     'email': course_json['email']
+=======
+>>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                 }
                 for notice in notices:
                     result['notice_detail'].append({
@@ -199,12 +202,17 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
+<<<<<<< HEAD
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
                         }
+=======
+                        }
+                        return result
+>>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                     else:
                         raise CourseError('No such course')
-        if status == '2':
+        if status == 3:
             if return_json['message'] == 'Success':
                 cous = Course.objects.filter(key=input_course_id)
                 operations = return_json['assignments']
@@ -212,8 +220,6 @@ class CourseDetail(APIView):
                     'name': cous[0].name,
                     'course_id': input_course_id,
                     'status': 1,
-                    'teacher': course_json['teacher'],
-                    'email': course_json['email'],
                     'new_operations': [],
                 }
                 for operation in operations:
@@ -235,6 +241,7 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
+<<<<<<< HEAD
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
                         }
@@ -285,19 +292,13 @@ class CommentOverview(APIView):
                 comments[len(comments)] = com
             comments = self.sort_comment_list(comments)
         return comments
+=======
+                        }
+                        return result
+                    else:
+                        raise CourseError('No such course')
+>>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
 
-    def sort_comment_list(self, comment_list):
-        i = len(comment_list) - 1
-        while True:
-            if i == 0:
-                break
-            if comment_list[i]['time'] < comment_list[i - 1]['time']:
-                break
-            temp_com = comment_list[i]
-            comment_list[i] = comment_list[i - 1]
-            comment_list[i - 1] = temp_com
-            i = i - 1
-        return comment_list
 
 
 class MakeComment(APIView):
@@ -437,6 +438,64 @@ class GetNotice(APIView):
             return result
         raise GetInfoError('Username Invalid')
 
+
+class CommentOverview(APIView):
+    def get(self):
+        self.check_input('course_id')
+        course_number_list = self.input['course_id'].split('-')
+        course_key = course_number_list[3]
+        course_number = course_number_list[4]
+        try:
+            cou = Course.objects.filter(key=course_key).get(number=course_number)
+        except:
+            raise CourseError('No such course')
+        result = {
+            'ratings': [],
+            'comments': [],
+            'course_info':{
+                'course_id': self.input['course_id'],
+                'course_key': cou.key,
+                'course_number': cou.number,
+                'course_name': cou.name,
+            },
+        }
+        result['ratings'].append(cou.rating_one, cou.rating_two, cou.rating_three)
+        result['comments'] = self.get_comment_list(cou)
+        return result
+
+    def get_comment_list(self, cou):
+        all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
+        comments = []
+        for comment in all_comments:
+            if len(comments) == 10 and comment.rating_time < comments[9]['rating_time']:
+                continue
+            student = User.objects.get(user_id=comment.student_id)
+            com = {
+                'student': student.name,
+                'time':comment.rating_time,
+                'comment':comment.rating_comment,
+            }
+            if len(comments) == 10:
+                comments[9] = com
+            else:
+                comments[len(comments)] = com
+            comments = self.sort_comment_list(comments)
+        return comments
+
+    def sort_comment_list(self, comment_list):
+        i = len(comment_list) - 1
+        while True:
+            if i == 0:
+                break
+            if comment_list[i]['time'] < comment_list[i - 1]['time']:
+                break
+            temp_com = comment_list[i]
+            comment_list[i] = comment_list[i - 1]
+            comment_list[i - 1] = temp_com
+            i = i - 1
+        return comment_list
+
+
 class MakeComment(APIView):
     def get(self):
         self.check_input('course_id')
@@ -444,7 +503,7 @@ class MakeComment(APIView):
         course_key = course_number_list[3]
         course_number = course_number_list[4]
         try:
-            cou = Course.objects.filter(key=course_key).filter(number=course_number)
+            cou = Course.objects.filter(key=course_key).get(number=course_number)
         except:
             raise CourseError('No such course')
         result = {

@@ -8,8 +8,13 @@
     <title>快乐学堂</title>
 </head>
 
+<<<<<<< HEAD
 <body height="1000px">
     <div id="wrap" height="1000px">
+=======
+<body id="mb">
+    <div id="wrap">
+>>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
     <header></header>
     <div class="theme" id="theme"></div>
     <hr/>
@@ -52,6 +57,7 @@
                     }
                 }
                 if (flag == 0) {
+<<<<<<< HEAD
                     var mainbody = document.getElementById("mainbody");
                     var marquee = document.createElement("marquee");
                     marquee.innerHTML = data[i].content;
@@ -61,6 +67,11 @@
                     marquee.style.top = 500 * Math.random() + "px";
                     mainbody.appendChild(marquee); 
                     setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 22000);
+=======
+                    var marquee = $("<marquee></marquee>").text(data[i].content);
+                    $("#mb").prepend(marquee);
+                    setTimeout(function() {marquee.parentNode.removeChild(marquee)}, 30000);
+>>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                 }
             }
             locals.pre_bullet = data;

@@ -4,11 +4,10 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="/css/base.css" rel="stylesheet" type="text/css" />
-    <link href="/css/user/course_list.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/dropdown.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/icon.min.css">
-    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/grid.min.css">
+    <link href="//cdn.bootcss.com/semantic-ui/2.2.7/components/grid.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/components/item.min.css">
     <title>快乐学堂</title>
 </head>
@@ -20,8 +19,13 @@
             <img src="/img/loading.gif" />
             <div>正在加载……</div>
         </div>
+<<<<<<< HEAD
         <div id="curriculumn" class="ui grid" v-else>
                 <!--<div id="week-banner" class="three column row">
+=======
+        <div id="curriculumn" class="ui grid" v-if="loaded">
+                <div id="week-banner" class="three column row">
+>>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                     <div class = "column"></div>
                     <div class = "column">
                         <div id="show-week" class ="ui inline dropdown">
@@ -37,6 +41,7 @@
                     </div>
                     <div class = "column"></div>
                 </div>
+<<<<<<< HEAD
                 <hr>-->
                 <div id="day-list" class="ui eight column row">
                     <div class="two wide column"></div>
@@ -52,12 +57,16 @@
                         </div>
                         <div  v-for="n in 7"  :id= '"course"+ courses[n-1][m-1][1]'  class="twelve wide column" v-if="n == current_day" v-on:click="jump(courses[n-1][m-1][1])">
                             <div class="course-sticky">{{ courses[n-1][m-1][0] }}</div>
+=======
+                <hr>
+                <div id="day-banner" class="eight column row">
+                    <div id="day-list" class="row">
+                        <div v-for="day in week" class="two wide column">
+                            <span class="day">{{day.text}}</span>
+                            <span class="date">{{day.date}}</span>
+>>>>>>> parent of 3054fd4... Merge branch 'master' of github.com:jianghc724/HappyXueTang
                         </div>
                     </div>
-                </div>
-
-
-
                 </div>
             </div>
     </div>
@@ -76,5 +85,10 @@
     <script src="/js/weixin_lib.js"></script>
     <script src="/js/base.js"></script>
     <script src="/js/student/course_list.js"></script>
+    <script>
+    
+    </script>
+    <script>
+    </script>
 </body>
 </html>
