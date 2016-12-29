@@ -1,0 +1,13 @@
+.ui.grid {
+  font-size: 12px !important;
+}
+.selected {
+  color: #688094;
+  background-color: white;
+  border-bottom: solid 1px #688094;
+}
+.not-selected {
+  color: #747b84;
+  background-color: white;
+  border-bottom: none;
+}
