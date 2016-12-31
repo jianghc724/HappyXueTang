@@ -187,6 +187,7 @@ class WeChatView(BaseView):
     handlers = []
     error_message_handler = WeChatEmptyHandler
     default_handler = WeChatEmptyHandler
+    wechatUser = User.objects.first()
 
     def _check_signature(self):
         query = self.request.GET
