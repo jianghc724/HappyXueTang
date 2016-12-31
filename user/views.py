@@ -193,7 +193,7 @@ class CourseDetail(APIView):
                 if return_json['reason'] == 'Invalid username':
                     raise GetInfoError('Username Invalid')
                 else:
-                    cous = Course.objects.filter(key=input_course_id)
+                    cous = Course.objects.filter(course_id=input_course_id)
                     if cous:
                         result = {
                             'name': cous[0].name,
@@ -216,6 +216,7 @@ class CourseDetail(APIView):
                     'teacher': cous[0].teacher,
                     'new_operations': [],
                 }
+                current_time = datetime.now().timestamp()
                 for operation in operations:
                     if operation['state'] == "尚未提交":
                         result['new_operations'].append({
@@ -224,6 +225,7 @@ class CourseDetail(APIView):
                             'duedate': operation['duedate'],
                             'detail': operation['detail'],
                             'fileurl': operation['fileurl'],
+                            'current_time':current_time
                         })
                 return result
             else:

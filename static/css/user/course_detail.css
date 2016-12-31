@@ -2,6 +2,12 @@
   width: 100%;
   margin-top: 10px !import;
 }
+#course-meta .header {
+  color: #54C8FF;
+}
+#course-meta p {
+  color: #8e8d92;
+}
 .block {
   display: none;
   height: 10px;
@@ -11,4 +17,19 @@
 }
 #comment-list {
   margin-bottom: 5px;
+}
+#nav-bar {
+  text-align: center;
+}
+.floated span {
+  color: red;
+}
+#nav-overall,
+#nav-notice,
+#nav-homework {
+  text-color: black;
+}
+#footer {
+  position: absolute;
+  bottome: 20px;
 }

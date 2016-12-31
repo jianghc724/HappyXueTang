@@ -26,7 +26,7 @@
         </div>
         <div class="block">空行</div>
         <div id = "course-meta" class="ui card" v-else>
-            <div id = "" class="content ">
+            <div class="content ">
                 <div class="header">{{name}}</div>
                 <div class="description">
                     <p v-if="teacher != ''">任课老师：{{teacher}}</p>
@@ -50,25 +50,61 @@
             </div>
             <div id="new-pannel" class="ui extra content grid" v-if="status > 0">
                 <div id="nav-bar" class= "ui three column row">
-                    <div id="nav-overall" class="five wide column">
-                    全部
-                    </div>
                     <div id="nav-notice" v-on:click = "getNotice()" class="five wide column">
                     公告
                     </div>
                     <div id="nav-homework" v-on:click = "getHomework()"class="five wide column">
                     作业
                     </div>
+                    <div id="nav-comment" v-on:click = "getComment()"class="five wide column">
+                    评论
+                    </div>
                 </div>
                 <div id="content-pannel" class= "row">
-                    <div id="overall" class="five wide column" v-if="status==0">
-                    全部
+                    <div id="notice" class="sixteen wide column" v-if="status==1">
+                        <div class="ui relaxed divided list" v-if="notices.length > 0">
+                            <div class="item" v-for="notice in notices">
+                                <div class="content row">
+                                    <div class="ten wide column header">{{notice.title}}
+                                        <div class="right floated meta">{{getTime(notice.publishtime)}}</div>
+                                    </div>
+                                    <div class="">{{notice.content}}</div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div v-else>
+                        </div>
                     </div>
-                    <div id="announcements" class="five wide column" v-if="status==1">
-                    {{notices}}
+                    <div id="homework" class="sixteen wide column" v-if="status==2">
+                        <div class="ui relaxed divided list" v-if="homeworks.length > 0">
+                            <div class="item" v-for="(homework,index) in homeworks">
+                                <div class="content">
+                                    <div class="header">{{homework.title}}
+                                        <div class="right floated ">剩余<span>{{remain[index][0]}}</span>天<span></span>小时<span>{{remain[index][2]}}</span>分钟</div>
+                                    </div>
+                                    <div class="row">{{homework.detail}}</div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div v-else>
+                        </div>
                     </div>
-                    <div id="homework" class="five wide column" v-if="status==2">
-                    作业
+                    <div id="homework" class="sixteen wide column" v-if="status==3">
+                        <div class="ui relaxed divided list" v-if="comments.length > 0">
+                            <div class="item" v-for="homework in homeworks">
+                                <div class="content">
+                                    <div class="header">{{homework.title}}
+                                        <div class="right floated ">
+                                    </div>
+                                    <div class="row">{{homework.detail}}</div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div v-else>
+                        </div>
                     </div>
                 </div>
             </div>
