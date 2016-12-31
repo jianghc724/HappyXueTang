@@ -157,7 +157,6 @@ class CourseDetail(APIView):
                             'file': course_json['newfile'],
                             'unsubmitted_homework': course_json['unsubmittedoperations'],
                             'teacher': course_json['teacher'],
-                            'email': course_json['email'],
                         }
                         return result
                 cous = Course.objects.filter(course_id=input_course_id)
@@ -165,9 +164,7 @@ class CourseDetail(APIView):
                     result = {
                         'name': cous[0].name,
                         'status': -1,
-                        'ratings':ratings,
-                        'teacher': course_json['teacher'],
-                        'email': course_json['email'],
+                        'teacher': cous[0].teacher,
                     }
                     return result
                 else:
@@ -183,8 +180,7 @@ class CourseDetail(APIView):
                     'course_id': input_course_id,
                     'status': 1,
                     'notice_detail':[],
-                    'teacher': course_json['teacher'],
-                    'email': course_json['email'],
+                    'teacher': cous[0].teacher,
                 }
                 for notice in notices:
                     result['notice_detail'].append({
@@ -202,8 +198,7 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
-                            'teacher': course_json['teacher'],
-                            'email': course_json['email'],
+                            'teacher': cous[0].teacher,
                         }
                     else:
                         raise CourseError('No such course')
@@ -215,8 +210,7 @@ class CourseDetail(APIView):
                     'name': cous[0].name,
                     'course_id': input_course_id,
                     'status': 1,
-                    'teacher': course_json['teacher'],
-                    'email': course_json['email'],
+                    'teacher': cous[0].teacher,
                     'new_operations': [],
                 }
                 for operation in operations:
@@ -238,8 +232,7 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
-                            'teacher': course_json['teacher'],
-                            'email': course_json['email'],
+                            'teacher': cous[0].teacher,
                         }
                     else:
                         raise CourseError('No such course')
