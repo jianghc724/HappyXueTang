@@ -164,7 +164,6 @@ def get_redirect_url(input_url):
     url_part3 = '&response_type=code&scope=snsapi_base&state=1#wechat_redirect'
 
     des = url_part1 + CONFIGS['WECHAT_APPID'] + url_part2 + url_part3
-    print(des)
     return des
 
 # Static files (CSS, JavaScript, Images)
