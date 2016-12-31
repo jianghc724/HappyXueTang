@@ -27,7 +27,7 @@
             <div>正在加载……</div>
         </div>
         <div id="curriculumn" class="ui grid" v-else>
-                <div id="week-banner" class="three column row">
+                <!--<div id="week-banner" class="three column row">
                     <div class = "column"></div>
                     <div class = "column">
                         <select class="ui orange dropdown">
@@ -53,7 +53,7 @@
                     </div>
                     <div class = "column"></div>
                 </div>
-                <hr>
+                <hr>-->
                 <div id="day-list" class="ui eight column row">
                     <div class="two wide column"></div>
                     <div v-for="day in week" :id='"day"+ day.id'class="two wide column" v-on:click="setCurrentDay(day.id)">

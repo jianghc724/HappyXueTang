@@ -86,6 +86,9 @@ class WeChatHandler(object):
     def url_list(self):
         return settings.get_url('student/course_list', {'open_id': self.user.open_id})
 
+    def url_ddl(self):
+        return settings.get_url('student/ddl_center', {'open_id': self.user.open_id})
+
 class WeChatEmptyHandler(WeChatHandler):
 
     def check(self):

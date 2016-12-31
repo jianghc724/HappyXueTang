@@ -50,8 +50,8 @@ class UserBind(APIView):
 
 class CourseList(APIView):
     def get(self):
-        print("23333")
         self.check_input('open_id', 'week')
+        print(self.input)
         data = {
             "apikey": API_KEY,
             "apisecret": API_SECRET,
@@ -60,7 +60,9 @@ class CourseList(APIView):
         userid = User.get_by_openid(self.input['open_id']).user_id
         addr = 'http://se.zhuangty.com:8000/curriculum/' + userid + '?username=' + userid
         r = requests.post(addr, data=json.dumps(data), headers=headers)
+        print(r)
         return_json = r.json()
+        #print(return_json)
         if return_json['message'] == 'Success':
             result = []
             for course_json in return_json['classes']:
@@ -73,6 +75,7 @@ class CourseList(APIView):
                 times = course_json['time']
                 time = times[0] * 10 + times[1]
                 courses = Course.objects.filter(key=courseid).filter(number=coursenum).filter(week=weeks).filter(course_time=time)
+        
                 if not courses:
                     cou = Course.objects.create(name=course_json['coursename'], key=courseid,
                                                 teacher=course_json['teacher'], week=weeks,
@@ -154,7 +157,6 @@ class CourseDetail(APIView):
                             'file': course_json['newfile'],
                             'unsubmitted_homework': course_json['unsubmittedoperations'],
                             'teacher': course_json['teacher'],
-                            'email': course_json['email'],
                         }
                         return result
                 cous = Course.objects.filter(course_id=input_course_id)
@@ -162,9 +164,7 @@ class CourseDetail(APIView):
                     result = {
                         'name': cous[0].name,
                         'status': -1,
-                        'ratings':ratings,
-                        'teacher': course_json['teacher'],
-                        'email': course_json['email'],
+                        'teacher': cous[0].teacher,
                     }
                     return result
                 else:
@@ -174,14 +174,13 @@ class CourseDetail(APIView):
         if status == '1':
             if return_json['message'] == 'Success':
                 cous = Course.objects.filter(course_id=input_course_id)
-                notices = return_json['notice']
+                notices = return_json['notices']
                 result = {
                     'name': cous[0].name,
                     'course_id': input_course_id,
                     'status': 1,
                     'notice_detail':[],
-                    'teacher': course_json['teacher'],
-                    'email': course_json['email']
+                    'teacher': cous[0].teacher,
                 }
                 for notice in notices:
                     result['notice_detail'].append({
@@ -199,21 +198,22 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
-                            'teacher': course_json['teacher'],
-                            'email': course_json['email'],
+                            'teacher': cous[0].teacher,
                         }
+                        return result
                     else:
                         raise CourseError('No such course')
         if status == '2':
             if return_json['message'] == 'Success':
-                cous = Course.objects.filter(key=input_course_id)
+                cous = Course.objects.filter(course_id=input_course_id)
+                if not cous:
+                    raise CourseError('No such course')
                 operations = return_json['assignments']
                 result = {
                     'name': cous[0].name,
                     'course_id': input_course_id,
                     'status': 1,
-                    'teacher': course_json['teacher'],
-                    'email': course_json['email'],
+                    'teacher': cous[0].teacher,
                     'new_operations': [],
                 }
                 for operation in operations:
@@ -235,43 +235,42 @@ class CourseDetail(APIView):
                         result = {
                             'name': cous[0].name,
                             'status': -1,
-                            'teacher': course_json['teacher'],
-                            'email': course_json['email'],
+                            'teacher': cous[0].teacher,
                         }
                     else:
                         raise CourseError('No such course')
-        
+
 class CommentOverview(APIView):
     def get(self):
-        self.check_input('course_id','open_id')
+        self.check_input('course_id')
         course_number_list = self.input['course_id'].split('-')
         course_key = course_number_list[3]
         course_number = course_number_list[4]
-        cou = Course.objects.filter(key=course_key).filter(number=course_number)
-        try:
-            result = {
-                'ratings': [],
-                'comments': [],
-                'course_info':{
-                    'course_id': self.input['course_id'],
-                    'course_key': cou[0].key,
-                    'course_number': cou[0].number,
-                    'course_name': cou[0].name,
-                },
-            }
-            result['ratings'].append(cou[0].rating_one)
-            result['ratings'].append(cou[0].rating_two)
-            result['ratings'].append(cou[0].rating_three)
-            result['comments'] = self.get_comment_list(cou[0])
-        except:
+
+        cous = Course.objects.filter(key=course_key).filter(number=course_number)
+        if not cous:
             raise CourseError('No such course')
+        result = {
+            'ratings': [],
+            'comments': [],
+            'course_info': {
+                'course_id': self.input['course_id'],
+                'course_key': cous[0].key,
+                'course_number': cous[0].number,
+                'course_name': cous[0].name,
+            },
+        }
+        result['ratings'].append(cous[0].rating_one)
+        result['ratings'].append(cous[0].rating_two)
+        result['ratings'].append(cous[0].rating_three)
+        result['comments'] = self.get_comment_list(cous[0])
         return result
 
     def get_comment_list(self, cou):
         all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
         comments = []
         for comment in all_comments:
-            if len(comments) == 10 and comment.rating_time < comments[9]['rating_time']:
+            if len(comments) == 10 and comment.rating_time < comments[9]['time']:
                 continue
             student = User.objects.get(user_id=comment.student_id)
             com = {
@@ -335,7 +334,7 @@ class MakeComment(APIView):
         current_time = datetime.now()
         com = Comment.objects.create(student_id=user.user_id, course_key=course_key, course_number=course_number,
                                      rating_one=self.input['rating_one'], rating_two=self.input['rating_two'], rating_three=self.input['rating_three'],
-                                     rating_time=current_time, rating_comment = self.input['comment'])
+                                     rating_time=current_time, rating_comment=self.input['comment'])
         com.save()
         total_people = cou.rating_people
         total_rating_one = cou.rating_one * total_people
@@ -373,7 +372,6 @@ class GetDeadline(APIView):
                     assignments = _return_json['assignments']
                     for assignment in assignments:
                         if current_time * 1000 < assignment['duedate'] and assignment['state'] == '尚未提交':
-                            print("in if")
                             result.append({
                                 'course_name':course_json['coursename'],
                                 'homework_title':assignment['title'],
@@ -407,7 +405,7 @@ class GetNotice(APIView):
         current_time = datetime.now().timestamp()
         if return_json['message'] == 'Success':
             result = []
-            for course_json in return_json['classes']:
+            for course_json in return_json['courses']:
                 courseid = course_json['courseid']
                 addr = 'http://se.zhuangty.com:8000/learnhelper/' + userid + '/courses/' + courseid \
                        + '/notices?username=' + userid + '&courseid=' + courseid
@@ -622,9 +620,12 @@ class InfoSearch(APIView):
                     'course_number': cou.number,
                     'course_name': cou.name,
                     'course_teacher': cou.teacher,
+                    'ratings':[],
                 })
-        print(result)
-        if search=="" :
+                result['ratings'].append(cou.rating_one)
+                result['ratings'].append(cou.rating_two)
+                result['ratings'].append(cou.rating_three)
+        if search=="":
             return {'courses':[]}
         return result
 
