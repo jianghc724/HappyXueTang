@@ -155,6 +155,18 @@ def get_url(path, params=None):
     else:
         return full_path
 
+
+def get_redirect_url(input_url):
+    setting_url = get_url(input_url)
+
+    url_part1 = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='
+    url_part2 = '&redirect_uri=' + urllib.parse.quote_plus(setting_url)
+    url_part3 = '&response_type=code&scope=snsapi_base&state=1#wechat_redirect'
+
+    des = url_part1 + CONFIGS['WECHAT_APPID'] + url_part2 + url_part3
+    print(des)
+    return des
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
