@@ -60,8 +60,8 @@
                     评论
                     </div>
                 </div>
-                <div id="content-pannel" class= "row">
-                    <div id="notice" class="sixteen wide column" v-if="status==1">
+                <div id="content-pannel" class= "row" v-if="status==1">
+                    <div id="notice" class="sixteen wide column">
                         <div class="ui relaxed divided list" v-if="notices.length > 0">
                             <div class="item" v-for="notice in notices">
                                 <div class="content row">
@@ -78,11 +78,10 @@
                     </div>
                     <div id="homework" class="sixteen wide column" v-if="status==2">
                         <div class="ui relaxed divided list" v-if="homeworks.length > 0">
-                            <div class="item" v-for="(homework,index) in homeworks">
+                           <div class="item" v-for="homework in homeworks">
                                 <div class="content">
-                                    <div class="header">{{homework.title}}
-                                        <div class="right floated ">剩余<span>{{remain[index][0]}}</span>天<span></span>小时<span>{{remain[index][2]}}</span>分钟</div>
-                                    </div>
+                                    <div class="header">{{homework.title}}</div>
+                                    
                                     <div class="row">{{homework.detail}}</div>
                                 </div>
                             </div>
@@ -91,14 +90,14 @@
                         <div v-else>
                         </div>
                     </div>
-                    <div id="homework" class="sixteen wide column" v-if="status==3">
+                    <div id="comment" class="sixteen wide column" v-if="status==3">
                         <div class="ui relaxed divided list" v-if="comments.length > 0">
                             <div class="item" v-for="homework in homeworks">
                                 <div class="content">
-                                    <div class="header">{{homework.title}}
-                                        <div class="right floated ">
+                                    <div class="header">
+                                        
                                     </div>
-                                    <div class="row">{{homework.detail}}</div>
+                                    <div class="row"></div>
                                 </div>
                             </div>
                         

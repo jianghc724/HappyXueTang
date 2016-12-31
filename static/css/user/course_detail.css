@@ -33,3 +33,6 @@
   position: absolute;
   bottome: 20px;
 }
+.content span {
+  color: red;
+}

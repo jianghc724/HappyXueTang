@@ -8,14 +8,13 @@ var course_meta = new Vue({
     el:"#course-meta",
     data:{
         name:"",
-        status:0,
+        status:1,
         teacher:"",
         email:"",
         ratings:[],
         rating_texts:["课堂氛围：","课程收获：", "课程负担："],
         notices:[],
         homeworks:[],
-        remain:[],
         files:[],
     },
     methods:{
@@ -28,11 +27,7 @@ var course_meta = new Vue({
         getHomework:function(){
             this.status = 2;
             api.get('/api/u/course/detail', {open_id: urlParam.open_id, course_id:urlParam.course_id,status:2}, function (data) {
-                this.homeworks = data["new_operations"];
-                for(var i = 0; i < this.homeworks.length;i++){
-                    var remain_array = getRemainTime(this.homeworks.duedate, this.homeworks.current_time);
-                    remain.append(remain_array);
-                }
+                course_meta.homeworks = data["new_operations"];
             }, dftFail);
         },
         getTime:function(time){
@@ -57,7 +52,6 @@ var course_meta = new Vue({
 $(function () {
     api.get('/api/u/course/detail', {open_id: urlParam.open_id, course_id:urlParam.course_id,status:0}, function (data) {
         course_meta.name = data["name"];
-        course_meta.status = data["status"];
         course_meta.teacher = data["teacher"];
         course_meta.email = data["email"];
         api.get('/api/u/course/comments/overview', {open_id: urlParam.open_id, course_id:urlParam.course_id}, function (data) {
@@ -68,6 +62,10 @@ $(function () {
                     course_meta.ratings[i] = 0;
             }
         }, dftFail);
+        if(course_meta.status == 1)
+            course_meta.getNotice();
+        if(course_meta.status == 2)
+            course_meta.getHomework();
         successHolder.loading = false;
     }, dftFail);
     $('#show-week').dropdown();
