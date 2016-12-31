@@ -69,6 +69,3 @@ target/
 
 #node_modules
 /static/node_modules/
-
-#migrations
-**/migrations/*.py
