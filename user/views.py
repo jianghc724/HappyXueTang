@@ -158,18 +158,7 @@ class CourseDetail(APIView):
                             'unsubmitted_homework': course_json['unsubmittedoperations'],
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
-                            'ratings':[],
-                            'comments':[]
                         }
-                        print(result)
-                        cou = Course.objects.filter(key=course_key).filter(number=course_number)
-                        try:
-                            result['ratings'].append(cou[0].rating_one)
-                            result['ratings'].append(cou[0].rating_two)
-                            result['ratings'].append(cou[0].rating_three)
-                            result['comments'] = self.get_comment_list(cou[0])
-                        except:
-                            raise CourseError('No such course')
                         return result
                 cous = Course.objects.filter(course_id=input_course_id)
                 if cous:
@@ -179,13 +168,7 @@ class CourseDetail(APIView):
                         'ratings':ratings,
                         'teacher': course_json['teacher'],
                         'email': course_json['email'],
-                        'ratings':[],
-                        'comments':[]
                     }
-                    result['ratings'].append(cous[0].rating_one)
-                    result['ratings'].append(cous[0].rating_two)
-                    result['ratings'].append(cous[0].rating_three)
-                    result['comments'] = self.get_comment_list(cous[0])
                     return result
                 else:
                     raise CourseError('No such course')
@@ -202,17 +185,7 @@ class CourseDetail(APIView):
                     'notice_detail':[],
                     'teacher': course_json['teacher'],
                     'email': course_json['email'],
-                    'ratings':[],
-                    'comments':[]
                 }
-                cou = Course.objects.filter(key=course_key).filter(number=course_number)
-                try:
-                    result['ratings'].append(cou[0].rating_one)
-                    result['ratings'].append(cou[0].rating_two)
-                    result['ratings'].append(cou[0].rating_three)
-                    result['comments'] = self.get_comment_list(cou[0])
-                except:
-                    raise CourseError('No such course')
                 for notice in notices:
                     result['notice_detail'].append({
                         'title': notice['title'],
@@ -231,13 +204,7 @@ class CourseDetail(APIView):
                             'status': -1,
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
-                            'ratings':[],
-                            'comments':[]
                         }
-                        result['ratings'].append(cous[0].rating_one)
-                        result['ratings'].append(cous[0].rating_two)
-                        result['ratings'].append(cous[0].rating_three)
-                        result['comments'] = self.get_comment_list(cous[0])
                     else:
                         raise CourseError('No such course')
         if status == '2':
@@ -251,17 +218,7 @@ class CourseDetail(APIView):
                     'teacher': course_json['teacher'],
                     'email': course_json['email'],
                     'new_operations': [],
-                    'ratings':[],
-                    'comments':[]
                 }
-                cou = Course.objects.filter(key=course_key).filter(number=course_number)
-                try:
-                    result['ratings'].append(cou[0].rating_one)
-                    result['ratings'].append(cou[0].rating_two)
-                    result['ratings'].append(cou[0].rating_three)
-                    result['comments'] = self.get_comment_list(cou[0])
-                except:
-                    raise CourseError('No such course')
                 for operation in operations:
                     if operation['state'] == "尚未提交":
                         result['new_operations'].append({
@@ -283,47 +240,9 @@ class CourseDetail(APIView):
                             'status': -1,
                             'teacher': course_json['teacher'],
                             'email': course_json['email'],
-                            'ratings':[],
-                            'comments':[]
                         }
-                        result['ratings'].append(cous[0].rating_one)
-                        result['ratings'].append(cous[0].rating_two)
-                        result['ratings'].append(cous[0].rating_three)
-                        result['comments'] = self.get_comment_list(cous[0])
                     else:
                         raise CourseError('No such course')
-        
-    def get_comment_list(self, cou):
-        all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
-        comments = []
-        for comment in all_comments:
-            if len(comments) == 10 and comment.rating_time < comments[9]['rating_time']:
-                continue
-            student = User.objects.get(user_id=comment.student_id)
-            com = {
-                'student': student.name,
-                'time':comment.rating_time,
-                'comment':comment.rating_comment,
-            }
-            if len(comments) == 10:
-                comments[9] = com
-            else:
-                comments[len(comments)] = com
-            comments = self.sort_comment_list(comments)
-        return comments
-
-    def sort_comment_list(self, comment_list):
-        i = len(comment_list) - 1
-        while True:
-            if i == 0:
-                break
-            if comment_list[i]['time'] < comment_list[i - 1]['time']:
-                break
-            temp_com = comment_list[i]
-            comment_list[i] = comment_list[i - 1]
-            comment_list[i - 1] = temp_com
-            i = i - 1
-        return comment_list
 
 class CommentOverview(APIView):
     def get(self):
