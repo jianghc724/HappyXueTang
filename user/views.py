@@ -200,6 +200,7 @@ class CourseDetail(APIView):
                             'status': -1,
                             'teacher': cous[0].teacher,
                         }
+                        return result
                     else:
                         raise CourseError('No such course')
         if status == '2':
@@ -267,7 +268,7 @@ class CommentOverview(APIView):
         all_comments = Comment.objects.filter(course_key=cou.key).filter(course_number=cou.number)
         comments = []
         for comment in all_comments:
-            if len(comments) == 10 and comment.rating_time < comments[9]['rating_time']:
+            if len(comments) == 10 and comment.rating_time < comments[9]['time']:
                 continue
             student = User.objects.get(user_id=comment.student_id)
             com = {
