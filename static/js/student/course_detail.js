@@ -15,7 +15,8 @@ var course_meta = new Vue({
         rating_texts:["课堂氛围：","课程收获：", "课程负担："],
         notices:[],
         homeworks:[],
-        files:[]
+        remain:[],
+        files:[],
     },
     methods:{
         getNotice:function(){
@@ -27,8 +28,11 @@ var course_meta = new Vue({
         getHomework:function(){
             this.status = 2;
             api.get('/api/u/course/detail', {open_id: urlParam.open_id, course_id:urlParam.course_id,status:2}, function (data) {
-                console.log(data['new_operations'])
-                course_meta.homeworks = data["new_operations"];
+                this.homeworks = data["new_operations"];
+                for(var i = 0; i < this.homeworks.length;i++){
+                    var remain_array = getRemainTime(this.homeworks.duedate, this.homeworks.current_time);
+                    remain.append(remain_array);
+                }
             }, dftFail);
         },
         getTime:function(time){
@@ -38,22 +42,14 @@ var course_meta = new Vue({
             return_time = date_array[0] + " " + time_array[0] + ":" + time_array[1] + ":"+ time_array[2];
             return return_time;
         },
-        lastTime:function(publish, current){
-            var last_time = (current.getTime() - publish.getTime())/1000;
-            var last_day = Math.floor(last_time/86400);
-            var last_hour = Math.floor(last_time%86400/3600);
-            var last_minute = Math.floor(last_time%86400%3600/60);
-            var return_str = "";
-            if(last_day != 0)
-                return_str += last_day + "天";
-            if(last_hour != 0)
-                return_str += last_hour + "小时";
-            if(last_minute != 0)
-                return_str += last_minute + "分钟";
-            if(last_day == 0 && last_hour == 0 && last_minute == 0)
-                return_str += "刚刚发布。"
-            else
-                return_str += "前发布。" 
+        getRemainTime:function(due, current){
+            var current_date = new Date(current*1000);
+            var due_date = new Date(due);
+            var time = (due_date.getTime() - current_date.getTime())/1000;
+            var day = Math.floor(time/86400);
+            var hour = Math.floor(time%86400/3600);
+            var minute = Math.floor(time%86400%3600/60);
+            return [day, hour, minute];
         },
     }
 })

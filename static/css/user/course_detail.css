@@ -21,8 +21,15 @@
 #nav-bar {
   text-align: center;
 }
+.floated span {
+  color: red;
+}
 #nav-overall,
 #nav-notice,
 #nav-homework {
   text-color: black;
+}
+#footer {
+  position: absolute;
+  bottome: 20px;
 }

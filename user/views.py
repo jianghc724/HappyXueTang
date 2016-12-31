@@ -206,6 +206,8 @@ class CourseDetail(APIView):
         if status == '2':
             if return_json['message'] == 'Success':
                 cous = Course.objects.filter(course_id=input_course_id)
+                if not cous:
+                    raise CourseError('No such course')
                 operations = return_json['assignments']
                 result = {
                     'name': cous[0].name,
@@ -214,6 +216,7 @@ class CourseDetail(APIView):
                     'teacher': cous[0].teacher,
                     'new_operations': [],
                 }
+                current_time = datetime.now().timestamp()
                 for operation in operations:
                     if operation['state'] == "尚未提交":
                         result['new_operations'].append({
@@ -222,6 +225,7 @@ class CourseDetail(APIView):
                             'duedate': operation['duedate'],
                             'detail': operation['detail'],
                             'fileurl': operation['fileurl'],
+                            'current_time':current_time
                         })
                 return result
             else:
@@ -332,7 +336,7 @@ class MakeComment(APIView):
         current_time = datetime.now()
         com = Comment.objects.create(student_id=user.user_id, course_key=course_key, course_number=course_number,
                                      rating_one=self.input['rating_one'], rating_two=self.input['rating_two'], rating_three=self.input['rating_three'],
-                                     rating_time=current_time, rating_comment = self.input['comment'])
+                                     rating_time=current_time, rating_comment=self.input['comment'])
         com.save()
         total_people = cou.rating_people
         total_rating_one = cou.rating_one * total_people
@@ -614,7 +618,11 @@ class InfoSearch(APIView):
                     'course_number': cou.number,
                     'course_name': cou.name,
                     'course_teacher': cou.teacher,
+                    'ratings':[],
                 })
+                result['ratings'].append(cou.rating_one)
+                result['ratings'].append(cou.rating_two)
+                result['ratings'].append(cou.rating_three)
         if search=="":
             return {'courses':[]}
         return result
