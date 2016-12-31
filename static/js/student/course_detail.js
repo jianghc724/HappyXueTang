@@ -58,12 +58,13 @@ $(function () {
         course_meta.status = data["status"];
         course_meta.teacher = data["teacher"];
         course_meta.email = data["email"];
-        course_meta.ratings = data["ratings"];
-        for(var i = 0; i < 3; i++){
-            course_meta.ratings[i] = Math.round(course_meta.ratings[i]);
-            if(course_meta.ratings[i] < 0)
-                course_meta.ratings[i] = 0;
-        }
+        api.get('/api/u/course/comments/overview', {open_id: urlParam.open_id, course_id:urlParam.course_id}, function (data) {
+            for(var i = 0; i < 3; i++){
+                course_meta.ratings[i] = Math.round(course_meta.ratings[i]);
+                if(course_meta.ratings[i] < 0)
+                    course_meta.ratings[i] = 0;
+            }
+        }, dftFail);
         successHolder.loading = false;
     }, dftFail);
     $('#show-week').dropdown();
