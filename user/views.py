@@ -186,7 +186,7 @@ class CourseDetail(APIView):
 
                 for notice in notices:
                     result['notice_detail'].append({
-                        'title': notice['title'],
+                        'title': html.unescape(notice['title']),
                         'publishtime': notice['publishtime'],
                         'content': html.unescape(notice['content']),
                     })
