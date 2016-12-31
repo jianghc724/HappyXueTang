@@ -3,7 +3,7 @@ from codex.baseview import APIView
 
 import requests
 import json
-import HTMLParser
+import html
 from datetime import datetime
 
 from wechat.models import *
@@ -183,12 +183,12 @@ class CourseDetail(APIView):
                     'notice_detail':[],
                     'teacher': cous[0].teacher,
                 }
-                html_parser = HTMLParser.HTMLParser()
+
                 for notice in notices:
                     result['notice_detail'].append({
                         'title': notice['title'],
                         'publishtime': notice['publishtime'],
-                        'content': html_parser.unescape(notice['content']),
+                        'content': html.unescape(notice['content']),
                     })
                 return result
             else:
