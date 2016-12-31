@@ -40,12 +40,12 @@ class CustomWeChatView(WeChatView):
                     {
                         "type": "view",
                         "name": "课程表",
-                        "url": settings.get_redirect_url('student/course_list')
+                        "url": settings.get_url('student/course_list', {'open_id': WeChatView.wechatUser.open_id})
                     },
                     {
                         "type": "view",
                         "name": "DDL中心",
-                        "url": settings.get_redirect_url('student/ddl_center')
+                        "url": settings.get_url('student/ddl_center', {'open_id': WeChatView.wechatUser.open_id})
                     },
                     {
                         "type": "click",
@@ -85,12 +85,12 @@ class CustomWeChatView(WeChatView):
                     {
                         "type": "view",
                         "name": "我要自习",
-                        "url": settings.get_redirect_url('student/library_status'),
+                        "url": settings.get_url('student/library_status', {'open_id': WeChatView.wechatUser.open_id}),
                     },
                     {
                         "type": "view",
                         "name": "我要搜课",
-                        "url": settings.get_redirect_url('student/search_course'),
+                        "url": settings.get_url('student/search_course', {'open_id': WeChatView.wechatUser.open_id}),
                     },
                     {
                         "type": "click",
