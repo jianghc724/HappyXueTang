@@ -205,7 +205,9 @@ class CourseDetail(APIView):
                         raise CourseError('No such course')
         if status == '2':
             if return_json['message'] == 'Success':
-                cous = Course.objects.filter(key=input_course_id)
+                cous = Course.objects.filter(course_id=input_course_id)
+                if not cous:
+                    raise CourseError('No such course')
                 operations = return_json['assignments']
                 result = {
                     'name': cous[0].name,
