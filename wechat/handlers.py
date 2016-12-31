@@ -103,10 +103,13 @@ class CourseListHandler(WeChatHandler):
 class DDLCenterHandler(WeChatHandler):
 
     def check(self):
-        return self.is_event_click(self.view.event_keys['get_ddl'])
+        return self.is_text('ddl中心') or self.is_event_click(self.view.event_keys['get_ddl'])
 
     def handle(self):
-        pass
+        if self.user.user_id == '' or self.user.user_status == -1:
+            return self.reply_text(self.get_message('bind_account'))
+        return self.reply_text(self.get_message('ddl'))
+
 
 
 class BulletScreenHandler(WeChatHandler):
