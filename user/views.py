@@ -243,24 +243,24 @@ class CommentOverview(APIView):
         course_number_list = self.input['course_id'].split('-')
         course_key = course_number_list[3]
         course_number = course_number_list[4]
+
+        cous = Course.objects.filter(key=course_key).filter(number=course_number)
+        if not cous:
+            raise CourseError('No such course')
         result = {
             'ratings': [],
             'comments': [],
-            'course_info':{
+            'course_info': {
                 'course_id': self.input['course_id'],
-                'course_key': cou.key,
-                'course_number': cou.number,
-                'course_name': cou.name,
+                'course_key': cous[0].key,
+                'course_number': cous[0].number,
+                'course_name': cous[0].name,
             },
         }
-        cou = Course.objects.filter(key=course_key).filter(number=course_number)
-        try:
-            result['ratings'].append(cou[0].rating_one)
-            result['ratings'].append(cou[0].rating_two)
-            result['ratings'].append(cou[0].rating_three)
-            result['comments'] = self.get_comment_list(cou[0])
-        except:
-            raise CourseError('No such course')
+        result['ratings'].append(cous[0].rating_one)
+        result['ratings'].append(cous[0].rating_two)
+        result['ratings'].append(cous[0].rating_three)
+        result['comments'] = self.get_comment_list(cous[0])
         return result
 
     def get_comment_list(self, cou):
