@@ -84,7 +84,8 @@
     };
 
     $("#h-submitBtn").click(function(){
-        api.get('/api/u/search/course', {open_id: urlParam.open_id,search:$("#test").text()}, function (data) {
+        console.log($("#search_content").val());
+        api.get('/api/u/search/course', {open_id: urlParam.open_id,search:$("#search_content").val()}, function (data) {
             $("#list_start").empty();
             if(data.courses.length == 0){
                 $('#notify').modal('show');

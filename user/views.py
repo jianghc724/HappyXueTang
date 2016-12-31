@@ -605,12 +605,15 @@ class InfoSearch(APIView):
     def get(self):
         self.check_input('open_id', 'search')
         search = self.input['search']
+        print(self.input)
+        print(search)
         userid = User.get_by_openid(self.input['open_id']).user_id
         result = {
             'courses':[],
         }
         courses = Course.objects.all()
-        print(courses.first())
+        print("d")
+        print(search)
         for cou in courses:
             if search in cou.name:
                 result['courses'].append({
@@ -621,7 +624,7 @@ class InfoSearch(APIView):
                     'course_teacher': cou.teacher,
                 })
         print(result)
-        if search=="":
+        if search=="" :
             return {'courses':[]}
         return result
 

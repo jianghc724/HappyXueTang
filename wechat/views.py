@@ -38,14 +38,14 @@ class CustomWeChatView(WeChatView):
                 "name": "我的课程",
                 "sub_button": [
                     {
-                        "type": "view",
+                        "type": "click",
                         "name": "课程表",
-                        "url": settings.get_url('student/course_list', {'open_id': WeChatView.wechatUser.open_id})
+                        "key": event_keys['get_curriculum_schedule']
                     },
                     {
-                        "type": "view",
+                        "type": "click",
                         "name": "DDL中心",
-                        "url": settings.get_url('student/ddl_center', {'open_id': WeChatView.wechatUser.open_id})
+                        "key": event_keys['get_ddl']
                     },
                     {
                         "type": "click",
@@ -83,14 +83,14 @@ class CustomWeChatView(WeChatView):
                 "name": "学习助手",
                 "sub_button": [
                     {
-                        "type": "view",
+                        "type": "click",
                         "name": "我要自习",
-                        "url": settings.get_url('student/library_status', {'open_id': WeChatView.wechatUser.open_id}),
+                        "key": event_keys['get_library'],
                     },
                     {
-                        "type": "view",
+                        "type": "click",
                         "name": "我要搜课",
-                        "url": settings.get_url('student/search_course', {'open_id': WeChatView.wechatUser.open_id}),
+                        "key": event_keys['search_lecture'],
                     },
                     {
                         "type": "click",
