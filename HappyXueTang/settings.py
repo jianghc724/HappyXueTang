@@ -172,8 +172,8 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 CELERYBEAT_SCHEDULE = {
-    'add-every-2-hours': {
+    'remind-every-6-hours': {
         'task': 'wechat.tasks.get_notice',
-        'schedule': timedelta(minutes=1)
+        'schedule': timedelta(minutes=360)
     },
 }
