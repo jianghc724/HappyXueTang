@@ -332,7 +332,7 @@ class MakeComment(APIView):
         current_time = datetime.now()
         com = Comment.objects.create(student_id=user.user_id, course_key=course_key, course_number=course_number,
                                      rating_one=self.input['rating_one'], rating_two=self.input['rating_two'], rating_three=self.input['rating_three'],
-                                     rating_time=current_time, rating_comment = self.input['comment'])
+                                     rating_time=current_time, rating_comment=self.input['comment'])
         com.save()
         total_people = cou.rating_people
         total_rating_one = cou.rating_one * total_people
@@ -614,7 +614,11 @@ class InfoSearch(APIView):
                     'course_number': cou.number,
                     'course_name': cou.name,
                     'course_teacher': cou.teacher,
+                    'ratings':[],
                 })
+                result['ratings'].append(cou.rating_one)
+                result['ratings'].append(cou.rating_two)
+                result['ratings'].append(cou.rating_three)
         if search=="":
             return {'courses':[]}
         return result
