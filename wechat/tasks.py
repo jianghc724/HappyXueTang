@@ -47,7 +47,7 @@ def get_notice():
                 "msgtype": "text",
                 "text":
                     {
-                        "content": json.dumps(return_str)
+                        "content": json.dumps(json.loads(return_str), ensure_ascii=False)
                     }
 
             }
