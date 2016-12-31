@@ -174,7 +174,7 @@ class CourseDetail(APIView):
         if status == '1':
             if return_json['message'] == 'Success':
                 cous = Course.objects.filter(course_id=input_course_id)
-                notices = return_json['notice']
+                notices = return_json['notices']
                 result = {
                     'name': cous[0].name,
                     'course_id': input_course_id,
