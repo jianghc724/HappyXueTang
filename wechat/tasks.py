@@ -47,9 +47,9 @@ def get_notice():
                 "msgtype": "text",
                 "text":
                     {
-                        "content": json.dumps(json.loads(return_str), ensure_ascii=False)
+                        "content": return_str
                     }
 
             }
-            r = requests.post(we_addr, data=json.dumps(we_data))
+            r = requests.post(we_addr, data=json.dumps(we_data, ensure_ascii=False))
             print(r)
