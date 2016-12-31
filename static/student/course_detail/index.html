@@ -26,7 +26,7 @@
         </div>
         <div class="block">空行</div>
         <div id = "course-meta" class="ui card" v-else>
-            <div id = "" class="content ">
+            <div class="content ">
                 <div class="header">{{name}}</div>
                 <div class="description">
                     <p v-if="teacher != ''">任课老师：{{teacher}}</p>
@@ -61,14 +61,36 @@
                     </div>
                 </div>
                 <div id="content-pannel" class= "row">
-                    <div id="overall" class="five wide column" v-if="status==0">
+                    <div id="overall" class="sixteen wide column" v-if="status==0">
                     全部
                     </div>
-                    <div id="announcements" class="five wide column" v-if="status==1">
-                    {{notices}}
+                    <div id="notice" class="sixteen wide column" v-if="status==1">
+                        <div class="ui relaxed divided list" v-if="notices.length > 0">
+                            <div class="item" v-for="notice in notices">
+                                <div class="content">
+                                    <div class="header">{{notice.title}}
+                                        <div class="right floated meta">{{getTime(notice.publishtime)}}</div>
+                                    </div>
+                                    <div class="">{{notice.content}}</div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div v-else>
+                        </div>
                     </div>
-                    <div id="homework" class="five wide column" v-if="status==2">
-                    作业
+                    <div id="homework" class="sixteen wide column" v-if="status==2">
+                        <div class="ui relaxed divided list" v-if="homeworks.length > 0">
+                            <div class="item" v-for="homework in homeworks">
+                                <div class="content">
+                                    <div class="header">{{homework.title}}</div>
+                                    <div class="row">{{homework.detail}}</div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div v-else>
+                        </div>
                     </div>
                 </div>
             </div>

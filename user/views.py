@@ -193,7 +193,7 @@ class CourseDetail(APIView):
                 if return_json['reason'] == 'Invalid username':
                     raise GetInfoError('Username Invalid')
                 else:
-                    cous = Course.objects.filter(key=input_course_id)
+                    cous = Course.objects.filter(course_id=input_course_id)
                     if cous:
                         result = {
                             'name': cous[0].name,
@@ -205,7 +205,7 @@ class CourseDetail(APIView):
                         raise CourseError('No such course')
         if status == '2':
             if return_json['message'] == 'Success':
-                cous = Course.objects.filter(key=input_course_id)
+                cous = Course.objects.filter(course_id=input_course_id)
                 operations = return_json['assignments']
                 result = {
                     'name': cous[0].name,
