@@ -624,11 +624,8 @@ class InfoSearch(APIView):
                     'course_number': cou.number,
                     'course_name': cou.name,
                     'course_teacher': cou.teacher,
-                    'ratings':[],
+                    'ratings':[cou.rating_one, cou.rating_two, cou.rating_three]
                 })
-                result['courses']['ratings'].append(cou.rating_one)
-                result['courses']['ratings'].append(cou.rating_two)
-                result['courses']['ratings'].append(cou.rating_three)
         if search=="":
             return {'courses':[]}
         return result
