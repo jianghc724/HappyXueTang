@@ -1,4 +1,3 @@
-
 var xmlhttp = null;
 
 function hideElem(id) {
@@ -122,7 +121,7 @@ function submitValidation(open_id, success, fail) {
     return false;
 }
 
-function checkNotEmpty(groupid, helpid, inputid, hintName) {
+function checkNotEmpty(inputid, hintName) {
     if (document.getElementById(inputid).value.trim().length == 0) {
         document.getElementById(groupid).setAttribute('class', 'form-group has-error');
         var dom = document.getElementById(helpid);
@@ -136,37 +135,8 @@ function checkNotEmpty(groupid, helpid, inputid, hintName) {
     }
 }
 
-function checkIsDigit(groupid, helpid, inputid, hintName) {
-    if (isNaN(document.getElementById(inputid).value)) {
-        document.getElementById(groupid).setAttribute('class', 'form-group has-error');
-        var dom = document.getElementById(helpid);
-        dom.innerText = hintName + '必须为数字！';
-        //dom.removeAttribute('hidden');
-        showElem(helpid);
-        return false;
-    } else {
-        showSuccess(groupid, helpid);
-        return true;
-    }
+function checkComment() {
+    return checkNotEmpty('comment', '评价内容');
 }
-
-function checkUserid() {
-    return checkNotEmpty('useridGroup', 'helpUserid', 'inputUserid', '学堂账号');
-}
-
-function checkPassword() {
-    return checkNotEmpty('passwordGroup', 'helpPassword', 'inputPassword', '密码');
-}
-
-window.setupWeixin({'optionMenu':false, 'toolbar':false});
 
 clearAllHelps();
-
-function showValidation(isValidated) {
-    if (!isValidated) {
-        document.getElementById('inputUserid').focus();
-    } else {
-        showElem('successHolder');
-        hideElem('validationHolder');
-    }
-}

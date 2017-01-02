@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/card.min.css" >
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/list.min.css" >
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/item.min.css" >
-    <link href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/list.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.2.7/components/rating.min.css" >
     <title>快乐学堂</title>
 </head>
 
@@ -25,7 +25,8 @@
             <div>正在加载……</div>
         </div>
         <div class="block">空行</div>
-        <div id = "course-meta" class="ui card" v-else>
+        <div v-else>
+        <div id="course-meta" class="ui card">
             <div class="content ">
                 <div class="header">{{name}}</div>
                 <div class="description">
@@ -33,8 +34,8 @@
                     <p v-if="email != ''">联系邮箱：{{email}}</p>
                 </div>
             </div>
-            <div class="ui extra content grid">
-            <div id="average-comments" class="nine wide column">
+            <div class="extra content">
+            <div id="average-comments" >
                 <div v-for="m in 3">
                     {{rating_texts[m-1]}}
                     <span class="ui heart rating" data-rating="5">
@@ -43,74 +44,110 @@
                     </span>
                 </div>
             </div>
-            <div id="comment-buttons"class="seven wide column">
-                <button id= "comment-list" class="ui inverted blue button" v-on:click="jump(0)">评价列表</button>
-                <button id="go-comment" class="ui inverted blue button" v-on:click="jump(1)">评价课程</button>
             </div>
-            </div>
-            <div id="new-pannel" class="ui extra content grid" v-if="status > 0">
+            <div id="new-pannel" class="ui extra content grid" v-if="view_status > 0">
                 <div id="nav-bar" class= "ui three column row">
-                    <div id="nav-notice" v-on:click = "getNotice()" class="five wide column">
+                    <div id="nav-notice" v-on:click = "setNotice()" class="five wide column">
                     公告
                     </div>
-                    <div id="nav-homework" v-on:click = "getHomework()"class="five wide column">
+                    <div id="nav-homework" v-on:click = "setHomework()"class="five wide column">
                     作业
                     </div>
-                    <div id="nav-comment" v-on:click = "getComment()"class="five wide column">
+                    <div id="nav-comment" v-on:click = "setComment()"class="five wide column">
                     评论
                     </div>
                 </div>
-                <div id="content-pannel" class= "row" v-if="status==1">
-                    <div id="notice" class="sixteen wide column">
-                        <div class="ui relaxed divided list" v-if="notices.length > 0">
+                <div id="content-pannel" class= "row" >
+                    <div id="notice" class="sixteen wide column" v-if="status==1">
+                        <div class="ui relaxed divided list" v-if="notice_length > 0">
                             <div class="item" v-for="notice in notices">
                                 <div class="content row">
-                                    <div class="ten wide column header">{{notice.title}}
+                                    <div class="header">{{notice.title}}
                                         <div class="right floated meta">{{getTime(notice.publishtime)}}</div>
                                     </div>
-                                    <div class="">{{notice.content}}</div>
+                                    <div>{{notice.content}}</div>
                                 </div>
                             </div>
                         
                         </div>
                         <div v-else>
+                            该课程下没有公告~
                         </div>
                     </div>
                     <div id="homework" class="sixteen wide column" v-if="status==2">
-                        <div class="ui relaxed divided list" v-if="homeworks.length > 0">
-                           <div class="item" v-for="homework in homeworks">
-                                <div class="content">
-                                    <div class="header">{{homework.title}}</div>
-                                    
-                                    <div class="row">{{homework.detail}}</div>
+                        <div class="ui relaxed divided list" v-if="homework_length > 0">
+                           <div class="item" v-for="n in homeworks.length">
+                                <div class="content row">
+                                    <div class="header">{{homeworks[n-1].title}}</div>
+                                    <div>
+                                        还剩<span>{{remain[n-1][0]}}</span>天<span>{{remain[n-1][0]}}</span>小时<span>{{remain[n-1][0]}}</span>分钟
+                                    </div>
+                                    <div>{{homeworks[n-1].detail}}</div>
                                 </div>
                             </div>
-                        
                         </div>
                         <div v-else>
+                            该课程下没有未提交作业~
                         </div>
                     </div>
                     <div id="comment" class="sixteen wide column" v-if="status==3">
-                        <div class="ui relaxed divided list" v-if="comments.length > 0">
-                            <div class="item" v-for="homework in homeworks">
+                        <div class="ui comments" v-if="comment_length > 0">
+                            <div class="comment" v-for="(comment, index) in comments">
                                 <div class="content">
-                                    <div class="header">
-                                        
+                                    <a class="author">comment.student</a>
+                                    <div class="metadata">
+                                    <div class="date">
+                                        <span v-if="comment_last[index-1][0] >0">comment_last[index-1][0]天前</span>
+                                        <span v-if="comment_last[index-1][0] ==0 && comment_last[index-1][1]>0">
+                                            comment_last[index-1][1]小时前
+                                        </span>
+                                        <span v-if="comment_last[index-1][0] ==0 && comment_last[index-1][1]==0">
+                                            comment_last[index-1][2]分钟前
+                                        </span>
                                     </div>
-                                    <div class="row"></div>
+                                    </div>
+                                    <div class="text">
+                                        comment.comment
+                                    </div>
+                                </div>
+                                <div class = "extra content">
+                                    <div v-for="m in 3">
+                                    {{rating_texts[m-1]}}
+                                    <span class="ui heart rating" data-rating="5">
+                                    <i class="icon active" v-for="n in comment.ratings[m-1]"></i>
+                                    <i class="icon " v-for="n in 5 - comment.ratings[m-1]"></i>
+                                    </span>
+                                    </div>
                                 </div>
                             </div>
-                        
                         </div>
                         <div v-else>
+                            该课程目前没有评价~
+                        </div>
+                        <div id="add-comment">
+                        <form @submit.prevent="submit" class="ui reply form">
+                        <div class="field">
+                        <label>
+                            <textarea v-model="my_comment.content"></textarea>
+                        </label>
+                        </div>
+                        <div id="my-ratings" class = "">
+                            <div v-for="m in 3">
+                            {{rating_texts[m-1]}}
+                            <div :id='"my-rating"+m' class="ui heart rating" data-rating="3" data-max-rating="5">
+                            </div>
+                            </div>
+                        </div>
+                        <div type="submit" class="ui primary submit button">评价课程</div>
+                        </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        </div>
     </div>
     </div>
-
     <footer id="footer">
         <hr/>
         <a href="" target="_blank">快乐学堂</a>

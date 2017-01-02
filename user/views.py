@@ -63,10 +63,11 @@ class CourseList(APIView):
         r = requests.post(addr, data=json.dumps(data), headers=headers)
         print(r)
         return_json = r.json()
-        #print(return_json)
+        print(return_json)
         if return_json['message'] == 'Success':
             result = []
             for course_json in return_json['classes']:
+                print(course_json)
                 course_num_list = course_json['courseid'].split('-')
                 courseid = course_num_list[3]
                 coursenum = int(course_num_list[4])
@@ -106,8 +107,11 @@ class CourseList(APIView):
                     _return_json = r.json()
                     if _return_json['message'] == 'Success':
                         input_week = int(_return_json["currentteachinginfo"]["currentteachingweek"]["name"])
+                        print(input_week)
                     else:
                         raise GetInfoError(return_json['reason'])
+                if input_week>16:
+                    input_week=16
                 if int(course_json['week'][input_week - 1]) == 1:
                     result.append({
                         'name': course_json['coursename'],
@@ -250,11 +254,12 @@ class CommentOverview(APIView):
         course_number_list = self.input['course_id'].split('-')
         course_key = course_number_list[3]
         course_number = course_number_list[4]
-
+        current_time = datetime.now().timestamp()
         cous = Course.objects.filter(key=course_key).filter(number=course_number)
         if not cous:
             raise CourseError('No such course')
         result = {
+            'current_time':current_time,
             'ratings': [],
             'comments': [],
             'course_info': {
@@ -281,6 +286,7 @@ class CommentOverview(APIView):
                 'student': student.name,
                 'time':comment.rating_time,
                 'comment':comment.rating_comment,
+                'ratings':[comment.rating_one,comment.rating_two,comment.rating_three]
             }
             if len(comments) == 10:
                 comments[9] = com

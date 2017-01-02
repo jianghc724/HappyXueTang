@@ -31,8 +31,23 @@
 }
 #footer {
   position: absolute;
-  bottome: 20px;
+  margin-top: -40px;
 }
 .content span {
   color: red;
+}
+form {
+  margin-top: 10px;
+}
+form .button {
+  background-color: #54C8FF !important;
+}
+form .button:hover {
+  background-color: #2185D0 !important;
+}
+form .button:focus {
+  background-color: #1678c2 !important;
+}
+form .button:active {
+  background-color: #0d71bb !important;
 }
